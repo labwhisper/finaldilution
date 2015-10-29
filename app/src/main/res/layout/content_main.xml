@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/beakerImage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="true"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <ListView
+        android:id="@+id/compoundsListView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:choiceMode="multipleChoice" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_weight=".5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/compoundsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:ems="10"
+            android:text="" />
+
+        <RelativeLayout
+            android:id="@+id/beakerRectangle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/beaker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/volumeViewSwitcher"
+                android:contentDescription="@string/beakerDescription"
+                android:src="@drawable/beaker" />
+
+            <ViewSwitcher
+                android:id="@+id/volumeViewSwitcher"
+                android:layout_width="181dp"
+                android:layout_height="46dp"
+                android:layout_gravity="start|top">
+
+
+                <EditText
+                    android:id="@+id/beakerVolumeEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:focusableInTouchMode="true"
+                    android:inputType="numberDecimal"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/beakerVolumeTextView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="@string/volumeText"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </ViewSwitcher>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
