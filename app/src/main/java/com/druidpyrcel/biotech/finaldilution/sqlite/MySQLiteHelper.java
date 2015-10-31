@@ -4,26 +4,20 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by dawid.chmielewski on 10/10/2015.
- */
-public class MySQLiteHelper extends SQLiteOpenHelper {
+public class MySQLiteHelper extends SQLiteAssetHelper {
 
-    // Database Version
+    private static final String DATABASE_NAME = "CompoundDB.sqlite";
     private static final int DATABASE_VERSION = 1;
-    // Database Name
-    private static final String DATABASE_NAME = "CompoundDB";
-    // Compounds table name
-    private static final String TABLE_COMPOUNDS = "compounds";
     // Compounds Table Columns names
+    private static final String TABLE_COMPOUNDS = "compounds";
     private static final String KEY_ID = "id";
     private static final String KEY_SHORT_NAME = "shortName";
     private static final String KEY_MOLAR_MASS = "molarMass";
@@ -31,18 +25,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        // SQL statement to create compounds table
-        String CREATE_COMPOUND_TABLE = "CREATE TABLE compounds ( " +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "shortName TEXT, " +
-                "molarMass SINGLE )";
-
-        // create compounds table
-        db.execSQL(CREATE_COMPOUND_TABLE);
     }
 
     @Override
@@ -81,8 +63,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                         null, // g. order by
                         null); // h. limit
 
-        if (cursor != null)
-            cursor.moveToFirst();
+        if (cursor == null)
+            return null;
+
+        cursor.moveToFirst();
 
         Compound compound = new Compound();
         compound.setId(Integer.parseInt(cursor.getString(0)));

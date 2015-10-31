@@ -41,13 +41,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         MySQLiteHelper db = new MySQLiteHelper(this);
-        //TODO Save database and provide prepared in assets to copy it on the first time the program starts
-        db.addCompound(new Compound("NaCl", 58.44f));
-        db.addCompound(new Compound("KCl", 74.55f));
-        db.addCompound(new Compound("EDTA", 372.24f));
-        db.addCompound(new Compound("MgCl2", 95.21f));
-        db.addCompound(new Compound("HEPES", 238.3f));
-        db.addCompound(new Compound("TRIS", 121.14f));
 
         List<Compound> allCompounds = db.getAllCompounds();
 

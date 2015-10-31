@@ -44,11 +44,11 @@ public class Solution {
             niceOutput.append(compound.getKey().getShortName());
             niceOutput.append(" : ");
             if (finalMassMili > 1000) {
-                niceOutput.append(String.format("%1$,.5f", finalMassMili / 1000));
+                niceOutput.append(String.format("%1$,.3f", finalMassMili / 1000));
                 niceOutput.append(" g");
             } else {
 
-                niceOutput.append(String.format("%1$,.2f", finalMassMili));
+                niceOutput.append(String.format("%1$,.1f", finalMassMili));
                 niceOutput.append(" mg");
             }
             niceOutput.append("\n");
