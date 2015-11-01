@@ -28,7 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     final Context context = this;
-    Solution solution = null;
+    Solution currentSolution = null;
     ViewSwitcher switcher = null;
     TextView volumeTextView = null;
     TextView volumeEditText = null;
@@ -44,13 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
         List<Compound> allCompounds = db.getAllCompounds();
 
-        solution = new Solution(1500);
+        Solution tempSolution = new Solution("Roztwor1", 145);
+        db.addSolution(tempSolution);
+        currentSolution = db.getSolution("Roztwor1");
         compoundsTextView = (TextView) findViewById(R.id.compoundsTextView);
         switcher = (ViewSwitcher) findViewById(R.id.volumeViewSwitcher);
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
-        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(solution.getVolumeMili()) + "ml");
-        volumeEditText.setText(volFormat.format(solution.getVolumeMili()));
+        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(currentSolution.getVolumeMili()) + "ml");
+        volumeEditText.setText(volFormat.format(currentSolution.getVolumeMili()));
         volumeEditText.setSelectAllOnFocus(true);
         volumeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -62,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     CharSequence s = v.getText();
                     if (s.length() != 0) {
-                        solution.setVolumeMili(Double.parseDouble(s.toString()));
-                        compoundsTextView.setText(solution.calculateQuantities());
-                        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(solution.getVolumeMili()) + "ml");
+                        currentSolution.setVolumeMili(Double.parseDouble(s.toString()));
+                        compoundsTextView.setText(currentSolution.calculateQuantities());
+                        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(currentSolution.getVolumeMili()) + "ml");
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(volumeEditText.getWindowToken(), 0);
                     }
@@ -148,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (amountInput.getText().length() != 0) {
-                                solution.addComponent((Compound) parent.getAdapter().getItem(position), Float.parseFloat(amountInput.getText().toString()));
-                                compoundsTextView.setText(solution.calculateQuantities());
+                                currentSolution.addComponent((Compound) parent.getAdapter().getItem(position), Double.parseDouble(amountInput.getText().toString()));
+                                compoundsTextView.setText(currentSolution.calculateQuantities());
                             }
                         }
                     })

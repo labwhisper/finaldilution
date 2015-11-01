@@ -9,12 +9,12 @@ public class Compound {
     private String longName;
     private String chemicalFormula;
     private String iupacName;
-    private float molarMass;
+    private double molarMass;
 
     public Compound() {
     }
 
-    public Compound(String shortName, float molarMass) {
+    public Compound(String shortName, double molarMass) {
         super();
         this.shortName = shortName;
         this.molarMass = molarMass;
@@ -60,11 +60,11 @@ public class Compound {
         this.iupacName = iupacName;
     }
 
-    public float getMolarMass() {
+    public double getMolarMass() {
         return molarMass;
     }
 
-    public void setMolarMass(float molarMass) {
+    public void setMolarMass(double molarMass) {
         this.molarMass = molarMass;
     }
 

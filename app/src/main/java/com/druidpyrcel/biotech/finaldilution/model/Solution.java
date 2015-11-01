@@ -4,19 +4,23 @@ package com.druidpyrcel.biotech.finaldilution.model;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by dawid.chmielewski on 10/11/2015.
- */
 public class Solution {
-    private double volumeMili;
-    private Map<Compound, Float> componentList;
+    private int id;
+    private String name;
+    private double volume;
+    private Map<Compound, Double> componentList;
 
-    public Solution(double volumeMili) {
-        this.volumeMili = volumeMili;
-        componentList = new HashMap<Compound, Float>();
+    public Solution() {
+        componentList = new HashMap<Compound, Double>();
     }
 
-    public boolean addComponent(Compound component, float molarConcentration) {
+    public Solution(String name, double volumeMili) {
+        this.name = name;
+        this.volume = volumeMili / 1000;
+        componentList = new HashMap<Compound, Double>();
+    }
+
+    public boolean addComponent(Compound component, double molarConcentration) {
         if (componentList.get(component) != null) {
             return false;
         }
@@ -32,23 +36,22 @@ public class Solution {
         componentList.clear();
     }
 
-    public void changeConcentration(Compound component, float newMolarConcentration) {
+    public void changeConcentration(Compound component, double newMolarConcentration) {
         componentList.put(component, newMolarConcentration);
     }
 
 
     public String calculateQuantities() {
         StringBuilder niceOutput = new StringBuilder(200);
-        for (Map.Entry<Compound, Float> compound : componentList.entrySet()) {
-            double finalMassMili = compound.getKey().getMolarMass() * compound.getValue() * volumeMili;
+        for (Map.Entry<Compound, Double> compound : componentList.entrySet()) {
+            double finalMass = compound.getKey().getMolarMass() * compound.getValue() * volume;
             niceOutput.append(compound.getKey().getShortName());
             niceOutput.append(" : ");
-            if (finalMassMili > 1000) {
-                niceOutput.append(String.format("%1$,.3f", finalMassMili / 1000));
+            if (finalMass > 1) {
+                niceOutput.append(String.format("%1$,.3f", finalMass));
                 niceOutput.append(" g");
             } else {
-
-                niceOutput.append(String.format("%1$,.1f", finalMassMili));
+                niceOutput.append(String.format("%1$,.1f", finalMass * 1000));
                 niceOutput.append(" mg");
             }
             niceOutput.append("\n");
@@ -56,11 +59,40 @@ public class Solution {
         return niceOutput.toString();
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
+    }
+
     public double getVolumeMili() {
-        return volumeMili;
+        return volume * 1000;
     }
 
     public void setVolumeMili(double volumeMili) {
-        this.volumeMili = volumeMili;
+        this.volume = volumeMili / 1000;
+    }
+
+    @Override
+    public String toString() {
+        return name + ", " + getVolumeMili() + "ml, " + componentList.size() + " components";
     }
 }
