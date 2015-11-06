@@ -48,12 +48,17 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     public void addSolution(Solution solution) {
         Log.d("addSolution", solution.toString());
-        SQLiteDatabase db = this.getWritableDatabase();
 
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_SOLUTIONS +
+                " WHERE " + SOLUTIONS_KEY_NAME + "=" + "'" + solution.getName() + "'";
+        db.execSQL(query);
+        db.close();
+
+        db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SOLUTIONS_KEY_NAME, solution.getName());
         values.put(SOLUTIONS_KEY_VOLUME, solution.getVolume());
-
         db.insert(TABLE_SOLUTIONS, null, values);
         db.close();
     }

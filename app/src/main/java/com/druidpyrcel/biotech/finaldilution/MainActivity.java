@@ -34,18 +34,22 @@ public class MainActivity extends AppCompatActivity {
     TextView volumeEditText = null;
     TextView compoundsTextView;
     DecimalFormat volFormat = new DecimalFormat("0.##");
+    MySQLiteHelper db = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MySQLiteHelper db = new MySQLiteHelper(this);
+        db = new MySQLiteHelper(this);
 
         List<Compound> allCompounds = db.getAllCompounds();
 
         Solution tempSolution = new Solution("Roztwor1", 145);
-        db.addSolution(tempSolution);
+        Solution previousSolution = db.getSolution("Roztwor1");
+        if (previousSolution == null) {
+            db.addSolution(tempSolution);
+        }
         currentSolution = db.getSolution("Roztwor1");
         compoundsTextView = (TextView) findViewById(R.id.compoundsTextView);
         switcher = (ViewSwitcher) findViewById(R.id.volumeViewSwitcher);
@@ -113,7 +117,20 @@ public class MainActivity extends AppCompatActivity {
         beakerImage.setOnClickListener(new BeakerClickListener());
 
     }
-//
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        db.addSolution(currentSolution);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        currentSolution = db.getSolution("Roztwor1");
+    }
+
+    //
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
