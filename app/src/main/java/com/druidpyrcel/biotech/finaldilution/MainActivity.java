@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         }
         currentSolution = db.getSolution("Roztwor1");
         compoundsTextView = (TextView) findViewById(R.id.compoundsTextView);
+        compoundsTextView.setText(currentSolution.calculateQuantities());
         switcher = (ViewSwitcher) findViewById(R.id.volumeViewSwitcher);
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        db.addSolution(currentSolution);
+        db.updateSolution(currentSolution);
     }
 
     @Override

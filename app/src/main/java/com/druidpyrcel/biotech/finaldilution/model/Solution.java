@@ -91,6 +91,10 @@ public class Solution {
         this.volume = volumeMili / 1000;
     }
 
+    public Map<Compound, Double> getComponentList() {
+        return componentList;
+    }
+
     @Override
     public String toString() {
         return name + ", " + getVolumeMili() + "ml, " + componentList.size() + " components";

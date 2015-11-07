@@ -12,6 +12,7 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MySQLiteHelper extends SQLiteAssetHelper {
 
@@ -46,7 +47,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         //TODO create fresh tables
     }
 
-    public void addSolution(Solution solution) {
+    public void deleteSolution(Solution solution) {
         Log.d("addSolution", solution.toString());
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -54,13 +55,30 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 " WHERE " + SOLUTIONS_KEY_NAME + "=" + "'" + solution.getName() + "'";
         db.execSQL(query);
         db.close();
+    }
 
-        db = this.getWritableDatabase();
+    public void addSolution(Solution solution) {
+        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(SOLUTIONS_KEY_ID, solution.getId());
         values.put(SOLUTIONS_KEY_NAME, solution.getName());
         values.put(SOLUTIONS_KEY_VOLUME, solution.getVolume());
         db.insert(TABLE_SOLUTIONS, null, values);
+
+        //add Components and assignments
+        for (Map.Entry<Compound, Double> compound : solution.getComponentList().entrySet()) {
+            ContentValues assignmentsValues = new ContentValues();
+            assignmentsValues.put(ASSIGNMENTS_KEY_SOLUTION, solution.getId());
+            assignmentsValues.put(ASSIGNMENTS_KEY_COMPOUND, compound.getKey().getId());
+            assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, compound.getValue());
+            db.insert(TABLE_ASSIGNMENTS, null, assignmentsValues);
+        }
         db.close();
+    }
+
+    public void updateSolution(Solution solution) {
+        deleteSolution(solution);
+        addSolution(solution);
     }
 
     public List<Solution> getAllSolutions() {
