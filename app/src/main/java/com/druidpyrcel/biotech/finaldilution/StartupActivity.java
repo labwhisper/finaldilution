@@ -7,20 +7,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
 import com.druidpyrcel.biotech.finaldilution.sqlite.DataProvider;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class StartupActivity extends AppCompatActivity {
 
+    DecimalFormat volFormat = new DecimalFormat("0.##");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +48,26 @@ public class StartupActivity extends AppCompatActivity {
     private void refreshSolutionList() {
 
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        List<Solution> solutionList = appState.getDb().getAllSolutions();
+        final List<Solution> solutionList = appState.getDb().getAllSolutions();
         if (!solutionList.isEmpty()) {
             //TODO Save and set last solution
             appState.setCurrentSolution(appState.getDb().getAllSolutions().get(0));
         }
         ListView solutionListView = (ListView) findViewById(R.id.solutionListView);
-        ArrayAdapter<Solution> solutionListAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_1, solutionList);
+        ArrayAdapter<Solution> solutionListAdapter = new ArrayAdapter<Solution>(
+                this, android.R.layout.simple_list_item_2, android.R.id.text1, solutionList) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                Solution solution = solutionList.get(position);
+                text1.setText(solution.getName());
+                text2.setText(volFormat.format(solution.getVolumeMili()) + " ml  "
+                        + solution.getComponentList().size() + " components");
+                return view;
+            }
+        };
         solutionListView.setAdapter(solutionListAdapter);
         solutionListView.setOnItemClickListener(new SolutionChooseListener());
     }
