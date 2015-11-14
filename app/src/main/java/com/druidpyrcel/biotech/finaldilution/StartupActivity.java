@@ -23,9 +23,18 @@ public class StartupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         appState.setDb(new DataProvider(appState));
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         appState.setCurrentSolution(appState.getDb().getSolution("Roztwor1"));
         List<Solution> solutionList = appState.getDb().getAllSolutions();
         ListView solutionListView = (ListView) findViewById(R.id.solutionListView);
@@ -34,9 +43,6 @@ public class StartupActivity extends AppCompatActivity {
         solutionListView.setAdapter(solutionListAdapter);
         solutionListView.setOnItemClickListener(new SolutionChooseListener());
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
 
     class SolutionChooseListener implements AdapterView.OnItemClickListener {
