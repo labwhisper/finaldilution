@@ -19,45 +19,33 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
-import com.druidpyrcel.biotech.finaldilution.model.Solution;
-import com.druidpyrcel.biotech.finaldilution.sqlite.MySQLiteHelper;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     final Context context = this;
-    Solution currentSolution = null;
     ViewSwitcher switcher = null;
     TextView volumeTextView = null;
     TextView volumeEditText = null;
     TextView compoundsTextView;
     DecimalFormat volFormat = new DecimalFormat("0.##");
-    MySQLiteHelper db = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = new MySQLiteHelper(this);
+        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
 
-        List<Compound> allCompounds = db.getAllCompounds();
 
-        Solution tempSolution = new Solution("Roztwor1", 145);
-        Solution previousSolution = db.getSolution("Roztwor1");
-        if (previousSolution == null) {
-            db.addSolution(tempSolution);
-        }
-        currentSolution = db.getSolution("Roztwor1");
         compoundsTextView = (TextView) findViewById(R.id.compoundsTextView);
-        compoundsTextView.setText(currentSolution.calculateQuantities());
+        compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
         switcher = (ViewSwitcher) findViewById(R.id.volumeViewSwitcher);
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
-        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(currentSolution.getVolumeMili()) + "ml");
-        volumeEditText.setText(volFormat.format(currentSolution.getVolumeMili()));
+        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolumeMili()) + "ml");
+        volumeEditText.setText(volFormat.format(appState.getCurrentSolution().getVolumeMili()));
         volumeEditText.setSelectAllOnFocus(true);
         volumeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -69,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     CharSequence s = v.getText();
                     if (s.length() != 0) {
-                        currentSolution.setVolumeMili(Double.parseDouble(s.toString()));
-                        compoundsTextView.setText(currentSolution.calculateQuantities());
-                        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(currentSolution.getVolumeMili()) + "ml");
+                        appState.getCurrentSolution().setVolumeMili(Double.parseDouble(s.toString()));
+                        compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
+                        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolumeMili()) + "ml");
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(volumeEditText.getWindowToken(), 0);
                     }
@@ -107,58 +95,36 @@ public class MainActivity extends AppCompatActivity {
 
         ListView compoundsListView = (ListView) findViewById(R.id.compoundsListView);
         ArrayAdapter<Compound> compoundListAdapter = new ArrayAdapter(
-                this, android.R.layout.simple_list_item_1, allCompounds);
+                this, android.R.layout.simple_list_item_1, appState.getDb().getAllCompounds());
         compoundsListView.setAdapter(compoundListAdapter);
         compoundsListView.setOnItemClickListener(new CompoundChooseListener());
-
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         View beakerImage = findViewById(R.id.beakerRectangle);
         beakerImage.setOnClickListener(new BeakerClickListener());
 
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
-        db.updateSolution(currentSolution);
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        appState.getDb().updateSolution(appState.getCurrentSolution());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        currentSolution = db.getSolution("Roztwor1");
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        appState.setCurrentSolution(appState.getDb().getSolution("Roztwor1"));
     }
-
-    //
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     class CompoundChooseListener implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
             final EditText amountInput = new EditText(MainActivity.this);
+            final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
             alertDialogBuilder.setView(amountInput)
@@ -168,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (amountInput.getText().length() != 0) {
-                                currentSolution.addComponent((Compound) parent.getAdapter().getItem(position), Double.parseDouble(amountInput.getText().toString()));
-                                compoundsTextView.setText(currentSolution.calculateQuantities());
+                                appState.getCurrentSolution().addComponent((Compound) parent.getAdapter().getItem(position), Double.parseDouble(amountInput.getText().toString()));
+                                compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
                             }
                         }
                     })

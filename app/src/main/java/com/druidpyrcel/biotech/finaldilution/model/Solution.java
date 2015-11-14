@@ -95,6 +95,10 @@ public class Solution {
         return componentList;
     }
 
+    public void setComponentList(Map<Compound, Double> componentList) {
+        this.componentList = componentList;
+    }
+
     @Override
     public String toString() {
         return name + ", " + getVolumeMili() + "ml, " + componentList.size() + " components";

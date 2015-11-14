@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
@@ -14,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MySQLiteHelper extends SQLiteAssetHelper {
+public class DataProvider extends SQLiteAssetHelper {
 
     private static final String DATABASE_NAME = "FinalDilutionDB.sqlite";
     private static final int DATABASE_VERSION = 1;
@@ -35,7 +36,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     private static final String ASSIGNMENTS_KEY_SOLUTION = "solution";
     private static final String ASSIGNMENTS_KEY_QUANTITY = "quantity";
 
-    public MySQLiteHelper(Context context) {
+    public DataProvider(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -84,17 +85,13 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     public List<Solution> getAllSolutions() {
         List<Solution> solutions = new LinkedList<Solution>();
 
-        String query = "SELECT * FROM " + TABLE_COMPOUNDS;
+        String query = "SELECT * FROM " + TABLE_SOLUTIONS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Solution solution = null;
         if (cursor.moveToFirst()) {
             do {
-                solution = new Solution();
-                solution.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_ID))));
-                solution.setName(cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_NAME)));
-                solution.setVolume(cursor.getDouble(cursor.getColumnIndex(SOLUTIONS_KEY_VOLUME)));
+                Solution solution = fillSolution(db, cursor);
                 solutions.add(solution);
             } while (cursor.moveToNext());
         }
@@ -117,37 +114,11 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             return null;
         }
 
-        Solution solution = new Solution();
-        solution.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_ID))));
-        solution.setName(cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_NAME)));
-        solution.setVolume(cursor.getDouble(cursor.getColumnIndex(SOLUTIONS_KEY_VOLUME)));
+        Solution solution = fillSolution(db, cursor);
 
-        query = "SELECT * " +
-                "FROM " + TABLE_ASSIGNMENTS + ", " + TABLE_COMPOUNDS + ", " + TABLE_SOLUTIONS +
-                " WHERE " + TABLE_SOLUTIONS + "." + SOLUTIONS_KEY_NAME + "=" + "'" + name + "'" +
-                " AND " + TABLE_SOLUTIONS + "." + SOLUTIONS_KEY_ID + " = " +
-                TABLE_ASSIGNMENTS + "." + ASSIGNMENTS_KEY_SOLUTION +
-                " AND " + TABLE_COMPOUNDS + "." + COMPOUNDS_KEY_ID + " = " +
-                TABLE_ASSIGNMENTS + "." + ASSIGNMENTS_KEY_COMPOUND;
-        cursor = db.rawQuery(query, null);
-
-        if (cursor == null || !cursor.moveToFirst()) {
-            db.close();
-            return solution;
-        }
-
-        Compound compound = null;
-        do {
-            compound = new Compound();
-            compound.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_ID))));
-            compound.setShortName(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_SHORT_NAME)));
-            compound.setMolarMass(cursor.getDouble(cursor.getColumnIndex(COMPOUNDS_KEY_MOLAR_MASS)));
-            double quantity = cursor.getDouble(cursor.getColumnIndex(ASSIGNMENTS_KEY_QUANTITY));
-            solution.addComponent(compound, quantity);
-        } while (cursor.moveToNext());
         db.close();
-
         Log.d("getSolution(" + name + ")", solution.toString());
+
         return solution;
     }
 
@@ -181,10 +152,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
         cursor.moveToFirst();
 
-        Compound compound = new Compound();
-        compound.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_ID))));
-        compound.setShortName(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_SHORT_NAME)));
-        compound.setMolarMass(cursor.getDouble(cursor.getColumnIndex(COMPOUNDS_KEY_MOLAR_MASS)));
+        Compound compound = fillCompound(cursor);
         db.close();
 
         Log.d("getCompound(" + shortName + ")", compound.toString());
@@ -198,13 +166,9 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
-        Compound compound = null;
         if (cursor.moveToFirst()) {
             do {
-                compound = new Compound();
-                compound.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_ID))));
-                compound.setShortName(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_SHORT_NAME)));
-                compound.setMolarMass(cursor.getDouble(cursor.getColumnIndex(COMPOUNDS_KEY_MOLAR_MASS)));
+                Compound compound = fillCompound(cursor);
                 compounds.add(compound);
             } while (cursor.moveToNext());
         }
@@ -214,5 +178,52 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         return compounds;
     }
 
+
+    @NonNull
+    private Cursor selectAllSolutionAssociations(SQLiteDatabase db, String name) {
+        String query;
+        query = "SELECT * " +
+                "FROM " + TABLE_ASSIGNMENTS + ", " + TABLE_COMPOUNDS + ", " + TABLE_SOLUTIONS +
+                " WHERE " + TABLE_SOLUTIONS + "." + SOLUTIONS_KEY_NAME + "=" + "'" + name + "'" +
+                " AND " + TABLE_SOLUTIONS + "." + SOLUTIONS_KEY_ID + " = " +
+                TABLE_ASSIGNMENTS + "." + ASSIGNMENTS_KEY_SOLUTION +
+                " AND " + TABLE_COMPOUNDS + "." + COMPOUNDS_KEY_ID + " = " +
+                TABLE_ASSIGNMENTS + "." + ASSIGNMENTS_KEY_COMPOUND;
+        return db.rawQuery(query, null);
+    }
+
+    @NonNull
+    private Compound fillCompound(Cursor cursor) {
+        Compound compound = new Compound();
+        compound.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_ID))));
+        compound.setShortName(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_SHORT_NAME)));
+        compound.setMolarMass(cursor.getDouble(cursor.getColumnIndex(COMPOUNDS_KEY_MOLAR_MASS)));
+        return compound;
+    }
+
+
+    @NonNull
+    private Solution fillSolution(SQLiteDatabase db, Cursor cursor) {
+        Solution solution = new Solution();
+        solution.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_ID))));
+        String name = cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_NAME));
+        solution.setName(name);
+        solution.setVolume(cursor.getDouble(cursor.getColumnIndex(SOLUTIONS_KEY_VOLUME)));
+
+        cursor = selectAllSolutionAssociations(db, name);
+
+        if (cursor == null || !cursor.moveToFirst()) {
+            db.close();
+            return solution;
+        }
+
+        do {
+            Compound compound = fillCompound(cursor);
+            double quantity = cursor.getDouble(cursor.getColumnIndex(ASSIGNMENTS_KEY_QUANTITY));
+            solution.addComponent(compound, quantity);
+        } while (cursor.moveToNext());
+
+        return solution;
+    }
 
 }

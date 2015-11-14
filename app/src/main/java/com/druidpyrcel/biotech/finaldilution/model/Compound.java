@@ -1,8 +1,5 @@
 package com.druidpyrcel.biotech.finaldilution.model;
 
-/**
- * Created by dawid.chmielewski on 10/10/2015.
- */
 public class Compound {
     private int id;
     private String shortName;
