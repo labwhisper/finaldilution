@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         switcher.showNext();
 
         ListView compoundsListView = (ListView) findViewById(R.id.compoundsListView);
-        ArrayAdapter<Compound> compoundListAdapter = new ArrayAdapter(
+        ArrayAdapter<Compound> compoundListAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, appState.getDb().getAllCompounds());
         compoundsListView.setAdapter(compoundListAdapter);
         compoundsListView.setOnItemClickListener(new CompoundChooseListener());

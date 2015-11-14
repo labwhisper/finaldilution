@@ -83,7 +83,7 @@ public class DataProvider extends SQLiteAssetHelper {
     }
 
     public List<Solution> getAllSolutions() {
-        List<Solution> solutions = new LinkedList<Solution>();
+        List<Solution> solutions = new LinkedList<>();
 
         String query = "SELECT * FROM " + TABLE_SOLUTIONS;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -160,7 +160,7 @@ public class DataProvider extends SQLiteAssetHelper {
     }
 
     public List<Compound> getAllCompounds() {
-        List<Compound> compounds = new LinkedList<Compound>();
+        List<Compound> compounds = new LinkedList<>();
 
         String query = "SELECT  * FROM " + TABLE_COMPOUNDS;
         SQLiteDatabase db = this.getReadableDatabase();

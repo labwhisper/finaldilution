@@ -38,14 +38,14 @@ public class StartupActivity extends AppCompatActivity {
         appState.setCurrentSolution(appState.getDb().getSolution("Roztwor1"));
         List<Solution> solutionList = appState.getDb().getAllSolutions();
         ListView solutionListView = (ListView) findViewById(R.id.solutionListView);
-        ArrayAdapter<Solution> solutionListAdapter = new ArrayAdapter(
+        ArrayAdapter<Solution> solutionListAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, solutionList);
         solutionListView.setAdapter(solutionListAdapter);
         solutionListView.setOnItemClickListener(new SolutionChooseListener());
 
     }
 
-    class SolutionChooseListener implements AdapterView.OnItemClickListener {
+    private class SolutionChooseListener implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
