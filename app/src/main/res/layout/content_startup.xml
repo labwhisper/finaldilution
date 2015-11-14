@@ -20,26 +20,13 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/addNewSolutionButton" />
 
-    <TextView
-        android:id="@+id/startupTitleTextView"
+    <Button
+        android:id="@+id/addNewSolutionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/solutionListView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/solutionListView"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <Button
-        android:id="@+id/addNewSolutionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/startupTitleTextView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/startupTitleTextView"
-        android:layout_below="@+id/startupTitleTextView"
-        android:text="New Button" />
+        android:text="@string/add_new_solution_button_text" />
 </RelativeLayout>

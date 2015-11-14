@@ -1,7 +1,6 @@
 package com.druidpyrcel.biotech.finaldilution.model;
 
 public class Compound {
-    private int id;
     private String shortName;
     private String longName;
     private String chemicalFormula;
@@ -15,14 +14,6 @@ public class Compound {
         super();
         this.shortName = shortName;
         this.molarMass = molarMass;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getShortName() {

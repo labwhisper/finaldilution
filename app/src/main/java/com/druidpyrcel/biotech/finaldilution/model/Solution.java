@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Solution {
-    private int id;
     private String name;
     private double volume;
     private Map<Compound, Double> componentList;
@@ -57,14 +56,6 @@ public class Solution {
             niceOutput.append("\n");
         }
         return niceOutput.toString();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

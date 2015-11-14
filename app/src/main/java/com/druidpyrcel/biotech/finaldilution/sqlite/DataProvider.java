@@ -64,13 +64,33 @@ public class DataProvider extends SQLiteAssetHelper {
         values.put(SOLUTIONS_KEY_NAME, solution.getName());
         values.put(SOLUTIONS_KEY_VOLUME, solution.getVolume());
         db.insert(TABLE_SOLUTIONS, null, values);
+        String query = "SELECT * FROM " + TABLE_SOLUTIONS +
+                " WHERE " + SOLUTIONS_KEY_NAME + "=" + "'" + solution.getName() + "'";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor == null || !cursor.moveToFirst()) {
+            //TODO Show error, throw exception
+            return;
+        }
+
+        int solutionId = cursor.getInt(cursor.getColumnIndex(SOLUTIONS_KEY_ID));
 
         //add Components and assignments
         for (Map.Entry<Compound, Double> compound : solution.getComponentList().entrySet()) {
             ContentValues assignmentsValues = new ContentValues();
-            assignmentsValues.put(ASSIGNMENTS_KEY_COMPOUND, compound.getKey().getId());
-            assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, compound.getValue());
-            db.insert(TABLE_ASSIGNMENTS, null, assignmentsValues);
+            query = "SELECT * FROM " + TABLE_COMPOUNDS +
+                    " WHERE " + COMPOUNDS_KEY_SHORT_NAME + "=" +
+                    "'" + compound.getKey().getShortName() + "'";
+            cursor = db.rawQuery(query, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                int compoundId = cursor.getInt(cursor.getColumnIndex(COMPOUNDS_KEY_ID));
+                assignmentsValues.put(ASSIGNMENTS_KEY_COMPOUND, compoundId);
+                assignmentsValues.put(ASSIGNMENTS_KEY_SOLUTION, solutionId);
+                assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, compound.getValue());
+                db.insertWithOnConflict(TABLE_ASSIGNMENTS, null, assignmentsValues, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+
         }
         db.close();
     }
@@ -83,13 +103,14 @@ public class DataProvider extends SQLiteAssetHelper {
     public List<Solution> getAllSolutions() {
         List<Solution> solutions = new LinkedList<>();
 
-        String query = "SELECT * FROM " + TABLE_SOLUTIONS;
+        String query = "SELECT * FROM " + TABLE_SOLUTIONS +
+                " ORDER BY " + SOLUTIONS_KEY_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                Solution solution = fillSolution(db, cursor);
+                Solution solution = getSolutionContent(db, cursor);
                 solutions.add(solution);
             } while (cursor.moveToNext());
         }
@@ -112,7 +133,7 @@ public class DataProvider extends SQLiteAssetHelper {
             return null;
         }
 
-        Solution solution = fillSolution(db, cursor);
+        Solution solution = getSolutionContent(db, cursor);
 
         db.close();
         Log.d("getSolution(" + name + ")", solution.toString());
@@ -150,7 +171,7 @@ public class DataProvider extends SQLiteAssetHelper {
 
         cursor.moveToFirst();
 
-        Compound compound = fillCompound(cursor);
+        Compound compound = fetchCompound(cursor);
         db.close();
 
         Log.d("getCompound(" + shortName + ")", compound.toString());
@@ -160,13 +181,14 @@ public class DataProvider extends SQLiteAssetHelper {
     public List<Compound> getAllCompounds() {
         List<Compound> compounds = new LinkedList<>();
 
-        String query = "SELECT  * FROM " + TABLE_COMPOUNDS;
+        String query = "SELECT  * FROM " + TABLE_COMPOUNDS +
+                " ORDER BY " + COMPOUNDS_KEY_SHORT_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                Compound compound = fillCompound(cursor);
+                Compound compound = fetchCompound(cursor);
                 compounds.add(compound);
             } while (cursor.moveToNext());
         }
@@ -191,9 +213,8 @@ public class DataProvider extends SQLiteAssetHelper {
     }
 
     @NonNull
-    private Compound fillCompound(Cursor cursor) {
+    private Compound fetchCompound(Cursor cursor) {
         Compound compound = new Compound();
-        compound.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_ID))));
         compound.setShortName(cursor.getString(cursor.getColumnIndex(COMPOUNDS_KEY_SHORT_NAME)));
         compound.setMolarMass(cursor.getDouble(cursor.getColumnIndex(COMPOUNDS_KEY_MOLAR_MASS)));
         return compound;
@@ -201,9 +222,8 @@ public class DataProvider extends SQLiteAssetHelper {
 
 
     @NonNull
-    private Solution fillSolution(SQLiteDatabase db, Cursor cursor) {
+    private Solution getSolutionContent(SQLiteDatabase db, Cursor cursor) {
         Solution solution = new Solution();
-        solution.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_ID))));
         String name = cursor.getString(cursor.getColumnIndex(SOLUTIONS_KEY_NAME));
         solution.setName(name);
         solution.setVolume(cursor.getDouble(cursor.getColumnIndex(SOLUTIONS_KEY_VOLUME)));
@@ -215,7 +235,7 @@ public class DataProvider extends SQLiteAssetHelper {
         }
 
         do {
-            Compound compound = fillCompound(cursor);
+            Compound compound = fetchCompound(cursor);
             double quantity = cursor.getDouble(cursor.getColumnIndex(ASSIGNMENTS_KEY_QUANTITY));
             solution.addComponent(compound, quantity);
         } while (cursor.moveToNext());
