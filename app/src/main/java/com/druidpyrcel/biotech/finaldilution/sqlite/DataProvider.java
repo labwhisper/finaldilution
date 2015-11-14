@@ -61,7 +61,6 @@ public class DataProvider extends SQLiteAssetHelper {
     public void addSolution(Solution solution) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(SOLUTIONS_KEY_ID, solution.getId());
         values.put(SOLUTIONS_KEY_NAME, solution.getName());
         values.put(SOLUTIONS_KEY_VOLUME, solution.getVolume());
         db.insert(TABLE_SOLUTIONS, null, values);
@@ -69,7 +68,6 @@ public class DataProvider extends SQLiteAssetHelper {
         //add Components and assignments
         for (Map.Entry<Compound, Double> compound : solution.getComponentList().entrySet()) {
             ContentValues assignmentsValues = new ContentValues();
-            assignmentsValues.put(ASSIGNMENTS_KEY_SOLUTION, solution.getId());
             assignmentsValues.put(ASSIGNMENTS_KEY_COMPOUND, compound.getKey().getId());
             assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, compound.getValue());
             db.insert(TABLE_ASSIGNMENTS, null, assignmentsValues);
@@ -213,7 +211,6 @@ public class DataProvider extends SQLiteAssetHelper {
         cursor = selectAllSolutionAssociations(db, name);
 
         if (cursor == null || !cursor.moveToFirst()) {
-            db.close();
             return solution;
         }
 

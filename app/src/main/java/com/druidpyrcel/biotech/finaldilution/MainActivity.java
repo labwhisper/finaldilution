@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        appState.setCurrentSolution(appState.getDb().getSolution("Roztwor1"));
     }
 
     class CompoundChooseListener implements AdapterView.OnItemClickListener {
