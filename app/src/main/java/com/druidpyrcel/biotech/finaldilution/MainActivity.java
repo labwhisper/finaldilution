@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
 
 import java.text.DecimalFormat;
 
@@ -133,7 +134,21 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (amountInput.getText().length() != 0) {
-                                appState.getCurrentSolution().addComponent((Compound) parent.getAdapter().getItem(position), Double.parseDouble(amountInput.getText().toString()));
+                                Compound currentCompound = (Compound) (parent.getAdapter().getItem(position));
+                                try {
+                                    appState.getCurrentSolution().addComponent(currentCompound, Double.parseDouble(amountInput.getText().toString()));
+                                } catch (ItemExistsException e) {
+                                    final AlertDialog itemExistsDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                    itemExistsDialog.setTitle("Information");
+                                    itemExistsDialog.setMessage("Compound [" + currentCompound.getShortName() + "] already present");
+                                    itemExistsDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    itemExistsDialog.show();
+                                }
                                 compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
                             }
                         }

@@ -19,9 +19,14 @@ public class Solution {
         componentList = new HashMap<Compound, Double>();
     }
 
-    public boolean addComponent(Compound component, double molarConcentration) {
+    public boolean addComponent(Compound component, double molarConcentration) throws ItemExistsException {
         if (componentList.get(component) != null) {
             return false;
+        }
+        for (Map.Entry<Compound, Double> componentEntry : componentList.entrySet()) {
+            if (componentEntry.getKey().equals(component)) {
+                throw new ItemExistsException();
+            }
         }
         componentList.put(component, molarConcentration);
         return true;

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -237,7 +238,12 @@ public class DataProvider extends SQLiteAssetHelper {
         do {
             Compound compound = fetchCompound(cursor);
             double quantity = cursor.getDouble(cursor.getColumnIndex(ASSIGNMENTS_KEY_QUANTITY));
-            solution.addComponent(compound, quantity);
+            try {
+                solution.addComponent(compound, quantity);
+            } catch (ItemExistsException e) {
+                //Shouldn't happen
+                e.printStackTrace();
+            }
         } while (cursor.moveToNext());
 
         return solution;

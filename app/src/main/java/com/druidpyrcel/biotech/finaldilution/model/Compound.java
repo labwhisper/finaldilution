@@ -60,4 +60,16 @@ public class Compound {
     public String toString() {
         return shortName + " [" + molarMass + "]";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Compound)) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        Compound secondCompound = (Compound) o;
+        return shortName.equals(secondCompound.getShortName());
+    }
 }
