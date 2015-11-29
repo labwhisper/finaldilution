@@ -40,11 +40,27 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        displayVolumeText();
+        displayCompoundList();
+        displayBeakerImage();
+        displayFromEditToPrepButton();
+        displayTitleToolbar();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        appState.getDb().updateSolution(appState.getCurrentSolution());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void displayVolumeText() {
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-
-
-        compoundsTextView = (TextView) findViewById(R.id.compoundsTextView);
-        compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
         switcher = (ViewSwitcher) findViewById(R.id.volumeViewSwitcher);
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
@@ -96,16 +112,25 @@ public class EditActivity extends AppCompatActivity {
             }
         });
         switcher.showNext();
+    }
 
+    private void displayCompoundList() {
+        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        compoundsTextView = (TextView) findViewById(R.id.compoundsTextView);
+        compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
         ListView compoundsListView = (ListView) findViewById(R.id.compoundsListView);
         ArrayAdapter<Compound> compoundListAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, appState.getDb().getAllCompounds());
         compoundsListView.setAdapter(compoundListAdapter);
         compoundsListView.setOnItemClickListener(new CompoundChooseListener());
+    }
 
+    private void displayBeakerImage() {
         View beakerImage = findViewById(R.id.beakerRectangle);
         beakerImage.setOnClickListener(new BeakerClickListener());
+    }
 
+    private void displayFromEditToPrepButton() {
         Button fromEditToPrepareButton = (Button) findViewById(R.id.fromEditToPreparebutton);
         fromEditToPrepareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,22 +139,11 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void displayTitleToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        appState.getDb().updateSolution(appState.getCurrentSolution());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
     }
 
     class CompoundChooseListener implements AdapterView.OnItemClickListener {
