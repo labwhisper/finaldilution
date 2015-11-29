@@ -92,6 +92,8 @@ public class StartupActivity extends AppCompatActivity {
                                 appState.getDb().addSolution(solution);
                                 refreshSolutionList();
                                 appState.setCurrentSolution(appState.getDb().getSolution(solutionNamePicker.getText().toString()));
+                                Intent intent = new Intent(StartupActivity.this, EditActivity.class);
+                                startActivity(intent);
                             }
                         }
                     })
@@ -116,7 +118,7 @@ public class StartupActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
             appState.setCurrentSolution((Solution) parent.getAdapter().getItem(position));
-            Intent intent = new Intent(StartupActivity.this, MainActivity.class);
+            Intent intent = new Intent(StartupActivity.this, EditActivity.class);
             startActivity(intent);
         }
     }

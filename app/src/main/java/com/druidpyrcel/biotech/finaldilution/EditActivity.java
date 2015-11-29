@@ -3,9 +3,11 @@ package com.druidpyrcel.biotech.finaldilution;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +26,7 @@ import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
 
 import java.text.DecimalFormat;
 
-public class MainActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity {
 
     final Context context = this;
     ViewSwitcher switcher = null;
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_edit);
 
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
 
@@ -103,6 +106,16 @@ public class MainActivity extends AppCompatActivity {
         View beakerImage = findViewById(R.id.beakerRectangle);
         beakerImage.setOnClickListener(new BeakerClickListener());
 
+        Button fromEditToPrepareButton = (Button) findViewById(R.id.fromEditToPreparebutton);
+        fromEditToPrepareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditActivity.this, PrepActivity.class);
+                startActivity(intent);
+            }
+        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
 
@@ -123,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-            final EditText amountInput = new EditText(MainActivity.this);
+            final EditText amountInput = new EditText(EditActivity.this);
             final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
@@ -138,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     appState.getCurrentSolution().addComponent(currentCompound, Double.parseDouble(amountInput.getText().toString()));
                                 } catch (ItemExistsException e) {
-                                    final AlertDialog itemExistsDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                    final AlertDialog itemExistsDialog = new AlertDialog.Builder(EditActivity.this).create();
                                     itemExistsDialog.setTitle("Information");
                                     itemExistsDialog.setMessage("Compound [" + currentCompound.getShortName() + "] already present");
                                     itemExistsDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
