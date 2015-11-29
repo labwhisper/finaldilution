@@ -32,7 +32,7 @@ public class EditActivity extends AppCompatActivity {
     ViewSwitcher switcher = null;
     TextView volumeTextView = null;
     TextView volumeEditText = null;
-    TextView compoundsTextView;
+    TextView componentsTextView;
     DecimalFormat volFormat = new DecimalFormat("0.##");
 
     @Override
@@ -41,6 +41,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
 
         displayVolumeText();
+        displayComponentsList();
         displayCompoundList();
         displayBeakerImage();
         displayFromEditToPrepButton();
@@ -78,7 +79,7 @@ public class EditActivity extends AppCompatActivity {
                     CharSequence s = v.getText();
                     if (s.length() != 0) {
                         appState.getCurrentSolution().setVolumeMili(Double.parseDouble(s.toString()));
-                        compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
+                        componentsTextView.setText(appState.getCurrentSolution().calculateQuantities());
                         volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolumeMili()) + "ml");
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(volumeEditText.getWindowToken(), 0);
@@ -114,10 +115,14 @@ public class EditActivity extends AppCompatActivity {
         switcher.showNext();
     }
 
+    private void displayComponentsList() {
+        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        componentsTextView = (TextView) findViewById(R.id.componentsTextView);
+        componentsTextView.setText(appState.getCurrentSolution().calculateQuantities());
+    }
+
     private void displayCompoundList() {
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        compoundsTextView = (TextView) findViewById(R.id.compoundsTextView);
-        compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
         ListView compoundsListView = (ListView) findViewById(R.id.compoundsListView);
         ArrayAdapter<Compound> compoundListAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_1, appState.getDb().getAllCompounds());
@@ -126,6 +131,18 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void displayBeakerImage() {
+        //TODO : Merge listeners (common code)
+        class BeakerClickListener implements View.OnClickListener {
+
+            @Override
+            public void onClick(View v) {
+                //Switch to Edit Text
+                if (switcher.getCurrentView().equals(volumeTextView)) {
+                    switcher.showNext();
+                    volumeEditText.requestFocus();
+                }
+            }
+        }
         View beakerImage = findViewById(R.id.beakerRectangle);
         beakerImage.setOnClickListener(new BeakerClickListener());
     }
@@ -176,7 +193,7 @@ public class EditActivity extends AppCompatActivity {
                                     });
                                     itemExistsDialog.show();
                                 }
-                                compoundsTextView.setText(appState.getCurrentSolution().calculateQuantities());
+                                componentsTextView.setText(appState.getCurrentSolution().calculateQuantities());
                             }
                         }
                     })
@@ -198,16 +215,5 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
-    //TODO : Merge listeners (common code)
-    class BeakerClickListener implements View.OnClickListener {
 
-        @Override
-        public void onClick(View v) {
-            //Switch to Edit Text
-            if (switcher.getCurrentView().equals(volumeTextView)) {
-                switcher.showNext();
-                volumeEditText.requestFocus();
-            }
-        }
-    }
 }
