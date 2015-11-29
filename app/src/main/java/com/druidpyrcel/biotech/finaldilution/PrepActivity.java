@@ -1,11 +1,22 @@
 package com.druidpyrcel.biotech.finaldilution;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.druidpyrcel.biotech.finaldilution.model.Compound;
+
+import java.util.Map;
 
 public class PrepActivity extends AppCompatActivity {
 
@@ -22,7 +33,10 @@ public class PrepActivity extends AppCompatActivity {
 
 
     private void displayComponentListView() {
-
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        ChecklistAdapter adapter = new ChecklistAdapter(appState.getCurrentSolution().getComponentList());
+        ListView componentListView = (ListView) findViewById(R.id.checklist_listView);
+        componentListView.setAdapter(adapter);
     }
 
     private void displayFromPrepToEditButton() {
@@ -39,6 +53,81 @@ public class PrepActivity extends AppCompatActivity {
     private void displayTitleToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
+
+    private class ChecklistAdapter extends BaseAdapter {
+
+        private Map<Compound, Double> componentList;
+        private Compound[] keys;
+
+        public ChecklistAdapter(Map<Compound, Double> componentList) {
+            this.componentList = componentList;
+            this.keys = this.componentList.keySet().toArray(new Compound[componentList.size()]);
+        }
+
+        @Override
+        public int getCount() {
+            return componentList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return componentList.get(keys[position]);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder holder = null;
+
+            if (convertView == null) {
+                LayoutInflater vi = (LayoutInflater) getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                convertView = vi.inflate(R.layout.checklist, null);
+
+                holder = new ViewHolder();
+                holder.compoundTextView = (TextView) convertView.findViewById(R.id.checklist_mainTextView);
+                holder.percentageTextView = (TextView) convertView.findViewById(R.id.checklist_percentageTextView);
+                holder.unitTextView = (TextView) convertView.findViewById(R.id.checklist_unitextView);
+                holder.extraTextView = (TextView) convertView.findViewById(R.id.checklist_extraTextView);
+                holder.checkBox = (CheckBox) convertView.findViewById(R.id.checklist_checkBox1);
+                convertView.setTag(holder);
+
+//                holder.name.setOnClickListener(new View.OnClickListener() {
+//                    public void onClick(View view) {
+//                        CheckBox cb = (CheckBox) view;
+//                        Compound component = (Compound) cb.getTag();
+//                        component.setSelected(cb.isChecked());
+//                    }
+//                });
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            Compound component = keys[position];
+            Double quantity = (Double) getItem(position);
+            holder.compoundTextView.setText(component.getShortName());
+            holder.percentageTextView.setText(Double.toString(quantity));
+            holder.checkBox.setChecked(true);
+            holder.checkBox.setTag(component);
+
+            return convertView;
+
+        }
+
+        private class ViewHolder {
+            TextView compoundTextView;
+            TextView percentageTextView;
+            TextView unitTextView;
+            TextView extraTextView;
+            CheckBox checkBox;
+        }
+
     }
 
 }

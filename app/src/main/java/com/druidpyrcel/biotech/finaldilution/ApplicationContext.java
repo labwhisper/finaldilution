@@ -6,9 +6,10 @@ import com.druidpyrcel.biotech.finaldilution.model.Solution;
 import com.druidpyrcel.biotech.finaldilution.sqlite.DataProvider;
 
 public class ApplicationContext extends Application {
+    static double SWIPE_MIN_VELOCITY = 200;
+    static double SWIPE_MIN_DISTANCE = 100;
     private DataProvider db;
     private Solution currentSolution;
-
 
     public DataProvider getDb() {
         return db;

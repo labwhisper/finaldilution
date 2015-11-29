@@ -6,10 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +29,9 @@ import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
 
 import java.text.DecimalFormat;
 
+import static com.druidpyrcel.biotech.finaldilution.ApplicationContext.SWIPE_MIN_DISTANCE;
+import static com.druidpyrcel.biotech.finaldilution.ApplicationContext.SWIPE_MIN_VELOCITY;
+
 public class EditActivity extends AppCompatActivity {
 
     final Context context = this;
@@ -34,6 +40,7 @@ public class EditActivity extends AppCompatActivity {
     TextView volumeEditText = null;
     TextView componentsTextView;
     DecimalFormat volFormat = new DecimalFormat("0.##");
+    private GestureDetectorCompat detector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,8 @@ public class EditActivity extends AppCompatActivity {
         displayBeakerImage();
         displayFromEditToPrepButton();
         displayTitleToolbar();
+
+        detector = new GestureDetectorCompat(this, new EditGestureListener());
     }
 
     @Override
@@ -58,6 +67,12 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     private void displayVolumeText() {
@@ -215,5 +230,27 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
+    class EditGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            float ev1X = e1.getX();
+            float ev2X = e2.getX();
+            final float xdistance = Math.abs(ev1X - ev2X);
+            final float xvelocity = Math.abs(velocityX);
+
+            if ((xvelocity < SWIPE_MIN_VELOCITY) || (xdistance < SWIPE_MIN_DISTANCE)) {
+                return false;
+            }
+            if (ev1X > ev2X) {
+                Intent intent = new Intent(EditActivity.this, PrepActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(EditActivity.this, StartupActivity.class);
+                startActivity(intent);
+            }
+
+            return true;
+        }
+    }
 
 }

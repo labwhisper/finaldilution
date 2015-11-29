@@ -97,6 +97,7 @@ public class DataProvider extends SQLiteAssetHelper {
     }
 
     public void updateSolution(Solution solution) {
+        //TODO takes long time! Change it to update in base or even remove base
         deleteSolution(solution);
         addSolution(solution);
     }

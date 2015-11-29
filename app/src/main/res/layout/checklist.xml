@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dip">
+
+    <CheckBox
+        android:id="@+id/checklist_checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/checklist_mainTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Compound"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <View
+        android:id="@+id/checklist_centerShim"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/checklist_extraTextView"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+
+    <TextView
+        android:id="@+id/checklist_percentageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/checklist_mainTextView"
+        android:layout_toLeftOf="@+id/checklist_centerShim"
+        android:layout_toRightOf="@+id/checklist_mainTextView"
+        android:text="[%]"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/checklist_unitextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checklist_centerShim"
+        android:layout_alignStart="@+id/checklist_centerShim"
+        android:layout_alignTop="@+id/checklist_checkBox1"
+        android:layout_toLeftOf="@+id/checklist_checkBox1"
+        android:layout_toStartOf="@+id/checklist_checkBox1"
+        android:text="Unit"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/checklist_extraTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/checklist_checkBox1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/checklist_checkBox1"
+        android:layout_toStartOf="@+id/checklist_checkBox1"
+        android:text="Extra Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>
