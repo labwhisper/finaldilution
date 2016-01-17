@@ -7,58 +7,49 @@ import java.util.Map;
 public class Solution {
     private String name;
     private double volume;
-    private Map<Compound, Double> componentList;
+    private Map<String, Component> componentList;
 
     public Solution() {
-        componentList = new HashMap<Compound, Double>();
+        componentList = new HashMap<>();
     }
 
     public Solution(String name, double volumeMili) {
         this.name = name;
         this.volume = volumeMili / 1000;
-        componentList = new HashMap<Compound, Double>();
+        componentList = new HashMap<>();
     }
 
-    public boolean addComponent(Compound component, double molarConcentration) throws ItemExistsException {
-        if (componentList.get(component) != null) {
+    public boolean addComponent(Component component) throws ItemExistsException {
+        if (componentList.get(component.getCompound().getShortName()) != null) {
             return false;
         }
-        for (Map.Entry<Compound, Double> componentEntry : componentList.entrySet()) {
-            if (componentEntry.getKey().equals(component)) {
+        for (Map.Entry<String, Component> componentEntry : componentList.entrySet()) {
+            if (componentEntry.getKey().equals(component.getCompound().getShortName())) {
                 throw new ItemExistsException();
             }
         }
-        componentList.put(component, molarConcentration);
+        componentList.put(component.getCompound().getShortName(), component);
         return true;
     }
 
-    public void removeComponent(Compound component) {
-        componentList.remove(component);
+    public void removeComponent(Component component) {
+        componentList.remove(component.getCompound().getShortName());
     }
 
     public void clearSolution() {
         componentList.clear();
     }
 
-    public void changeConcentration(Compound component, double newMolarConcentration) {
-        componentList.put(component, newMolarConcentration);
+    public void changeConcentration(Component component, double newMolarConcentration) {
+        componentList.put(component.getCompound().getShortName(), component);
     }
 
 
     public String calculateQuantities() {
-        StringBuilder niceOutput = new StringBuilder(200);
-        for (Map.Entry<Compound, Double> compound : componentList.entrySet()) {
-            double finalMass = compound.getKey().getMolarMass() * compound.getValue() * volume;
-            niceOutput.append(compound.getKey().getShortName());
-            niceOutput.append(" : ");
-            if (finalMass > 1) {
-                niceOutput.append(String.format("%1$,.3f", finalMass));
-                niceOutput.append(" g");
-            } else {
-                niceOutput.append(String.format("%1$,.1f", finalMass * 1000));
-                niceOutput.append(" mg");
-            }
-            niceOutput.append("\n");
+        StringBuilder niceOutput = new StringBuilder(800);
+        for (Map.Entry<String, Component> component : componentList.entrySet()) {
+            niceOutput.append(component.getValue().getAmountString(volume));
+            niceOutput.append(System.getProperty("line.separator"));
         }
         return niceOutput.toString();
     }
@@ -87,11 +78,11 @@ public class Solution {
         this.volume = volumeMili / 1000;
     }
 
-    public Map<Compound, Double> getComponentList() {
+    public Map<String, Component> getComponentList() {
         return componentList;
     }
 
-    public void setComponentList(Map<Compound, Double> componentList) {
+    public void setComponentList(Map<String, Component> componentList) {
         this.componentList = componentList;
     }
 

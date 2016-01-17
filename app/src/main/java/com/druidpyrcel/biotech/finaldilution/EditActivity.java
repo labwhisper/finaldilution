@@ -24,7 +24,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.druidpyrcel.biotech.finaldilution.model.Concentration;
 import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
 
 import java.text.DecimalFormat;
@@ -195,7 +197,9 @@ public class EditActivity extends AppCompatActivity {
                             if (amountInput.getText().length() != 0) {
                                 Compound currentCompound = (Compound) (parent.getAdapter().getItem(position));
                                 try {
-                                    appState.getCurrentSolution().addComponent(currentCompound, Double.parseDouble(amountInput.getText().toString()));
+                                    Concentration concentration = new Concentration(Double.parseDouble(amountInput.getText().toString()), Concentration.ConcentrationType.MOLAR);
+                                    Component component = new Component(currentCompound, concentration);
+                                    appState.getCurrentSolution().addComponent(component);
                                 } catch (ItemExistsException e) {
                                     final AlertDialog itemExistsDialog = new AlertDialog.Builder(EditActivity.this).create();
                                     itemExistsDialog.setTitle("Information");

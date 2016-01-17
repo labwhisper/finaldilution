@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.druidpyrcel.biotech.finaldilution.model.Concentration;
 import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
@@ -77,18 +79,18 @@ public class DataProvider extends SQLiteAssetHelper {
         int solutionId = cursor.getInt(cursor.getColumnIndex(SOLUTIONS_KEY_ID));
 
         //add Components and assignments
-        for (Map.Entry<Compound, Double> compound : solution.getComponentList().entrySet()) {
+        for (Map.Entry<String, Component> component : solution.getComponentList().entrySet()) {
             ContentValues assignmentsValues = new ContentValues();
             query = "SELECT * FROM " + TABLE_COMPOUNDS +
                     " WHERE " + COMPOUNDS_KEY_SHORT_NAME + "=" +
-                    "'" + compound.getKey().getShortName() + "'";
+                    "'" + component.getKey() + "'";
             cursor = db.rawQuery(query, null);
 
             if (cursor != null && cursor.moveToFirst()) {
                 int compoundId = cursor.getInt(cursor.getColumnIndex(COMPOUNDS_KEY_ID));
                 assignmentsValues.put(ASSIGNMENTS_KEY_COMPOUND, compoundId);
                 assignmentsValues.put(ASSIGNMENTS_KEY_SOLUTION, solutionId);
-                assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, compound.getValue());
+                assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, component.getValue().getQuantity());
                 db.insertWithOnConflict(TABLE_ASSIGNMENTS, null, assignmentsValues, SQLiteDatabase.CONFLICT_REPLACE);
             }
 
@@ -240,7 +242,10 @@ public class DataProvider extends SQLiteAssetHelper {
             Compound compound = fetchCompound(cursor);
             double quantity = cursor.getDouble(cursor.getColumnIndex(ASSIGNMENTS_KEY_QUANTITY));
             try {
-                solution.addComponent(compound, quantity);
+                //TODO Change DB! to have components
+                Concentration concentration = new Concentration(quantity, Concentration.ConcentrationType.MOLAR);
+                Component component = new Component(compound, concentration);
+                solution.addComponent(component);
             } catch (ItemExistsException e) {
                 //Shouldn't happen
                 e.printStackTrace();

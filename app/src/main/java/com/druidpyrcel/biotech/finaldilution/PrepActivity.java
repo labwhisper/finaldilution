@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
 
 import java.util.Map;
@@ -57,12 +58,12 @@ public class PrepActivity extends AppCompatActivity {
 
     private class ChecklistAdapter extends BaseAdapter {
 
-        private Map<Compound, Double> componentList;
-        private Compound[] keys;
+        private Map<String, Component> componentList;
+        private String[] keys;
 
-        public ChecklistAdapter(Map<Compound, Double> componentList) {
+        public ChecklistAdapter(Map<String, Component> componentList) {
             this.componentList = componentList;
-            this.keys = this.componentList.keySet().toArray(new Compound[componentList.size()]);
+            this.keys = this.componentList.keySet().toArray(new String[componentList.size()]);
         }
 
         @Override
@@ -83,7 +84,7 @@ public class PrepActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            ViewHolder holder = null;
+            ViewHolder holder;
 
             if (convertView == null) {
                 LayoutInflater vi = (LayoutInflater) getSystemService(
@@ -109,11 +110,14 @@ public class PrepActivity extends AppCompatActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            Compound component = keys[position];
-            Double quantity = (Double) getItem(position);
+
+            ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+
+            Compound component = appState.getDb().getCompound(keys[position]);
+            Double quantity = ((Component) getItem(position)).getQuantity();
             holder.compoundTextView.setText(component.getShortName());
             holder.percentageTextView.setText(Double.toString(quantity));
-            holder.checkBox.setChecked(true);
+            holder.checkBox.setChecked(false);
             holder.checkBox.setTag(component);
 
             return convertView;
