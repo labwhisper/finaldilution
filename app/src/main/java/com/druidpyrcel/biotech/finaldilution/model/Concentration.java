@@ -2,16 +2,8 @@ package com.druidpyrcel.biotech.finaldilution.model;
 
 public class Concentration {
 
-    public enum ConcentrationType {
-        PERCENTAGE,
-        MOLAR,
-        MILIMOLAR,
-        MILIGRAM_PER_MILILITER;
-    }
-
     private double amount;
     private ConcentrationType type;
-
     public Concentration(double amount, ConcentrationType type) {
         this.amount = amount;
         this.type = type;
@@ -29,14 +21,14 @@ public class Concentration {
         return type;
     }
 
+    public void setType(ConcentrationType type) {
+        this.type = type;
+    }
+
     public enum ConcentrationType {
         PERCENTAGE,
         MOLAR,
         MILIMOLAR,
         MILIGRAM_PER_MILILITER;
-    }
-
-    public void setType(ConcentrationType type) {
-        this.type = type;
     }
 }
