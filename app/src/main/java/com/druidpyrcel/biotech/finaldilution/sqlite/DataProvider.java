@@ -90,7 +90,7 @@ public class DataProvider extends SQLiteAssetHelper {
                 int compoundId = cursor.getInt(cursor.getColumnIndex(COMPOUNDS_KEY_ID));
                 assignmentsValues.put(ASSIGNMENTS_KEY_COMPOUND, compoundId);
                 assignmentsValues.put(ASSIGNMENTS_KEY_SOLUTION, solutionId);
-                assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, component.getValue().getQuantity());
+                assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, component.getValue().getQuantity(solution.getVolume()));
                 db.insertWithOnConflict(TABLE_ASSIGNMENTS, null, assignmentsValues, SQLiteDatabase.CONFLICT_REPLACE);
             }
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.druidpyrcel.biotech.finaldilution.model.Solution;
 
 import java.util.Map;
 
@@ -113,8 +114,9 @@ public class PrepActivity extends AppCompatActivity {
 
             ApplicationContext appState = ((ApplicationContext) getApplicationContext());
 
+            Solution solution = appState.getCurrentSolution();
             Compound component = appState.getDb().getCompound(keys[position]);
-            Double quantity = ((Component) getItem(position)).getQuantity();
+            Double quantity = ((Component) getItem(position)).getQuantity(solution.getVolume());
             holder.compoundTextView.setText(component.getShortName());
             holder.percentageTextView.setText(Double.toString(quantity));
             holder.checkBox.setChecked(false);

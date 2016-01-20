@@ -6,9 +6,9 @@ package com.druidpyrcel.biotech.finaldilution.model;
 public class Component {
 
     private Compound compound;
-    private boolean fromStack;
+    private boolean fromStock;
     private Concentration desiredConcentration;
-    private Concentration ownedConcentration;
+    private Concentration ownedConcentration = null;
     private double quantity;
     //TODO addedToSolution should be in different list
     private boolean addedToSolution;
@@ -22,7 +22,7 @@ public class Component {
     public Component(Compound compound, Concentration desiredConcentration) {
         this.compound = compound;
         this.desiredConcentration = desiredConcentration;
-        this.fromStack = false;
+        this.fromStock = false;
     }
 
     /**
@@ -36,55 +36,87 @@ public class Component {
         this.compound = compound;
         this.desiredConcentration = desiredConcentration;
         this.ownedConcentration = ownedConcentration;
-        this.fromStack = true;
+        this.fromStock = true;
     }
 
     public String getAmountString(double volume) {
-        //TODO Add ownedConc + fromStack somehow
-        switch (desiredConcentration.getType()) {
-            case PERCENTAGE:
-                return getAmountForConc(volume);
-            case MOLAR:
-            default:
-                return getAmountForMolarConc(volume);
-            case MILIMOLAR:
-                return "Not implemented";
-            case MILIGRAM_PER_MILILITER:
-                return "Not implemented";
-        }
-//        if( fromStack ) {
-//            return getAmountStringStack(volume);
-//        } else {
-//            return getAmountStringCompound(volume);
-//        }
-    }
 
-    public String getAmountForConc(double volume) {
-        return "Not implemented";
-    }
-
-    public String getAmountForMolarConc(double volume) {
-
+        double amount = getQuantity(volume);
         StringBuilder niceOutput = new StringBuilder(200);
-        double finalMass = compound.getMolarMass() * desiredConcentration.getAmount() * volume;
         niceOutput.append(compound.getShortName());
         niceOutput.append(" : ");
-        if (finalMass > 1) {
-            niceOutput.append(String.format("%1$,.3f", finalMass));
-            niceOutput.append(" g");
+        if (amount > 1) {
+            niceOutput.append(String.format("%1$,.3f", amount));
+            if (fromStock) {
+                niceOutput.append(" ml");
+            } else {
+                niceOutput.append(" g");
+            }
         } else {
-            niceOutput.append(String.format("%1$,.1f", finalMass * 1000));
-            niceOutput.append(" mg");
+            niceOutput.append(String.format("%1$,.1f", amount * 1000));
+            if (fromStock) {
+                niceOutput.append(" ul");
+            } else {
+                niceOutput.append(" mg");
+            }
         }
         return niceOutput.toString();
     }
 
-    public double getQuantity() {
-        return quantity;
+    public double getQuantity(double volume) {
+        if (fromStock) {
+            return calcAmoutForDesiredMass(calcDesiredMass(volume));
+        } else {
+            return calcDesiredMass(volume);
+        }
     }
 
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
+    /**
+     * Calculate desired mass depending on desired concentration
+     *
+     * @param volume
+     * @return
+     */
+    private double calcDesiredMass(double volume) {
+
+        double c = desiredConcentration.getAmount();
+        double v = volume;
+        double M = compound.getMolarMass();
+        switch (desiredConcentration.getType()) {
+            case PERCENTAGE:
+                return c * v * 10;
+            case MOLAR:
+            default:
+                return c * v * M;
+            case MILIMOLAR:
+                return c * v * M / 1000;
+            case MILIGRAM_PER_MILILITER:
+                return c * v * 1000;
+        }
+    }
+
+    /**
+     * Calculate final amount using calculated desired mass
+     *
+     * @param desiredMass
+     * @return
+     */
+    private double calcAmoutForDesiredMass(double desiredMass) {
+
+        double c = ownedConcentration.getAmount();
+        double m = desiredMass;
+        double M = compound.getMolarMass();
+        switch (ownedConcentration.getType()) {
+            case PERCENTAGE:
+                return m / c;
+            case MOLAR:
+            default:
+                return m / M / c;
+            case MILIMOLAR:
+                return m / M / c * 1000;
+            case MILIGRAM_PER_MILILITER:
+                return m / c;
+        }
     }
 
     public Compound getCompound() {
@@ -92,14 +124,3 @@ public class Component {
     }
 
 }
-// Jak zrealizować, skoro:
-// Głównie używamy proszku, dodatkowo może być from stack.
-// Czyli mamy Component.
-//                boolean fromStack -- (g/ml, ownedConc)
-//                Concentration desiredConcentration
-//                Concentration ownedConcentration (only from stack)
-//                double calculateQuantity() (in g/ml  noStack/stack)
-//                double quantity
-//                String getQuantityString()
-
-//                Interface Concentration ( %, M, mg/ml, mM )
