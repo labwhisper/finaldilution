@@ -1,4 +1,4 @@
-package com.druidpyrcel.biotech.finaldilution;
+package com.druidpyrcel.biotech.finaldilution.view;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
+import com.druidpyrcel.biotech.finaldilution.R;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
 import com.druidpyrcel.biotech.finaldilution.sqlite.DataProvider;
 

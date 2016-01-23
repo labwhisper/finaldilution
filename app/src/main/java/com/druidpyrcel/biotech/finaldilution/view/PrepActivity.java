@@ -1,4 +1,4 @@
-package com.druidpyrcel.biotech.finaldilution;
+package com.druidpyrcel.biotech.finaldilution.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
+import com.druidpyrcel.biotech.finaldilution.R;
 import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
