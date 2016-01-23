@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".StartupActivity"
+            android:name=".view.StartupActivity"
             android:label="@string/title_activity_startup"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,11 +20,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EditActivity"
+            android:name=".view.EditActivity"
             android:label="@string/title_activity_edit"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".PrepActivity"
+            android:name=".view.PrepActivity"
             android:label="@string/title_activity_prepare"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
