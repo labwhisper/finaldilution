@@ -1,8 +1,6 @@
 package com.druidpyrcel.biotech.finaldilution.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,10 +23,7 @@ import android.widget.ViewSwitcher;
 
 import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
 import com.druidpyrcel.biotech.finaldilution.R;
-import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
-import com.druidpyrcel.biotech.finaldilution.model.Concentration;
-import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
 
 import java.text.DecimalFormat;
 
@@ -38,7 +32,6 @@ import static com.druidpyrcel.biotech.finaldilution.ApplicationContext.SWIPE_MIN
 
 public class EditActivity extends AppCompatActivity {
 
-    final Context context = this;
     ViewSwitcher switcher = null;
     TextView volumeTextView = null;
     TextView volumeEditText = null;
@@ -186,53 +179,8 @@ public class EditActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-            final EditText amountInput = new EditText(EditActivity.this);
-            final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-            alertDialogBuilder.setView(amountInput)
-                    .setMessage("Pick amount: ")
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (amountInput.getText().length() != 0) {
-                                Compound currentCompound = (Compound) (parent.getAdapter().getItem(position));
-                                try {
-                                    Concentration concentration = new Concentration(Double.parseDouble(amountInput.getText().toString()), Concentration.ConcentrationType.MOLAR);
-                                    Component component = new Component(currentCompound, concentration);
-                                    appState.getCurrentSolution().addComponent(component);
-                                } catch (ItemExistsException e) {
-                                    final AlertDialog itemExistsDialog = new AlertDialog.Builder(EditActivity.this).create();
-                                    itemExistsDialog.setTitle("Information");
-                                    itemExistsDialog.setMessage("Compound [" + currentCompound.getShortName() + "] already present");
-                                    itemExistsDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    itemExistsDialog.show();
-                                }
-                                componentsTextView.setText(appState.getCurrentSolution().calculateQuantities());
-                            }
-                        }
-                    })
-                    .setNegativeButton("Cancel", null);
-            final AlertDialog alertDialog = alertDialogBuilder.create();
-
-            //Set keyboard to numerical and to show immediately
-            amountInput.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            amountInput.setRawInputType(Configuration.KEYBOARD_12KEY);
-            amountInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    }
-                }
-            });
-            alertDialog.show();
+            CompoundChooseDialog compoundChooseDialog = new CompoundChooseDialog(EditActivity.this, componentsTextView, (Compound) (parent.getAdapter().getItem(position)));
+            compoundChooseDialog.show();
         }
     }
 
