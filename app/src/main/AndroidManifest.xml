@@ -22,10 +22,14 @@
         <activity
             android:name=".view.EditActivity"
             android:label="@string/title_activity_edit"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".view.PrepActivity"
             android:label="@string/title_activity_prepare"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".view.CompoundActivity"
+            android:label="@string/title_activity_compound"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

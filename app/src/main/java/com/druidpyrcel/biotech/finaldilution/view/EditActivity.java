@@ -179,8 +179,10 @@ public class EditActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-            CompoundChooseDialog compoundChooseDialog = new CompoundChooseDialog(EditActivity.this, componentsTextView, (Compound) (parent.getAdapter().getItem(position)));
-            compoundChooseDialog.show();
+            Intent intent = new Intent(EditActivity.this, CompoundActivity.class);
+            startActivity(intent);
+//            CompoundChooseDialog compoundChooseDialog = new CompoundChooseDialog(EditActivity.this, componentsTextView, (Compound) (parent.getAdapter().getItem(position)));
+//            compoundChooseDialog.show();
         }
     }
 
