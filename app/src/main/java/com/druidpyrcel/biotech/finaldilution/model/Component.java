@@ -108,7 +108,7 @@ public class Component {
         double M = compound.getMolarMass();
         switch (ownedConcentration.getType()) {
             case PERCENTAGE:
-                return m / c;
+                return m / c * 100;
             case MOLAR:
             default:
                 return m / M / c;
