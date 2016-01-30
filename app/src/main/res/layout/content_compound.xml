@@ -12,62 +12,65 @@
     tools:context="com.druidpyrcel.biotech.finaldilution.view.CompoundActivity"
     tools:showIn="@layout/activity_choose_compound">
 
-    <View
-        android:id="@+id/secondView"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_centerVertical="true" />
 
-    <HorizontalScrollView
-        android:id="@+id/desiredConcHorizontalScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RadioGroup
+        android:id="@+id/desiredConcButtonsBar"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
         android:layout_above="@+id/secondView"
         android:layout_alignEnd="@+id/secondView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/secondView">
+        android:layout_alignRight="@+id/secondView"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/desiredPercentageConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:gravity="center"
+            android:text="%" />
 
-            <Button
-                android:id="@+id/desiredPercentageConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:text="%" />
+        <RadioButton
+            android:id="@+id/desiredMolarConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:text="mol" />
 
-            <Button
-                android:id="@+id/desiredMolarConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:text="mol" />
+        <RadioButton
+            android:id="@+id/desiredMilimolarConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:gravity="center"
+            android:text="mmol" />
 
-            <Button
-                android:id="@+id/desiredMilimolarConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:text="mMOL" />
-
-            <Button
-                android:id="@+id/desiredMgMlConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:text="mg/ml" />
-        </LinearLayout>
-    </HorizontalScrollView>
+        <RadioButton
+            android:id="@+id/desiredMgMlConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:gravity="center"
+            android:text="mg/ml" />
+    </RadioGroup>
 
     <EditText
         android:id="@+id/desiredConcEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/desiredConcHorizontalScrollView"
+        android:layout_above="@+id/desiredConcButtonsBar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:ems="10"
@@ -85,7 +88,13 @@
         android:text="Desired concentration"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
+    <View
+        android:id="@+id/secondView"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_centerVertical="true" />
+
+    <ToggleButton
         android:id="@+id/enableStockDilutionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -94,77 +103,106 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/secondView"
         android:layout_below="@+id/secondView"
-        android:layout_marginTop="33dp"
         android:clickable="false"
-        android:text="Dilution from stock" />
+        android:textOff="Dilution from stock"
+        android:textOn="Dilution from stock" />
 
     <TextView
         android:id="@+id/stockConcTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/stockConcEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/enableStockDilutionButton"
         android:text="Stock concentration"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="invisible" />
 
     <EditText
         android:id="@+id/stockConcEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/stockConcButtonsBar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/stockConcTextView"
         android:clickable="false"
         android:ems="10"
-        android:inputType="number" />
+        android:inputType="number"
+        android:visibility="invisible" />
 
-    <HorizontalScrollView
-        android:id="@+id/stockConcScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/secondView"
+    <RadioGroup
+        android:id="@+id/stockConcButtonsBar"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/buttonAddCompoundDone"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/secondView"
-        android:layout_below="@+id/stockConcEditText">
+        android:orientation="horizontal"
+        android:visibility="invisible">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/stockPercentageConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:gravity="center"
+            android:text="%"
+            android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/stockPercentageConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:clickable="false"
-                android:text="%" />
+        <RadioButton
+            android:id="@+id/stockMolarConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:gravity="center"
+            android:text="mol"
+            android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/stockMolarConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:clickable="false"
-                android:text="mol" />
+        <RadioButton
+            android:id="@+id/stockMilimolarConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:gravity="center"
+            android:text="mmol"
+            android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/stockMilimolarConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:clickable="false"
-                android:text="mMOL" />
+        <RadioButton
+            android:id="@+id/stockMgMlConcButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".25"
+            android:background="@drawable/button_states"
+            android:button="@null"
+            android:gravity="center"
+            android:text="mg/ml"
+            android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/stockMgMlConcButton"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight=".25"
-                android:clickable="false"
-                android:text="mg/ml" />
-        </LinearLayout>
-    </HorizontalScrollView>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonAddCompoundDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom"
+        android:text="DONE" />
+
+    <Button
+        android:id="@+id/buttonAddCompoundCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="CANCEL" />
+
 </RelativeLayout>

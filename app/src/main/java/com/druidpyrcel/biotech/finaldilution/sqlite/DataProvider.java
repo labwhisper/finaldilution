@@ -92,6 +92,7 @@ public class DataProvider extends SQLiteAssetHelper {
                 assignmentsValues.put(ASSIGNMENTS_KEY_SOLUTION, solutionId);
                 assignmentsValues.put(ASSIGNMENTS_KEY_QUANTITY, component.getValue().getQuantity(solution.getVolume()));
                 db.insertWithOnConflict(TABLE_ASSIGNMENTS, null, assignmentsValues, SQLiteDatabase.CONFLICT_REPLACE);
+                cursor.close();
             }
 
         }
@@ -234,7 +235,7 @@ public class DataProvider extends SQLiteAssetHelper {
 
         cursor = selectAllSolutionAssociations(db, name);
 
-        if (cursor == null || !cursor.moveToFirst()) {
+        if (!cursor.moveToFirst()) {
             return solution;
         }
 

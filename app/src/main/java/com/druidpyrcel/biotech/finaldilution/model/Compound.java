@@ -1,6 +1,8 @@
 package com.druidpyrcel.biotech.finaldilution.model;
 
-public class Compound {
+import java.io.Serializable;
+
+public class Compound implements Serializable {
     private String shortName;
     private String longName;
     private String chemicalFormula;
@@ -72,4 +74,5 @@ public class Compound {
         Compound secondCompound = (Compound) o;
         return shortName.equals(secondCompound.getShortName());
     }
+
 }

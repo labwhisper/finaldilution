@@ -9,15 +9,14 @@ public class Component {
     private boolean fromStock;
     private Concentration desiredConcentration;
     private Concentration ownedConcentration = null;
-    private double quantity;
     //TODO addedToSolution should be in different list
     private boolean addedToSolution;
 
     /**
      * Generate component using compound - default
      *
-     * @param compound
-     * @param desiredConcentration
+     * @param compound - compound to be added to solution
+     * @param desiredConcentration - concentration required in final solution
      */
     public Component(Compound compound, Concentration desiredConcentration) {
         this.compound = compound;
@@ -28,9 +27,9 @@ public class Component {
     /**
      * Generate component using prepared stack concentration
      *
-     * @param compound
-     * @param desiredConcentration
-     * @param ownedConcentration
+     * @param compound - compound to be added to solution
+     * @param desiredConcentration - concentration required in final solution
+     * @param ownedConcentration - concentration available in lab
      */
     public Component(Compound compound, Concentration desiredConcentration, Concentration ownedConcentration) {
         this.compound = compound;
@@ -74,48 +73,46 @@ public class Component {
     /**
      * Calculate desired mass depending on desired concentration
      *
-     * @param volume
-     * @return
+     * @param volume - volume of the final solution
+     * @return - desired mass
      */
     private double calcDesiredMass(double volume) {
 
         double c = desiredConcentration.getAmount();
-        double v = volume;
         double M = compound.getMolarMass();
         switch (desiredConcentration.getType()) {
             case PERCENTAGE:
-                return c * v * 10;
+                return c * volume * 10;
             case MOLAR:
             default:
-                return c * v * M;
+                return c * volume * M;
             case MILIMOLAR:
-                return c * v * M / 1000;
-            case MILIGRAM_PER_MILILITER:
-                return c * v * 1000;
+                return c * volume * M / 1000;
+            case MILIGRAM_PER_MILLILITER:
+                return c * volume * 1000;
         }
     }
 
     /**
      * Calculate final amount using calculated desired mass
      *
-     * @param desiredMass
-     * @return
+     * @param mass - mass required in final solution
+     * @return - amount of compound to be taken (in g or ml)
      */
-    private double calcAmoutForDesiredMass(double desiredMass) {
+    private double calcAmoutForDesiredMass(double mass) {
 
         double c = ownedConcentration.getAmount();
-        double m = desiredMass;
         double M = compound.getMolarMass();
         switch (ownedConcentration.getType()) {
             case PERCENTAGE:
-                return m / c * 100;
+                return mass / c * 100;
             case MOLAR:
             default:
-                return m / M / c;
+                return mass / M / c;
             case MILIMOLAR:
-                return m / M / c * 1000;
-            case MILIGRAM_PER_MILILITER:
-                return m / c;
+                return mass / M / c * 1000;
+            case MILIGRAM_PER_MILLILITER:
+                return mass / c;
         }
     }
 

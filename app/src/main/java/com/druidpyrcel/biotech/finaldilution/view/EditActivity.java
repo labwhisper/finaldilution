@@ -180,9 +180,8 @@ public class EditActivity extends AppCompatActivity {
         @Override
         public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
             Intent intent = new Intent(EditActivity.this, CompoundActivity.class);
+            intent.putExtra("compound", (Compound) (parent.getAdapter().getItem(position)));
             startActivity(intent);
-//            CompoundChooseDialog compoundChooseDialog = new CompoundChooseDialog(EditActivity.this, componentsTextView, (Compound) (parent.getAdapter().getItem(position)));
-//            compoundChooseDialog.show();
         }
     }
 

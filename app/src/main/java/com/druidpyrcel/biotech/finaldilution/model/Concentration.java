@@ -29,6 +29,6 @@ public class Concentration {
         PERCENTAGE,
         MOLAR,
         MILIMOLAR,
-        MILIGRAM_PER_MILILITER;
+        MILIGRAM_PER_MILLILITER
     }
 }
