@@ -1,15 +1,19 @@
 package com.druidpyrcel.biotech.finaldilution.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
@@ -27,6 +31,12 @@ public class CompoundActivity extends AppCompatActivity {
     Compound compound;
     Concentration.ConcentrationType desiredConcType;
     Concentration.ConcentrationType stockConcType;
+    private List<View> desiredViewsList;
+    private List<View> stockViewsList;
+
+    public CompoundActivity() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +45,23 @@ public class CompoundActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        stockViewsList = new ArrayList<>();
+        stockViewsList.add(findViewById(R.id.stockConcEditText));
+        stockViewsList.add(findViewById(R.id.stockConcButtonsBar));
+        stockViewsList.add(findViewById(R.id.stockConcTextView));
+        stockViewsList.add(findViewById(R.id.stockPercentageConcButton));
+        stockViewsList.add(findViewById(R.id.stockMolarConcButton));
+        stockViewsList.add(findViewById(R.id.stockMilimolarConcButton));
+        stockViewsList.add(findViewById(R.id.stockMgMlConcButton));
+
+        desiredViewsList = new ArrayList<>();
+        desiredViewsList.add(findViewById(R.id.desiredConcEditText));
+        desiredViewsList.add(findViewById(R.id.desiredConcButtonsBar));
+        desiredViewsList.add(findViewById(R.id.desiredConcTextView));
+        desiredViewsList.add(findViewById(R.id.desiredPercentageConcButton));
+        desiredViewsList.add(findViewById(R.id.desiredMolarConcButton));
+        desiredViewsList.add(findViewById(R.id.desiredMilimolarConcButton));
+        desiredViewsList.add(findViewById(R.id.desiredMgMlConcButton));
         compound = (Compound) getIntent().getSerializableExtra("compound");
 
         findViewById(R.id.desiredConcButtonsBar).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -51,6 +78,7 @@ public class CompoundActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 desiredConcType = Concentration.ConcentrationType.PERCENTAGE;
+                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("%");
             }
         });
 
@@ -58,6 +86,7 @@ public class CompoundActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 desiredConcType = Concentration.ConcentrationType.MOLAR;
+                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("M/l");
             }
         });
 
@@ -65,6 +94,7 @@ public class CompoundActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 desiredConcType = Concentration.ConcentrationType.MILIMOLAR;
+                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mM/l");
             }
         });
 
@@ -72,6 +102,7 @@ public class CompoundActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 desiredConcType = Concentration.ConcentrationType.MILIGRAM_PER_MILLILITER;
+                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mg/ml");
             }
         });
 
@@ -127,35 +158,35 @@ public class CompoundActivity extends AppCompatActivity {
     }
 
     private void setKeyboardOnInputs() {
-        EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
+        final EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
         desiredConcEditText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         desiredConcEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
+        desiredConcEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    // hide virtual keyboard
+                    InputMethodManager imm =
+                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(desiredConcEditText.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void renderButtonsSquare() {
-        View buttonsBar = findViewById(R.id.desiredConcButtonsBar);
-        RelativeLayout.LayoutParams params;
-        params = (RelativeLayout.LayoutParams) buttonsBar.getLayoutParams();
-        params.height = buttonsBar.getWidth() / 4;
-        buttonsBar.setLayoutParams(params);
-        buttonsBar.postInvalidate();
-        View stockButtonsBar = findViewById(R.id.stockConcButtonsBar);
-        params = (RelativeLayout.LayoutParams) stockButtonsBar.getLayoutParams();
-        params.height = stockButtonsBar.getWidth() / 4;
-        stockButtonsBar.setLayoutParams(params);
-        stockButtonsBar.postInvalidate();
+        RadioGroup buttonsBar = (RadioGroup) findViewById(R.id.desiredConcButtonsBar);
+        buttonsBar.getLayoutParams().height = buttonsBar.getWidth() / 4;
+
+        RadioGroup stockButtonsBar = (RadioGroup) findViewById(R.id.stockConcButtonsBar);
+        stockButtonsBar.getLayoutParams().height = buttonsBar.getWidth() / 4;
     }
 
     private void toggleSolutionFromStock() {
-        List<View> stockViewsList = new ArrayList<>();
-        stockViewsList.add(findViewById(R.id.stockConcEditText));
-        stockViewsList.add(findViewById(R.id.stockConcButtonsBar));
-        stockViewsList.add(findViewById(R.id.stockConcTextView));
-        stockViewsList.add(findViewById(R.id.stockPercentageConcButton));
-        stockViewsList.add(findViewById(R.id.stockMolarConcButton));
-        stockViewsList.add(findViewById(R.id.stockMilimolarConcButton));
-        stockViewsList.add(findViewById(R.id.stockMgMlConcButton));
-
         boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
         for (View stockView : stockViewsList) {
             if (fromStock) {
