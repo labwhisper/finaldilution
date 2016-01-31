@@ -64,7 +64,7 @@ public class Component {
 
     public double getQuantity(double volume) {
         if (fromStock) {
-            return calcAmoutForDesiredMass(calcDesiredMass(volume));
+            return calcVolumeForDesiredMass(calcDesiredMass(volume));
         } else {
             return calcDesiredMass(volume);
         }
@@ -73,8 +73,8 @@ public class Component {
     /**
      * Calculate desired mass depending on desired concentration
      *
-     * @param volume - volume of the final solution
-     * @return - desired mass
+     * @param volume - volume[ml] of the final solution
+     * @return - desired mass[g]
      */
     private double calcDesiredMass(double volume) {
 
@@ -82,24 +82,24 @@ public class Component {
         double M = compound.getMolarMass();
         switch (desiredConcentration.getType()) {
             case PERCENTAGE:
-                return c * volume * 10;
+                return c * volume / 100;
             case MOLAR:
             default:
-                return c * volume * M;
-            case MILIMOLAR:
                 return c * volume * M / 1000;
+            case MILIMOLAR:
+                return c * volume * M / 1000 / 1000;
             case MILIGRAM_PER_MILLILITER:
-                return c * volume * 1000;
+                return c * volume / 1000;
         }
     }
 
     /**
-     * Calculate final amount using calculated desired mass
+     * Calculate component volume using calculated desired mass
      *
-     * @param mass - mass required in final solution
-     * @return - amount of compound to be taken (in g or ml)
+     * @param mass - mass[g] required in final solution
+     * @return - volume[ml] of compound to be taken
      */
-    private double calcAmoutForDesiredMass(double mass) {
+    private double calcVolumeForDesiredMass(double mass) {
 
         double c = ownedConcentration.getAmount();
         double M = compound.getMolarMass();
@@ -108,11 +108,11 @@ public class Component {
                 return mass / c * 100;
             case MOLAR:
             default:
-                return mass / M / c;
-            case MILIMOLAR:
                 return mass / M / c * 1000;
+            case MILIMOLAR:
+                return mass / M / c * 1000 * 1000;
             case MILIGRAM_PER_MILLILITER:
-                return mass / c;
+                return mass / c * 1000;
         }
     }
 
