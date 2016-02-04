@@ -158,24 +158,29 @@ public class CompoundActivity extends AppCompatActivity {
     }
 
     private void setKeyboardOnInputs() {
-        final EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
-        desiredConcEditText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        desiredConcEditText.setRawInputType(Configuration.KEYBOARD_12KEY);
-        desiredConcEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        List<EditText> concEditTexts = new ArrayList<>();
+        concEditTexts.add((EditText) findViewById(R.id.desiredConcEditText));
+        concEditTexts.add((EditText) findViewById(R.id.stockConcEditText));
+        for (EditText editText : concEditTexts) {
 
-            @Override
-            public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    // hide virtual keyboard
-                    InputMethodManager imm =
-                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(desiredConcEditText.getWindowToken(), 0);
-                    return true;
+            editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            editText.setRawInputType(Configuration.KEYBOARD_12KEY);
+            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+                @Override
+                public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                        // hide virtual keyboard
+                        InputMethodManager imm =
+                                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
 
     private void renderButtonsSquare() {
