@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
 import com.druidpyrcel.biotech.finaldilution.R;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
-import com.druidpyrcel.biotech.finaldilution.sqlite.DataProvider;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -32,8 +31,6 @@ public class StartupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        appState.setDb(new DataProvider(appState));
-
         Button newSolutionButton = (Button) findViewById(R.id.addNewSolutionButton);
         newSolutionButton.setOnClickListener(new OnNewSolutionButtonClickListener());
 
@@ -65,8 +62,8 @@ public class StartupActivity extends AppCompatActivity {
                 TextView text2 = (TextView) view.findViewById(android.R.id.text2);
                 Solution solution = solutionList.get(position);
                 text1.setText(solution.getName());
-                text2.setText(volFormat.format(solution.getVolumeMili()) + " ml  "
-                        + solution.getComponentList().size() + " components");
+                text2.setText(volFormat.format(solution.getVolume()) + " ml  "
+                        + solution.getComponents().size() + " components");
                 return view;
             }
         };

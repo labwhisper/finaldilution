@@ -77,8 +77,8 @@ public class EditActivity extends AppCompatActivity {
         switcher = (ViewSwitcher) findViewById(R.id.volumeViewSwitcher);
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
-        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolumeMili()) + "ml");
-        volumeEditText.setText(volFormat.format(appState.getCurrentSolution().getVolumeMili()));
+        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
+        volumeEditText.setText(volFormat.format(appState.getCurrentSolution().getVolume()));
         volumeEditText.setSelectAllOnFocus(true);
         volumeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -90,9 +90,9 @@ public class EditActivity extends AppCompatActivity {
                 try {
                     CharSequence s = v.getText();
                     if (s.length() != 0) {
-                        appState.getCurrentSolution().setVolumeMili(Double.parseDouble(s.toString()));
+                        appState.getCurrentSolution().setVolume(Double.parseDouble(s.toString()));
                         componentsTextView.setText(appState.getCurrentSolution().calculateQuantities());
-                        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolumeMili()) + "ml");
+                        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(volumeEditText.getWindowToken(), 0);
                     }

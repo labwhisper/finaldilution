@@ -7,8 +7,11 @@ import de.greenrobot.daogenerator.Schema;
 import de.greenrobot.daogenerator.ToMany;
 
 public class FinalDilutionDaoGenerator {
+
+    public static final int DATABASE_VERSION = 1;
+
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1, "com.druidpyrcel.biotech.finaldilution.model");
+        Schema schema = new Schema(DATABASE_VERSION, "com.druidpyrcel.biotech.finaldilution.model");
         schema.enableKeepSectionsByDefault();
         addTables(schema);
         new DaoGenerator().generateAll(schema, "./app/src/main/java");
@@ -45,6 +48,7 @@ public class FinalDilutionDaoGenerator {
         Entity compound = schema.addEntity("Compound");
         compound.addStringProperty("shortName").primaryKey();
         compound.addDoubleProperty("molarMass");
+        compound.implementsSerializable();
         return compound;
     }
 
@@ -52,7 +56,7 @@ public class FinalDilutionDaoGenerator {
         Entity concentration = schema.addEntity("Concentration");
         concentration.addIdProperty().primaryKey();
         concentration.addDoubleProperty("amount");
-        concentration.addIntProperty("type").customType("com.druidpyrcel.biotech.finaldilution.model.Concentration.ConcentrationType", "com.druidpyrcel.biotech.finaldilution.model.Concentration.ConcentrationConverter"
+        concentration.addIntProperty("type").customType("com.druidpyrcel.biotech.finaldilution.model.ConcentrationType", "com.druidpyrcel.biotech.finaldilution.model.ConcentrationConverter"
         );
         return concentration;
     }

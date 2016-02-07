@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
-import com.druidpyrcel.biotech.finaldilution.sqlite.DataProvider;
+import com.druidpyrcel.biotech.finaldilution.model.sqlite.DataProvider;
 
 public class ApplicationContext extends Application {
     public static double SWIPE_MIN_VELOCITY = 200;
@@ -13,20 +13,19 @@ public class ApplicationContext extends Application {
     private DataProvider db;
     private Solution currentSolution;
 
-    public ApplicationContext(){
+    public ApplicationContext() {
         instance = this;
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return instance;
     }
 
     public DataProvider getDb() {
+        if (db == null) {
+            db = new DataProvider(this);
+        }
         return db;
-    }
-
-    public void setDb(DataProvider db) {
-        this.db = db;
     }
 
     public Solution getCurrentSolution() {

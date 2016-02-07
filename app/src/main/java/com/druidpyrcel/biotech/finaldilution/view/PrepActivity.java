@@ -20,7 +20,7 @@ import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
 
-import java.util.Map;
+import java.util.List;
 
 public class PrepActivity extends AppCompatActivity {
 
@@ -38,7 +38,7 @@ public class PrepActivity extends AppCompatActivity {
 
     private void displayComponentListView() {
         ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        ChecklistAdapter adapter = new ChecklistAdapter(appState.getCurrentSolution().getComponentList());
+        ChecklistAdapter adapter = new ChecklistAdapter(appState.getCurrentSolution().getComponents());
         ListView componentListView = (ListView) findViewById(R.id.checklist_listView);
         componentListView.setAdapter(adapter);
     }
@@ -61,12 +61,11 @@ public class PrepActivity extends AppCompatActivity {
 
     private class ChecklistAdapter extends BaseAdapter {
 
-        private Map<String, Component> componentList;
+        private List<Component> componentList;
         private String[] keys;
 
-        public ChecklistAdapter(Map<String, Component> componentList) {
+        public ChecklistAdapter(List<Component> componentList) {
             this.componentList = componentList;
-            this.keys = this.componentList.keySet().toArray(new String[componentList.size()]);
         }
 
         @Override
@@ -76,7 +75,7 @@ public class PrepActivity extends AppCompatActivity {
 
         @Override
         public Object getItem(int position) {
-            return componentList.get(keys[position]);
+            return componentList.get(position);
         }
 
         @Override

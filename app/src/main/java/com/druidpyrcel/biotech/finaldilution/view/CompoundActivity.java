@@ -21,7 +21,7 @@ import com.druidpyrcel.biotech.finaldilution.R;
 import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
 import com.druidpyrcel.biotech.finaldilution.model.Concentration;
-import com.druidpyrcel.biotech.finaldilution.model.ItemExistsException;
+import com.druidpyrcel.biotech.finaldilution.model.ConcentrationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ import java.util.List;
 public class CompoundActivity extends AppCompatActivity {
 
     Compound compound;
-    Concentration.ConcentrationType desiredConcType;
-    Concentration.ConcentrationType stockConcType;
+    ConcentrationType desiredConcType;
+    ConcentrationType stockConcType;
     private List<View> desiredViewsList;
     private List<View> stockViewsList;
 
@@ -77,7 +77,7 @@ public class CompoundActivity extends AppCompatActivity {
         findViewById(R.id.desiredPercentageConcButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                desiredConcType = Concentration.ConcentrationType.PERCENTAGE;
+                desiredConcType = ConcentrationType.PERCENTAGE;
                 ((EditText) findViewById(R.id.desiredConcEditText)).setHint("%");
             }
         });
@@ -85,7 +85,7 @@ public class CompoundActivity extends AppCompatActivity {
         findViewById(R.id.desiredMolarConcButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                desiredConcType = Concentration.ConcentrationType.MOLAR;
+                desiredConcType = ConcentrationType.MOLAR;
                 ((EditText) findViewById(R.id.desiredConcEditText)).setHint("M/l");
             }
         });
@@ -93,7 +93,7 @@ public class CompoundActivity extends AppCompatActivity {
         findViewById(R.id.desiredMilimolarConcButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                desiredConcType = Concentration.ConcentrationType.MILIMOLAR;
+                desiredConcType = ConcentrationType.MILIMOLAR;
                 ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mM/l");
             }
         });
@@ -101,7 +101,7 @@ public class CompoundActivity extends AppCompatActivity {
         findViewById(R.id.desiredMgMlConcButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                desiredConcType = Concentration.ConcentrationType.MILIGRAM_PER_MILLILITER;
+                desiredConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
                 ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mg/ml");
             }
         });
@@ -141,20 +141,19 @@ public class CompoundActivity extends AppCompatActivity {
             (new Anim()).blink(desiredConcEditText);
             return;
         }
-        Concentration concentration = new Concentration(Double.parseDouble(desiredConcEditText.getText().toString()), desiredConcType);
-        Component component = new Component(compound, concentration);
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        Concentration concentration = new Concentration();
+        concentration.setAmount(Double.parseDouble(desiredConcEditText.getText().toString()));
+        concentration.setType(desiredConcType);
+        Component component = new Component();
+        component.setSolution(appState.getCurrentSolution());
+        component.setCompound(compound);
+        component.setDesiredConcentration(concentration);
 
-        try {
-            ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-            appState.getCurrentSolution().addComponent(component);
+        Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
+        startActivity(intent);
+        //TODO WHEN ITEM EXISTS SHOW STH? OR BEFORE EVEN OPENING COMP.ACTIVITY?
 
-            Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
-            startActivity(intent);
-        } catch (ItemExistsException e) {
-            //TODO WHEN ITEM EXISTS SHOW STH? OR BEFORE EVEN OPENING COMP.ACTIVITY?
-            e.printStackTrace();
-
-        }
     }
 
     private void setKeyboardOnInputs() {

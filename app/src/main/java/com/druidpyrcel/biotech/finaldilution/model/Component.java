@@ -16,21 +16,15 @@ public class Component {
      * Not-null value.
      */
     private String solutionName;
-    /**
-     * Not-null value.
-     */
+    /** Not-null value. */
     private String compoundShortName;
     private long desConcId;
     private Long availConcId;
 
-    /**
-     * Used to resolve relations
-     */
+    /** Used to resolve relations */
     private transient DaoSession daoSession;
 
-    /**
-     * Used for active entity operations.
-     */
+    /** Used for active entity operations. */
     private transient ComponentDao myDao;
 
     private Solution solution;
@@ -60,9 +54,7 @@ public class Component {
         this.availConcId = availConcId;
     }
 
-    /**
-     * called by internal mechanisms, do not call yourself.
-     */
+    /** called by internal mechanisms, do not call yourself. */
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getComponentDao() : null;
@@ -76,30 +68,22 @@ public class Component {
         this.fromStock = fromStock;
     }
 
-    /**
-     * Not-null value.
-     */
+    /** Not-null value. */
     public String getSolutionName() {
         return solutionName;
     }
 
-    /**
-     * Not-null value; ensure this value is available before it is saved to the database.
-     */
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setSolutionName(String solutionName) {
         this.solutionName = solutionName;
     }
 
-    /**
-     * Not-null value.
-     */
+    /** Not-null value. */
     public String getCompoundShortName() {
         return compoundShortName;
     }
 
-    /**
-     * Not-null value; ensure this value is available before it is saved to the database.
-     */
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setCompoundShortName(String compoundShortName) {
         this.compoundShortName = compoundShortName;
     }
@@ -120,9 +104,7 @@ public class Component {
         this.availConcId = availConcId;
     }
 
-    /**
-     * To-one relationship, resolved on first access.
-     */
+    /** To-one relationship, resolved on first access. */
     public Solution getSolution() {
         String __key = this.solutionName;
         if (solution__resolvedKey == null || solution__resolvedKey != __key) {
@@ -150,9 +132,7 @@ public class Component {
         }
     }
 
-    /**
-     * To-one relationship, resolved on first access.
-     */
+    /** To-one relationship, resolved on first access. */
     public Compound getCompound() {
         String __key = this.compoundShortName;
         if (compound__resolvedKey == null || compound__resolvedKey != __key) {
@@ -180,9 +160,7 @@ public class Component {
         }
     }
 
-    /**
-     * To-one relationship, resolved on first access.
-     */
+    /** To-one relationship, resolved on first access. */
     public Concentration getDesiredConcentration() {
         long __key = this.desConcId;
         if (desiredConcentration__resolvedKey == null || !desiredConcentration__resolvedKey.equals(__key)) {
@@ -210,9 +188,7 @@ public class Component {
         }
     }
 
-    /**
-     * To-one relationship, resolved on first access.
-     */
+    /** To-one relationship, resolved on first access. */
     public Concentration getAvailableConcentration() {
         Long __key = this.availConcId;
         if (availableConcentration__resolvedKey == null || !availableConcentration__resolvedKey.equals(__key)) {
@@ -237,33 +213,27 @@ public class Component {
         }
     }
 
-    /**
-     * Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context.
-     */
+    /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */
     public void delete() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.delete(this);
     }
 
-    /**
-     * Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context.
-     */
+    /** Convenient call for {@link AbstractDao#update(Object)}. Entity must attached to an entity context. */
     public void update() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.update(this);
     }
 
-    /**
-     * Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context.
-     */
+    /** Convenient call for {@link AbstractDao#refresh(Object)}. Entity must attached to an entity context. */
     public void refresh() {
         if (myDao == null) {
             throw new DaoException("Entity is detached from DAO context");
-        }
+        }    
         myDao.refresh(this);
     }
 
