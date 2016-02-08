@@ -12,9 +12,7 @@ import de.greenrobot.dao.DaoException;
 public class Component {
 
     private boolean fromStock;
-    /**
-     * Not-null value.
-     */
+    /** Not-null value. */
     private String solutionName;
     /** Not-null value. */
     private String compoundShortName;
@@ -115,7 +113,7 @@ public class Component {
             Solution solutionNew = targetDao.load(__key);
             synchronized (this) {
                 solution = solutionNew;
-                solution__resolvedKey = __key;
+            	solution__resolvedKey = __key;
             }
         }
         return solution;
@@ -143,7 +141,7 @@ public class Component {
             Compound compoundNew = targetDao.load(__key);
             synchronized (this) {
                 compound = compoundNew;
-                compound__resolvedKey = __key;
+            	compound__resolvedKey = __key;
             }
         }
         return compound;
@@ -171,7 +169,7 @@ public class Component {
             Concentration desiredConcentrationNew = targetDao.load(__key);
             synchronized (this) {
                 desiredConcentration = desiredConcentrationNew;
-                desiredConcentration__resolvedKey = __key;
+            	desiredConcentration__resolvedKey = __key;
             }
         }
         return desiredConcentration;
@@ -199,7 +197,7 @@ public class Component {
             Concentration availableConcentrationNew = targetDao.load(__key);
             synchronized (this) {
                 availableConcentration = availableConcentrationNew;
-                availableConcentration__resolvedKey = __key;
+            	availableConcentration__resolvedKey = __key;
             }
         }
         return availableConcentration;

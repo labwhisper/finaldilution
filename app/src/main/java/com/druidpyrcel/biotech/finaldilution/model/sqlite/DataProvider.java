@@ -1,6 +1,7 @@
 package com.druidpyrcel.biotech.finaldilution.model.sqlite;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteException;
 
 import com.druidpyrcel.biotech.finaldilution.model.Component;
@@ -127,7 +128,12 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             return;
         }
         openWritableDb();
-        daoSession.getComponentDao().insert(component);
+        try {
+            daoSession.getComponentDao().insert(component);
+        } catch (SQLiteConstraintException e) {
+            //Tried to add another one same component...
+            //this code shouldn't be achieved.
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.druidpyrcel.biotech.finaldilutiondaogenerator;
 
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
+import de.greenrobot.daogenerator.Index;
 import de.greenrobot.daogenerator.Property;
 import de.greenrobot.daogenerator.Schema;
 import de.greenrobot.daogenerator.ToMany;
@@ -35,6 +36,13 @@ public class FinalDilutionDaoGenerator {
         ToMany solutionToComponents = solution.addToMany(component, solutionId);
         solutionToComponents.setName("components");
         //TODO add order Asc by Compound short name
+
+        Index indexUnique = new Index();
+        indexUnique.addProperty(solutionId);
+        indexUnique.addProperty(compoundId);
+        indexUnique.makeUnique();
+        component.addIndex(indexUnique);
+
     }
 
     private static Entity addSolution(Schema schema) {

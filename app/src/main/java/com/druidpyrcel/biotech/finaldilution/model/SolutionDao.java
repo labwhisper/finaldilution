@@ -33,23 +33,19 @@ public class SolutionDao extends AbstractDao<Solution, String> {
      * Creates the underlying database table.
      */
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SOLUTION\" (" + //
                 "\"NAME\" TEXT PRIMARY KEY NOT NULL ," + // 0: name
                 "\"VOLUME\" REAL NOT NULL );"); // 1: volume
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(SQLiteDatabase db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"SOLUTION\"";
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, Solution entity) {
         stmt.clearBindings();
@@ -67,17 +63,13 @@ public class SolutionDao extends AbstractDao<Solution, String> {
         entity.__setDaoSession(daoSession);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public String readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public Solution readEntity(Cursor cursor, int offset) {
         Solution entity = new Solution( //
@@ -87,26 +79,20 @@ public class SolutionDao extends AbstractDao<Solution, String> {
         return entity;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Solution entity, int offset) {
         entity.setName(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setVolume(cursor.getDouble(offset + 1));
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected String updateKeyAfterInsert(Solution entity, long rowId) {
         return entity.getName();
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     public String getKey(Solution entity) {
         if (entity != null) {
@@ -116,21 +102,19 @@ public class SolutionDao extends AbstractDao<Solution, String> {
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected boolean isEntityUpdateable() {
         return true;
     }
 
-    /**
+/**
      * Properties of entity Solution.<br/>
      * Can be used for QueryBuilder and for referencing column names.
-     */
+    */
     public static class Properties {
         public final static Property Name = new Property(0, String.class, "name", true, "NAME");
         public final static Property Volume = new Property(1, double.class, "volume", false, "VOLUME");
     }
-
+    
 }
