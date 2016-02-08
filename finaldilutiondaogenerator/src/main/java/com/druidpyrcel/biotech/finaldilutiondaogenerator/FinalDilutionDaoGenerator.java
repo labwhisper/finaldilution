@@ -26,7 +26,7 @@ public class FinalDilutionDaoGenerator {
         Property solutionId = component.addStringProperty("solutionName").notNull().getProperty();
         Property compoundId = component.addStringProperty("compoundShortName").notNull().getProperty();
         Property desConcId = component.addLongProperty("desConcId").notNull().getProperty();
-        Property availConcId = component.addLongProperty("availConcId").getProperty();
+        Property availConcId = component.addLongProperty("availConcId").notNull().getProperty();
 
         component.addToOne(solution, solutionId);
         component.addToOne(compound, compoundId);
@@ -40,30 +40,30 @@ public class FinalDilutionDaoGenerator {
     private static Entity addSolution(Schema schema) {
         Entity solution = schema.addEntity("Solution");
         solution.addStringProperty("name").primaryKey();
-        solution.addDoubleProperty("volume");
+        solution.addDoubleProperty("volume").notNull();
         return solution;
     }
 
     private static Entity addCompound(Schema schema) {
         Entity compound = schema.addEntity("Compound");
         compound.addStringProperty("shortName").primaryKey();
-        compound.addDoubleProperty("molarMass");
+        compound.addDoubleProperty("molarMass").notNull();
         compound.implementsSerializable();
         return compound;
     }
 
     private static Entity addConcentration(Schema schema) {
         Entity concentration = schema.addEntity("Concentration");
-        concentration.addIdProperty().primaryKey();
-        concentration.addDoubleProperty("amount");
+        concentration.addIdProperty().autoincrement();
+        concentration.addDoubleProperty("amount").notNull();
         concentration.addIntProperty("type").customType("com.druidpyrcel.biotech.finaldilution.model.ConcentrationType", "com.druidpyrcel.biotech.finaldilution.model.ConcentrationConverter"
-        );
+        ).notNull();
         return concentration;
     }
 
     private static Entity addComponent(Schema schema) {
         Entity component = schema.addEntity("Component");
-        component.addBooleanProperty("fromStock");
+        component.addBooleanProperty("fromStock").notNull();
         return component;
     }
 

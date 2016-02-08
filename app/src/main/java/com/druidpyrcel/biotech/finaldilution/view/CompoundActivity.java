@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -63,6 +64,16 @@ public class CompoundActivity extends AppCompatActivity {
         desiredViewsList.add(findViewById(R.id.desiredMilimolarConcButton));
         desiredViewsList.add(findViewById(R.id.desiredMgMlConcButton));
         compound = (Compound) getIntent().getSerializableExtra("compound");
+
+        if (((RadioButton) findViewById(R.id.desiredPercentageConcButton)).isChecked()) {
+            desiredConcType = ConcentrationType.PERCENTAGE;
+        } else if (((RadioButton) findViewById(R.id.desiredMolarConcButton)).isChecked()) {
+            desiredConcType = ConcentrationType.MOLAR;
+        } else if (((RadioButton) findViewById(R.id.desiredMilimolarConcButton)).isChecked()) {
+            desiredConcType = ConcentrationType.MILIMOLAR;
+        } else if (((RadioButton) findViewById(R.id.desiredMgMlConcButton)).isChecked()) {
+            desiredConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
+        }
 
         findViewById(R.id.desiredConcButtonsBar).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -142,13 +153,18 @@ public class CompoundActivity extends AppCompatActivity {
             return;
         }
         ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        Concentration concentration = new Concentration();
-        concentration.setAmount(Double.parseDouble(desiredConcEditText.getText().toString()));
-        concentration.setType(desiredConcType);
+        Concentration concentrationPrototype = new Concentration();
+        concentrationPrototype.setAmount(Double.parseDouble(desiredConcEditText.getText().toString()));
+        concentrationPrototype.setType(desiredConcType);
+        long concId = appState.getDb().addConcentration(concentrationPrototype);
+
         Component component = new Component();
         component.setSolution(appState.getCurrentSolution());
         component.setCompound(compound);
+        Concentration concentration = appState.getDb().getConcentrationById(concId);
         component.setDesiredConcentration(concentration);
+        appState.getDb().addComponent(component);
+        appState.getCurrentSolution().resetComponents();
 
         Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
         startActivity(intent);

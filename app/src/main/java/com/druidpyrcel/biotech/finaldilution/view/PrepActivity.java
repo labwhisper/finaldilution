@@ -62,7 +62,6 @@ public class PrepActivity extends AppCompatActivity {
     private class ChecklistAdapter extends BaseAdapter {
 
         private List<Component> componentList;
-        private String[] keys;
 
         public ChecklistAdapter(List<Component> componentList) {
             this.componentList = componentList;
@@ -104,8 +103,8 @@ public class PrepActivity extends AppCompatActivity {
 //                holder.name.setOnClickListener(new View.OnClickListener() {
 //                    public void onClick(View view) {
 //                        CheckBox cb = (CheckBox) view;
-//                        Compound component = (Compound) cb.getTag();
-//                        component.setSelected(cb.isChecked());
+//                        Compound compound = (Compound) cb.getTag();
+//                        compound.setSelected(cb.isChecked());
 //                    }
 //                });
             } else {
@@ -116,12 +115,12 @@ public class PrepActivity extends AppCompatActivity {
             ApplicationContext appState = ((ApplicationContext) getApplicationContext());
 
             Solution solution = appState.getCurrentSolution();
-            Compound component = appState.getDb().getCompound(keys[position]);
+            Compound compound = ((Component) getItem(position)).getCompound();
             Double quantity = ((Component) getItem(position)).getQuantity(solution.getVolume());
-            holder.compoundTextView.setText(component.getShortName());
+            holder.compoundTextView.setText(compound.getShortName());
             holder.percentageTextView.setText(Double.toString(quantity));
             holder.checkBox.setChecked(false);
-            holder.checkBox.setTag(component);
+            holder.checkBox.setTag(compound);
 
             return convertView;
 

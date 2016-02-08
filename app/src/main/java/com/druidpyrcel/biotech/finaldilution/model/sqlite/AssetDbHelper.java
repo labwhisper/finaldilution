@@ -5,7 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import com.druidpyrcel.biotech.finaldilution.model.ComponentDao;
+import com.druidpyrcel.biotech.finaldilution.model.CompoundDao;
+import com.druidpyrcel.biotech.finaldilution.model.ConcentrationDao;
 import com.druidpyrcel.biotech.finaldilution.model.DaoMaster;
+import com.druidpyrcel.biotech.finaldilution.model.SolutionDao;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -137,6 +141,8 @@ public class AssetDbHelper extends DaoMaster.OpenHelper {
             //    db = mContext.openOrCreateDatabase(mName, 0, mFactory);
             //}
             db = createOrOpenDatabase(false);
+            //Create missing tables if any
+//            super.onCreate(db);
 
             int version = db.getVersion();
 
@@ -151,7 +157,7 @@ public class AssetDbHelper extends DaoMaster.OpenHelper {
                 db.beginTransaction();
                 try {
                     if (version == 0) {
-                        onCreate(db);
+//                        super.onCreate(db);
                     } else {
                         if (version > mNewVersion) {
                             Log.w(TAG, "Can't downgrade read-only database from version " +
@@ -301,6 +307,7 @@ public class AssetDbHelper extends DaoMaster.OpenHelper {
         }
 
         Log.w(TAG, "Successfully upgraded database " + mName + " from version " + oldVersion + " to " + newVersion);
+//        super.onCreate(db);
 
     }
 
@@ -372,6 +379,10 @@ public class AssetDbHelper extends DaoMaster.OpenHelper {
         try {
             SQLiteDatabase db = SQLiteDatabase.openDatabase(mDatabasePath + "/" + mName, mFactory, SQLiteDatabase.OPEN_READWRITE);
             Log.i(TAG, "successfully opened database " + mName);
+            SolutionDao.createTable(db, true);
+            CompoundDao.createTable(db, true);
+            ConcentrationDao.createTable(db, true);
+            ComponentDao.createTable(db, true);
             return db;
         } catch (SQLiteException e) {
             Log.w(TAG, "could not open database " + mName + " - " + e.getMessage());

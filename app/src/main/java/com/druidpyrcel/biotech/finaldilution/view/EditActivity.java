@@ -55,18 +55,6 @@ public class EditActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        appState.getDb().updateSolution(appState.getCurrentSolution());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public boolean onTouchEvent(MotionEvent event) {
         detector.onTouchEvent(event);
         return super.onTouchEvent(event);

@@ -3,7 +3,9 @@ package com.druidpyrcel.biotech.finaldilution.model.sqlite;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 
+import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.druidpyrcel.biotech.finaldilution.model.Concentration;
 import com.druidpyrcel.biotech.finaldilution.model.DaoMaster;
 import com.druidpyrcel.biotech.finaldilution.model.DaoSession;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
@@ -103,4 +105,30 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openReadableDb();
         return daoSession.getCompoundDao().loadAll();
     }
+
+    public long addConcentration(Concentration concentration) {
+        if (concentration == null) {
+            //TODO Change to exception
+            return -1;
+        }
+        openWritableDb();
+        return daoSession.getConcentrationDao().insert(concentration);
+    }
+
+    public Concentration getConcentrationById(long concentrationId) {
+        if (concentrationId < 0) {
+            return null;
+        }
+        return daoSession.getConcentrationDao().load(concentrationId);
+    }
+
+    public void addComponent(Component component) {
+        if (component == null) {
+            return;
+        }
+        openWritableDb();
+        daoSession.getComponentDao().insert(component);
+    }
+
+
 }
