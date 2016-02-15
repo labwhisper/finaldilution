@@ -57,6 +57,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         asyncSession.setListener(this);
     }
 
+    //TODO Close DB somewhere on exit!
     public void closeDbConnections() {
         if (daoSession != null) {
             daoSession.clear();
@@ -72,7 +73,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
         openWritableDb();
         daoSession.getSolutionDao().insert(solution);
-        //TODO Add log and daosession.clear
+        daoSession.clear();
     }
 
     public void updateSolution(Solution solution) {
@@ -81,6 +82,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
         openWritableDb();
         daoSession.getSolutionDao().update(solution);
+        daoSession.clear();
     }
 
     public Solution getSolution(String solutionName) {
@@ -89,12 +91,16 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
 
         openReadableDb();
-        return daoSession.getSolutionDao().load(solutionName);
+        Solution solution = daoSession.getSolutionDao().load(solutionName);
+        daoSession.clear();
+        return solution;
     }
 
     public List<Solution> getAllSolutions() {
         openReadableDb();
-        return daoSession.getSolutionDao().loadAll();
+        List<Solution> solutions = daoSession.getSolutionDao().loadAll();
+        daoSession.clear();
+        return solutions;
     }
 
 
@@ -104,6 +110,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
         openWritableDb();
         daoSession.getCompoundDao().insert(compound);
+        daoSession.clear();
     }
 
     public Compound getCompound(String shortName) {
@@ -112,12 +119,16 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
 
         openReadableDb();
-        return daoSession.getCompoundDao().load(shortName);
+        Compound compound = daoSession.getCompoundDao().load(shortName);
+        daoSession.clear();
+        return compound;
     }
 
     public List<Compound> getAllCompounds() {
         openReadableDb();
-        return daoSession.getCompoundDao().loadAll();
+        List<Compound> compounds = daoSession.getCompoundDao().loadAll();
+        daoSession.clear();
+        return compounds;
     }
 
     public long addConcentration(Concentration concentration) {
@@ -126,14 +137,18 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             return -1;
         }
         openWritableDb();
-        return daoSession.getConcentrationDao().insert(concentration);
+        long concRowId = daoSession.getConcentrationDao().insert(concentration);
+        daoSession.clear();
+        return concRowId;
     }
 
     public Concentration getConcentrationById(long concentrationId) {
         if (concentrationId < 0) {
             return null;
         }
-        return daoSession.getConcentrationDao().load(concentrationId);
+        Concentration concentration = daoSession.getConcentrationDao().load(concentrationId);
+        daoSession.clear();
+        return concentration;
     }
 
     public void addComponent(Component component) {
@@ -143,6 +158,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openWritableDb();
         try {
             daoSession.getComponentDao().insert(component);
+            daoSession.clear();
         } catch (SQLiteConstraintException e) {
             //Tried to add the other the same component...
             //this code shouldn't be achieved.
