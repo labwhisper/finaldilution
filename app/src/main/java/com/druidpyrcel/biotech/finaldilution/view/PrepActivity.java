@@ -33,6 +33,9 @@ public class PrepActivity extends AppCompatActivity {
         displayFromPrepToEditButton();
 
         displayTitleToolbar();
+
+        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        setTitle("Prepare " + appState.getCurrentSolution().getName());
     }
 
 

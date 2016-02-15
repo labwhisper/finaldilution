@@ -30,7 +30,6 @@ public class StartupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         Button newSolutionButton = (Button) findViewById(R.id.addNewSolutionButton);
         newSolutionButton.setOnClickListener(new OnNewSolutionButtonClickListener());
 

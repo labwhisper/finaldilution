@@ -10,4 +10,5 @@
     <string name="add_new_solution_button_text">ADD NEW</string>
     <string name="FromEditToPrepButtonText">DONE</string>
     <string name="fromPrepToEditButtonText">BACK</string>
+    <string name="buttonNewCompound">+</string>
 </resources>

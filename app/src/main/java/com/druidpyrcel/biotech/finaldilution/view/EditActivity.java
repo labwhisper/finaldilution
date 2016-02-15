@@ -1,17 +1,22 @@
 package com.druidpyrcel.biotech.finaldilution.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +37,7 @@ import static com.druidpyrcel.biotech.finaldilution.ApplicationContext.SWIPE_MIN
 
 public class EditActivity extends AppCompatActivity {
 
+    private static final String TAG = "Edit Activity";
     ViewSwitcher switcher = null;
     TextView volumeTextView = null;
     TextView volumeEditText = null;
@@ -49,6 +55,7 @@ public class EditActivity extends AppCompatActivity {
         displayCompoundList();
         displayBeakerImage();
         displayFromEditToPrepButton();
+        displayNewCompoundButton();
         displayTitleToolbar();
 
         detector = new GestureDetectorCompat(this, new EditGestureListener());
@@ -65,6 +72,7 @@ public class EditActivity extends AppCompatActivity {
         switcher = (ViewSwitcher) findViewById(R.id.volumeViewSwitcher);
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
+        //TODO NPE IN THE LINE BELOW SOMEWHERE
         volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
         volumeEditText.setText(volFormat.format(appState.getCurrentSolution().getVolume()));
         volumeEditText.setSelectAllOnFocus(true);
@@ -79,7 +87,8 @@ public class EditActivity extends AppCompatActivity {
                     CharSequence s = v.getText();
                     if (s.length() != 0) {
                         appState.getCurrentSolution().setVolume(Double.parseDouble(s.toString()));
-                        componentsTextView.setText(appState.getCurrentSolution().calculateQuantities());
+                        appState.getDb().updateSolution(appState.getCurrentSolution());
+                        displayComponentsList();
                         volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(volumeEditText.getWindowToken(), 0);
@@ -158,18 +167,79 @@ public class EditActivity extends AppCompatActivity {
         });
     }
 
+    private void displayNewCompoundButton() {
+        Button newCompoundButton = (Button) findViewById(R.id.newCompoundButton);
+        newCompoundButton.setOnClickListener(new OnNewCompoundButtonClickListener());
+    }
+
     private void displayTitleToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        setTitle("Edit " + appState.getCurrentSolution().getName());
     }
 
     class CompoundChooseListener implements AdapterView.OnItemClickListener {
 
         @Override
         public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-            Intent intent = new Intent(EditActivity.this, CompoundActivity.class);
-            intent.putExtra("compound", (Compound) (parent.getAdapter().getItem(position)));
-            startActivity(intent);
+            final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+            Compound compound = (Compound) (parent.getAdapter().getItem(position));
+
+            if (appState.getDb().getComponentWithCompound(appState.getCurrentSolution(), compound) != null) {
+                //TODO Change animation
+                //TODO Check on all android versions simulators
+                View currentView = view;
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
+                    currentView = parent.getChildAt(parent.getChildCount() - position - 1);
+                }
+                new Anim().blinkWithRed(currentView);
+                Log.d(TAG, "Compound (" + compound.getShortName() + ") already in solution (" + appState.getCurrentSolution().getName() + ")");
+            } else {
+                Intent intent = new Intent(EditActivity.this, CompoundActivity.class);
+                intent.putExtra("compound", compound);
+                startActivity(intent);
+            }
+        }
+    }
+
+    private class OnNewCompoundButtonClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            final EditText compoundNamePicker = new EditText(EditActivity.this);
+            final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(EditActivity.this);
+            alertDialogBuilder.setView(compoundNamePicker)
+                    .setMessage("Enter new compound parameters: ")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (compoundNamePicker.getText().length() != 0) {
+                                Compound compound = new Compound();
+                                compound.setShortName(compoundNamePicker.getText().toString());
+                                //TODO Add nice dialog with molar mass
+                                compound.setMolarMass(40.0);
+                                appState.getDb().addCompound(compound);
+                                //TODO refresh compound list properly
+                                EditActivity.this.displayCompoundList();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Cancel", null);
+            final AlertDialog alertDialog = alertDialogBuilder.create();
+
+            compoundNamePicker.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    }
+                }
+            });
+            alertDialog.show();
         }
     }
 
@@ -190,6 +260,7 @@ public class EditActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(EditActivity.this, StartupActivity.class);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.linear_interpolator, android.R.anim.linear_interpolator);
             }
 
             return true;

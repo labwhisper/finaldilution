@@ -64,6 +64,7 @@ public class CompoundActivity extends AppCompatActivity {
         desiredViewsList.add(findViewById(R.id.desiredMilimolarConcButton));
         desiredViewsList.add(findViewById(R.id.desiredMgMlConcButton));
         compound = (Compound) getIntent().getSerializableExtra("compound");
+        setTitle("Add " + compound.getShortName());
 
         if (((RadioButton) findViewById(R.id.desiredPercentageConcButton)).isChecked()) {
             desiredConcType = ConcentrationType.PERCENTAGE;
@@ -164,6 +165,7 @@ public class CompoundActivity extends AppCompatActivity {
         Concentration concentration = appState.getDb().getConcentrationById(concId);
         component.setDesiredConcentration(concentration);
         appState.getDb().addComponent(component);
+        appState.getDb().updateSolution(appState.getCurrentSolution());
         appState.getCurrentSolution().resetComponents();
 
         Intent intent = new Intent(CompoundActivity.this, EditActivity.class);

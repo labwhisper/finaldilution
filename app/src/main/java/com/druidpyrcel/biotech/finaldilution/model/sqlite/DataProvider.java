@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteException;
 
 import com.druidpyrcel.biotech.finaldilution.model.Component;
+import com.druidpyrcel.biotech.finaldilution.model.ComponentDao;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
 import com.druidpyrcel.biotech.finaldilution.model.Concentration;
 import com.druidpyrcel.biotech.finaldilution.model.DaoMaster;
@@ -17,6 +18,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import de.greenrobot.dao.async.AsyncOperation;
 import de.greenrobot.dao.async.AsyncOperationListener;
 import de.greenrobot.dao.async.AsyncSession;
+import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.dao.query.WhereCondition;
 
 public class DataProvider extends AssetDbHelper implements AsyncOperationListener {
 
@@ -69,6 +72,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
         openWritableDb();
         daoSession.getSolutionDao().insert(solution);
+        //TODO Add log and daosession.clear
     }
 
     public void updateSolution(Solution solution) {
@@ -91,6 +95,15 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
     public List<Solution> getAllSolutions() {
         openReadableDb();
         return daoSession.getSolutionDao().loadAll();
+    }
+
+
+    public void addCompound(Compound compound) {
+        if (compound == null) {
+            return;
+        }
+        openWritableDb();
+        daoSession.getCompoundDao().insert(compound);
     }
 
     public Compound getCompound(String shortName) {
@@ -131,10 +144,25 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         try {
             daoSession.getComponentDao().insert(component);
         } catch (SQLiteConstraintException e) {
-            //Tried to add another one same component...
+            //Tried to add the other the same component...
             //this code shouldn't be achieved.
         }
     }
 
+    public Component getComponentWithCompound(Solution solution, Compound compound) {
+        if (solution == null || compound == null) {
+            return null;
+        }
+        openWritableDb();
+        //get Component by solution Name and compound shortName
+        ComponentDao dao = daoSession.getComponentDao();
+        WhereCondition condition = dao.queryBuilder().and(
+                ComponentDao.Properties.SolutionName.eq(solution.getName()),
+                ComponentDao.Properties.CompoundShortName.eq(compound.getShortName()));
+        QueryBuilder<Component> queryBuilder = dao.queryBuilder().where(condition);
+        Component component = queryBuilder.unique();
+        daoSession.clear();
+        return component;
+    }
 
 }
