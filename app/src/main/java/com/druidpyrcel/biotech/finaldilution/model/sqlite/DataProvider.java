@@ -3,6 +3,7 @@ package com.druidpyrcel.biotech.finaldilution.model.sqlite;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.ComponentDao;
@@ -24,7 +25,7 @@ import de.greenrobot.dao.query.WhereCondition;
 public class DataProvider extends AssetDbHelper implements AsyncOperationListener {
 
     public static final String DATABASE_NAME = "FinalDilutionDB.sqlite";
-
+    private static final String TAG = "Data Provider";
     private DaoMaster daoMaster;
     private DaoSession daoSession;
     private AsyncSession asyncSession;
@@ -33,6 +34,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
     public DataProvider(Context context) {
         super(context, DATABASE_NAME, null);
         completedOperations = new CopyOnWriteArrayList<AsyncOperation>();
+        Log.d(TAG, "Data provider created");
     }
 
 
@@ -47,6 +49,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         daoSession = daoMaster.newSession();
         asyncSession = daoSession.startAsyncSession();
         asyncSession.setListener(this);
+        Log.d(TAG, "Db opened for read");
     }
 
     public void openWritableDb() throws SQLiteException {
@@ -55,6 +58,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         daoSession = daoMaster.newSession();
         asyncSession = daoSession.startAsyncSession();
         asyncSession.setListener(this);
+        Log.d(TAG, "Db opened for write");
     }
 
     //TODO Close DB somewhere on exit!
@@ -74,6 +78,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openWritableDb();
         daoSession.getSolutionDao().insert(solution);
         daoSession.clear();
+        Log.d(TAG, "Solution " + solution.getName() + " added");
     }
 
     public void updateSolution(Solution solution) {
@@ -83,6 +88,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openWritableDb();
         daoSession.getSolutionDao().update(solution);
         daoSession.clear();
+        Log.d(TAG, "Solution " + solution.getName() + " updated");
     }
 
     public Solution getSolution(String solutionName) {
@@ -93,6 +99,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openReadableDb();
         Solution solution = daoSession.getSolutionDao().load(solutionName);
         daoSession.clear();
+        Log.d(TAG, "Solution " + solution.getName() + " fetched");
         return solution;
     }
 
@@ -100,6 +107,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openReadableDb();
         List<Solution> solutions = daoSession.getSolutionDao().loadAll();
         daoSession.clear();
+        Log.d(TAG, "All " + solutions.size() + " solutions fetched");
         return solutions;
     }
 
@@ -110,6 +118,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
         openWritableDb();
         daoSession.getCompoundDao().insert(compound);
+        Log.d(TAG, "Compound " + compound.getShortName() + " added");
         daoSession.clear();
     }
 
@@ -121,6 +130,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openReadableDb();
         Compound compound = daoSession.getCompoundDao().load(shortName);
         daoSession.clear();
+        Log.d(TAG, "Compound " + compound.getShortName() + " fetched");
         return compound;
     }
 
@@ -128,6 +138,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openReadableDb();
         List<Compound> compounds = daoSession.getCompoundDao().loadAll();
         daoSession.clear();
+        Log.d(TAG, "All " + compounds.size() + " compounds fetched");
         return compounds;
     }
 
@@ -137,17 +148,20 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             return -1;
         }
         openWritableDb();
-        long concRowId = daoSession.getConcentrationDao().insert(concentration);
+        long concenRowId = daoSession.getConcentrationDao().insert(concentration);
         daoSession.clear();
-        return concRowId;
+        Log.d(TAG, "Concentration " + concentration.getAmount() + " added");
+        return concenRowId;
     }
 
     public Concentration getConcentrationById(long concentrationId) {
         if (concentrationId < 0) {
             return null;
         }
+        openReadableDb();
         Concentration concentration = daoSession.getConcentrationDao().load(concentrationId);
         daoSession.clear();
+        Log.d(TAG, "Concentration " + concentration.getAmount() + " fetched");
         return concentration;
     }
 
@@ -158,6 +172,9 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         openWritableDb();
         try {
             daoSession.getComponentDao().insert(component);
+            //TODO replace with Component.tostring
+            Log.d(TAG, "Component " + component.getCompound().getShortName()
+                    + ", " + component.getSolutionName() + " added");
             daoSession.clear();
         } catch (SQLiteConstraintException e) {
             //Tried to add the other the same component...
@@ -169,7 +186,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         if (solution == null || compound == null) {
             return null;
         }
-        openWritableDb();
+        openReadableDb();
         //get Component by solution Name and compound shortName
         ComponentDao dao = daoSession.getComponentDao();
         WhereCondition condition = dao.queryBuilder().and(
@@ -178,6 +195,10 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         QueryBuilder<Component> queryBuilder = dao.queryBuilder().where(condition);
         Component component = queryBuilder.unique();
         daoSession.clear();
+        if (component != null) {
+            Log.d(TAG, "Component " + component.getCompound().getShortName()
+                    + ", " + component.getSolutionName() + " fetched");
+        }
         return component;
     }
 

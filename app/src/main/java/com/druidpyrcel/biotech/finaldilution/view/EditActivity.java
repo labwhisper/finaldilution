@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -190,9 +189,9 @@ public class EditActivity extends AppCompatActivity {
                 //TODO Change animation
                 //TODO Check on all android versions simulators
                 View currentView = view;
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
-                    currentView = parent.getChildAt(parent.getChildCount() - position - 1);
-                }
+//                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD) {
+//                    currentView = parent.getChildAt(parent.getChildCount() - position - 1);
+//                }
                 new Anim().blinkWithRed(currentView);
                 Log.d(TAG, "Compound (" + compound.getShortName() + ") already in solution (" + appState.getCurrentSolution().getName() + ")");
             } else {
