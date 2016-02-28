@@ -259,7 +259,7 @@ public class EditActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(EditActivity.this, StartupActivity.class);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.linear_interpolator, android.R.anim.linear_interpolator);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
             }
 
             return true;
