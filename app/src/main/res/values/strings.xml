@@ -11,4 +11,5 @@
     <string name="FromEditToPrepButtonText">DONE</string>
     <string name="fromPrepToEditButtonText">BACK</string>
     <string name="buttonNewCompound">+</string>
+    <string name="mililiters">ml</string>
 </resources>

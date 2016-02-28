@@ -79,7 +79,7 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 //Switch to Edit Text
-                if (switcher.getCurrentView().equals(volumeEditText)) {
+                if (!switcher.getCurrentView().equals(volumeTextView)) {
                     switcher.showNext();
                 }
                 try {
