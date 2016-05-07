@@ -68,6 +68,7 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             daoSession = null;
         }
         close();
+        Log.d(TAG, "All database connection closed");
     }
 
 
