@@ -131,6 +131,7 @@ public class EditActivity extends AppCompatActivity {
                 this, R.layout.tiny_list, appState.getCurrentSolution().getComponents());
         componentsListView.setAdapter(componentListAdapter);
         componentsListView.setOnItemClickListener(new ComponentListItemListener());
+        componentsListView.setOnItemLongClickListener(new ComponentLongClickListener());
     }
 
     private void displayCompoundList() {
@@ -195,6 +196,24 @@ public class EditActivity extends AppCompatActivity {
 //            appState.getDb().removeComponent(component);
 //            appState.getCurrentSolution().resetComponents();
 //            displayComponentsList();
+        }
+    }
+
+    class ComponentLongClickListener implements AdapterView.OnItemLongClickListener {
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+            final Component component = (Component) (parent.getAdapter().getItem(position));
+            appState.getDb().removeConcentration(component.getDesiredConcentration());
+            if (component.getFromStock()) {
+                appState.getDb().removeConcentration(component.getAvailableConcentration());
+            }
+            appState.getDb().removeComponent(component);
+            appState.getDb().updateSolution(appState.getCurrentSolution());
+            appState.getCurrentSolution().resetComponents();
+            displayComponentsList();
+            return true;
         }
     }
 

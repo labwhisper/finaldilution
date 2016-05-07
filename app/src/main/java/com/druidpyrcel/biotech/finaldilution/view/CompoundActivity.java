@@ -171,9 +171,17 @@ public class CompoundActivity extends AppCompatActivity {
         findViewById(R.id.buttonAddCompoundCancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OnCancelComponent();
+                onCancelComponent();
             }
         });
+
+        findViewById(R.id.buttonAddCompoundDelete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDeleteComponent();
+            }
+        });
+
     }
 
     private void fillComponentFields() {
@@ -231,7 +239,7 @@ public class CompoundActivity extends AppCompatActivity {
 
     }
 
-    private void OnCancelComponent() {
+    private void onCancelComponent() {
         Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
         startActivity(intent);
     }
@@ -279,6 +287,26 @@ public class CompoundActivity extends AppCompatActivity {
         startActivity(intent);
         //TODO WHEN ITEM EXISTS SHOW STH? OR BEFORE EVEN OPENING COMP.ACTIVITY?
 
+    }
+
+    private void onDeleteComponent() {
+
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        Component component = appState.getDb().getComponentWithCompound(appState.getCurrentSolution(), compound);
+        if (component == null) {
+            onCancelComponent();
+        } else {
+            appState.getDb().removeConcentration(component.getDesiredConcentration());
+            if (component.getFromStock()) {
+                appState.getDb().removeConcentration(component.getAvailableConcentration());
+            }
+            appState.getDb().removeComponent(component);
+            appState.getDb().updateSolution(appState.getCurrentSolution());
+            appState.getCurrentSolution().resetComponents();
+
+            Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void createComponent() {
