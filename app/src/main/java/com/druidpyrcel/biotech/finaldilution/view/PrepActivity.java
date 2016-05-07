@@ -118,10 +118,13 @@ public class PrepActivity extends AppCompatActivity {
             ApplicationContext appState = ((ApplicationContext) getApplicationContext());
 
             Solution solution = appState.getCurrentSolution();
-            Compound compound = ((Component) getItem(position)).getCompound();
-            Double quantity = ((Component) getItem(position)).getQuantity(solution.getVolume());
-            holder.compoundTextView.setText(compound.getShortName());
-            holder.percentageTextView.setText(Double.toString(quantity));
+            Component component = (Component) getItem(position);
+            Compound compound = component.getCompound();
+            holder.compoundTextView.setText(component.getCompoundShortName());
+            holder.unitTextView.setText(component.getAmountString());
+            if (component.getFromStock()) {
+                holder.extraTextView.setText(component.getAvailableConcentration().toString());
+            }
             holder.checkBox.setChecked(false);
             holder.checkBox.setTag(compound);
 

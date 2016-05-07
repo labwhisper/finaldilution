@@ -27,6 +27,7 @@ import android.widget.ViewSwitcher;
 
 import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
 import com.druidpyrcel.biotech.finaldilution.R;
+import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
 
 import java.text.DecimalFormat;
@@ -40,7 +41,6 @@ public class EditActivity extends AppCompatActivity {
     ViewSwitcher switcher = null;
     TextView volumeTextView = null;
     TextView volumeEditText = null;
-    TextView componentsTextView;
     DecimalFormat volFormat = new DecimalFormat("0.##");
     private GestureDetectorCompat detector;
 
@@ -85,7 +85,8 @@ public class EditActivity extends AppCompatActivity {
                 try {
                     CharSequence s = v.getText();
                     if (s.length() != 0) {
-                        appState.getCurrentSolution().setVolume(Double.parseDouble(s.toString()));
+                        appState.getCurrentSolution().setVolume(Double.parseDouble(s.toString().replace(',', '.')));
+                        appState.getCurrentSolution().resetComponents();
                         appState.getDb().updateSolution(appState.getCurrentSolution());
                         displayComponentsList();
                         volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
@@ -125,8 +126,11 @@ public class EditActivity extends AppCompatActivity {
 
     private void displayComponentsList() {
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        componentsTextView = (TextView) findViewById(R.id.componentsTextView);
-        componentsTextView.setText(appState.getCurrentSolution().calculateQuantities());
+        ListView componentsListView = (ListView) findViewById(R.id.componentsTextView);
+        ArrayAdapter<Component> componentListAdapter = new ArrayAdapter<>(
+                this, R.layout.tiny_list, appState.getCurrentSolution().getComponents());
+        componentsListView.setAdapter(componentListAdapter);
+        componentsListView.setOnItemClickListener(new ComponentListItemListener());
     }
 
     private void displayCompoundList() {
@@ -176,6 +180,22 @@ public class EditActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         setTitle("Edit " + appState.getCurrentSolution().getName());
+    }
+
+    class ComponentListItemListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+            final Component component = (Component) (parent.getAdapter().getItem(position));
+            Intent intent = new Intent(EditActivity.this, CompoundActivity.class);
+            intent.putExtra("compound", component.getCompound());
+            startActivity(intent);
+
+//            appState.getDb().removeComponent(component);
+//            appState.getCurrentSolution().resetComponents();
+//            displayComponentsList();
+        }
     }
 
     class CompoundChooseListener implements AdapterView.OnItemClickListener {

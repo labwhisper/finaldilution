@@ -114,7 +114,7 @@ public class Solution {
     public String calculateQuantities() {
         StringBuilder niceOutput = new StringBuilder(800);
         for (Component component : getComponents()) {
-            niceOutput.append(component.getAmountString(getVolume()));
+            niceOutput.append(component.getAmountString());
             niceOutput.append(System.getProperty("line.separator"));
         }
         return niceOutput.toString();

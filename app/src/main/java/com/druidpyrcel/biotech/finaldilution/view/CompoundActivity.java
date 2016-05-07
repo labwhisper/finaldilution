@@ -30,10 +30,12 @@ import java.util.List;
 public class CompoundActivity extends AppCompatActivity {
 
     Compound compound;
-    ConcentrationType desiredConcType;
+    ConcentrationType desiredConcType = ConcentrationType.MOLAR;
     ConcentrationType stockConcType;
     private List<View> desiredViewsList;
     private List<View> stockViewsList;
+    private List<RadioButton> desiredButtonList;
+    private List<RadioButton> stockButtonList;
 
     public CompoundActivity() {
 
@@ -46,35 +48,32 @@ public class CompoundActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        stockViewsList = new ArrayList<>();
-        stockViewsList.add(findViewById(R.id.stockConcEditText));
-        stockViewsList.add(findViewById(R.id.stockConcButtonsBar));
-        stockViewsList.add(findViewById(R.id.stockConcTextView));
-        stockViewsList.add(findViewById(R.id.stockPercentageConcButton));
-        stockViewsList.add(findViewById(R.id.stockMolarConcButton));
-        stockViewsList.add(findViewById(R.id.stockMilimolarConcButton));
-        stockViewsList.add(findViewById(R.id.stockMgMlConcButton));
+        desiredButtonList = new ArrayList<>();
+        desiredButtonList.add((RadioButton) findViewById(R.id.desiredPercentageConcButton));
+        desiredButtonList.add((RadioButton) findViewById(R.id.desiredMolarConcButton));
+        desiredButtonList.add((RadioButton) findViewById(R.id.desiredMilimolarConcButton));
+        desiredButtonList.add((RadioButton) findViewById(R.id.desiredMgMlConcButton));
+
+        stockButtonList = new ArrayList<>();
+        stockButtonList.add((RadioButton) findViewById(R.id.stockPercentageConcButton));
+        stockButtonList.add((RadioButton) findViewById(R.id.stockMolarConcButton));
+        stockButtonList.add((RadioButton) findViewById(R.id.stockMilimolarConcButton));
+        stockButtonList.add((RadioButton) findViewById(R.id.stockMgMlConcButton));
 
         desiredViewsList = new ArrayList<>();
         desiredViewsList.add(findViewById(R.id.desiredConcEditText));
         desiredViewsList.add(findViewById(R.id.desiredConcButtonsBar));
         desiredViewsList.add(findViewById(R.id.desiredConcTextView));
-        desiredViewsList.add(findViewById(R.id.desiredPercentageConcButton));
-        desiredViewsList.add(findViewById(R.id.desiredMolarConcButton));
-        desiredViewsList.add(findViewById(R.id.desiredMilimolarConcButton));
-        desiredViewsList.add(findViewById(R.id.desiredMgMlConcButton));
+        desiredViewsList.addAll(desiredButtonList);
+
+        stockViewsList = new ArrayList<>();
+        stockViewsList.add(findViewById(R.id.stockConcEditText));
+        stockViewsList.add(findViewById(R.id.stockConcButtonsBar));
+        stockViewsList.add(findViewById(R.id.stockConcTextView));
+        stockViewsList.addAll(stockButtonList);
+
         compound = (Compound) getIntent().getSerializableExtra("compound");
         setTitle("Add " + compound.getShortName());
-
-        if (((RadioButton) findViewById(R.id.desiredPercentageConcButton)).isChecked()) {
-            desiredConcType = ConcentrationType.PERCENTAGE;
-        } else if (((RadioButton) findViewById(R.id.desiredMolarConcButton)).isChecked()) {
-            desiredConcType = ConcentrationType.MOLAR;
-        } else if (((RadioButton) findViewById(R.id.desiredMilimolarConcButton)).isChecked()) {
-            desiredConcType = ConcentrationType.MILIMOLAR;
-        } else if (((RadioButton) findViewById(R.id.desiredMgMlConcButton)).isChecked()) {
-            desiredConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
-        }
 
         findViewById(R.id.desiredConcButtonsBar).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -84,8 +83,13 @@ public class CompoundActivity extends AppCompatActivity {
         });
 
         setKeyboardOnInputs();
+        bindListeners();
+        setConcentrationButtonsState(false);
+        fillComponentFields();
+        toggleSolutionFromStock();
+    }
 
-
+    private void bindListeners() {
         findViewById(R.id.desiredPercentageConcButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +122,38 @@ public class CompoundActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.stockPercentageConcButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stockConcType = ConcentrationType.PERCENTAGE;
+                ((EditText) findViewById(R.id.stockConcEditText)).setHint("%");
+            }
+        });
+
+        findViewById(R.id.stockMolarConcButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stockConcType = ConcentrationType.MOLAR;
+                ((EditText) findViewById(R.id.stockConcEditText)).setHint("M/l");
+            }
+        });
+
+        findViewById(R.id.stockMilimolarConcButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stockConcType = ConcentrationType.MILIMOLAR;
+                ((EditText) findViewById(R.id.stockConcEditText)).setHint("mM/l");
+            }
+        });
+
+        findViewById(R.id.stockMgMlConcButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stockConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
+                ((EditText) findViewById(R.id.stockConcEditText)).setHint("mg/ml");
+            }
+        });
+
         findViewById(R.id.enableStockDilutionButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +176,61 @@ public class CompoundActivity extends AppCompatActivity {
         });
     }
 
+    private void fillComponentFields() {
+        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        Component component = appState.getDb().getComponentWithCompound(appState.getCurrentSolution(), compound);
+        if (component != null) {
+            desiredConcType = component.getDesiredConcentration().getType();
+            EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
+            desiredConcEditText.setText(Double.toString(component.getDesiredConcentration().getAmount()));
+            if (component.getFromStock()) {
+                EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
+                stockConcType = component.getAvailableConcentration().getType();
+                stockConcEditText.setText(Double.toString(component.getAvailableConcentration().getAmount()));
+
+            }
+            setConcentrationButtonsState(component.getFromStock());
+        }
+    }
+
+    private void setConcentrationButtonsState(boolean fromStock) {
+        ((ToggleButton) (findViewById(R.id.enableStockDilutionButton))).setChecked(fromStock);
+        RadioGroup desiredRadioGroup = (RadioGroup) findViewById(R.id.desiredConcButtonsBar);
+        switch (desiredConcType) {
+            case PERCENTAGE:
+                desiredRadioGroup.check(R.id.desiredPercentageConcButton);
+                break;
+            case MOLAR:
+                desiredRadioGroup.check(R.id.desiredMolarConcButton);
+                break;
+            case MILIMOLAR:
+                desiredRadioGroup.check(R.id.desiredMilimolarConcButton);
+                break;
+            case MILIGRAM_PER_MILLILITER:
+                desiredRadioGroup.check(R.id.desiredMgMlConcButton);
+                break;
+        }
+
+        if (fromStock) {
+            RadioGroup stockRadioGroup = (RadioGroup) findViewById(R.id.stockConcButtonsBar);
+            switch (stockConcType) {
+                case PERCENTAGE:
+                    stockRadioGroup.check(R.id.stockPercentageConcButton);
+                    break;
+                case MOLAR:
+                    stockRadioGroup.check(R.id.stockMolarConcButton);
+                    break;
+                case MILIMOLAR:
+                    stockRadioGroup.check(R.id.stockMilimolarConcButton);
+                    break;
+                case MILIGRAM_PER_MILLILITER:
+                    stockRadioGroup.check(R.id.stockMgMlConcButton);
+                    break;
+            }
+        }
+
+    }
+
     private void OnCancelComponent() {
         Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
         startActivity(intent);
@@ -147,24 +238,40 @@ public class CompoundActivity extends AppCompatActivity {
 
     //TODO run this listener also on back and generaly close?
     private void onAcceptComponent() {
+        boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
         //TODO Add all checks!
         EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
+        EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
         if (desiredConcEditText.getText().toString().trim().length() == 0) {
             (new Anim()).blink(desiredConcEditText);
             return;
         }
-        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        Concentration concentrationPrototype = new Concentration();
-        concentrationPrototype.setAmount(Double.parseDouble(desiredConcEditText.getText().toString()));
-        concentrationPrototype.setType(desiredConcType);
-        long concId = appState.getDb().addConcentration(concentrationPrototype);
 
-        Component component = new Component();
-        component.setSolution(appState.getCurrentSolution());
-        component.setCompound(compound);
-        Concentration concentration = appState.getDb().getConcentrationById(concId);
-        component.setDesiredConcentration(concentration);
-        appState.getDb().addComponent(component);
+        if (fromStock && stockConcEditText.getText().toString().trim().length() == 0) {
+            (new Anim()).blink(stockConcEditText);
+            return;
+        }
+
+        if (desiredConcType == null) {
+            //TODO Add animation to buttons
+            return;
+        }
+
+        if (fromStock && stockConcType == null) {
+            //TODO Add animation to buttons
+            return;
+        }
+
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        Component component = appState.getDb().getComponentWithCompound(appState.getCurrentSolution(), compound);
+
+        if (component != null) {
+            updateComponent(component);
+
+        } else {
+            createComponent();
+        }
+
         appState.getDb().updateSolution(appState.getCurrentSolution());
         appState.getCurrentSolution().resetComponents();
 
@@ -173,6 +280,67 @@ public class CompoundActivity extends AppCompatActivity {
         //TODO WHEN ITEM EXISTS SHOW STH? OR BEFORE EVEN OPENING COMP.ACTIVITY?
 
     }
+
+    private void createComponent() {
+        //TODO remove local vars
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
+        EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
+        boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
+        Component component = new Component();
+        component.setSolution(appState.getCurrentSolution());
+        component.setCompound(compound);
+        component.setFromStock(fromStock);
+
+        Concentration concentrationPrototype = new Concentration();
+        concentrationPrototype.setAmount(Double.parseDouble(desiredConcEditText.getText().toString().replace(',', '.')));
+        concentrationPrototype.setType(desiredConcType);
+        long concId = appState.getDb().addConcentration(concentrationPrototype);
+        Concentration concentration = appState.getDb().getConcentrationById(concId);
+        component.setDesiredConcentration(concentration);
+
+        if (fromStock) {
+            concentrationPrototype = new Concentration();
+            concentrationPrototype.setAmount(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
+            concentrationPrototype.setType(stockConcType);
+            concId = appState.getDb().addConcentration(concentrationPrototype);
+            concentration = appState.getDb().getConcentrationById(concId);
+            component.setAvailableConcentration(concentration);
+        }
+
+        appState.getDb().addComponent(component);
+    }
+
+    private void updateComponent(Component component) {
+        //TODO remove local vars
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
+        EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
+        boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
+        component.getDesiredConcentration().setType(desiredConcType);
+        component.getDesiredConcentration().setAmount(Double.parseDouble(desiredConcEditText.getText().toString().replace(',', '.')));
+        if (fromStock) {
+            if (!component.getFromStock()) {
+                //from stock was added, so need to create concentration object
+                Concentration concentrationPrototype = new Concentration();
+                concentrationPrototype.setType(stockConcType);
+                concentrationPrototype.setAmount(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
+                long concId = appState.getDb().addConcentration(concentrationPrototype);
+                Concentration concentration = appState.getDb().getConcentrationById(concId);
+                component.setAvailableConcentration(concentration);
+            }
+            component.getAvailableConcentration().setType(stockConcType);
+            component.getAvailableConcentration().setAmount(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
+        } else {
+            if (component.getFromStock()) {
+                //from stock was removed, so need to remove concentration from db
+                appState.getDb().removeConcentration(component.getAvailableConcentration());
+            }
+        }
+        component.setFromStock(fromStock);
+        appState.getDb().updateComponent(component);
+    }
+
 
     private void setKeyboardOnInputs() {
         List<EditText> concEditTexts = new ArrayList<>();

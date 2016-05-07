@@ -84,14 +84,14 @@ public class SolutionDao extends AbstractDao<Solution, String> {
     public void readEntity(Cursor cursor, Solution entity, int offset) {
         entity.setName(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setVolume(cursor.getDouble(offset + 1));
-    }
-
+     }
+     
     /** @inheritdoc */
     @Override
     protected String updateKeyAfterInsert(Solution entity, long rowId) {
         return entity.getName();
     }
-
+    
     /** @inheritdoc */
     @Override
     public String getKey(Solution entity) {
@@ -101,7 +101,7 @@ public class SolutionDao extends AbstractDao<Solution, String> {
             return null;
         }
     }
-
+    
     /** @inheritdoc */
     @Override
     protected boolean isEntityUpdateable() {

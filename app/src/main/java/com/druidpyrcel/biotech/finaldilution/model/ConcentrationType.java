@@ -15,4 +15,20 @@ public enum ConcentrationType {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        switch (this.value) {
+            case 0:
+                return "%";
+            case 1:
+                return "M";
+            case 2:
+                return "mM";
+            case 3:
+                return "mg/ml";
+            default:
+                return "";
+        }
+    }
 }

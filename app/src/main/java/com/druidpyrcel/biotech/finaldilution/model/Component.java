@@ -11,6 +11,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class Component {
 
+    private Long id;
     private boolean fromStock;
     /** Not-null value. */
     private String solutionName;
@@ -44,7 +45,12 @@ public class Component {
     public Component() {
     }
 
-    public Component(boolean fromStock, String solutionName, String compoundShortName, long desConcId, long availConcId) {
+    public Component(Long id) {
+        this.id = id;
+    }
+
+    public Component(Long id, boolean fromStock, String solutionName, String compoundShortName, long desConcId, long availConcId) {
+        this.id = id;
         this.fromStock = fromStock;
         this.solutionName = solutionName;
         this.compoundShortName = compoundShortName;
@@ -56,6 +62,14 @@ public class Component {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getComponentDao() : null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean getFromStock() {
@@ -240,12 +254,20 @@ public class Component {
 
     // KEEP METHODS - put your custom methods here
 
-    public String getAmountString(double volume) {
 
-        double amount = getQuantity(volume);
+    @Override
+    public String toString() {
         StringBuilder niceOutput = new StringBuilder(200);
         niceOutput.append(getCompound().getShortName());
         niceOutput.append(" : ");
+        niceOutput.append(getAmountString());
+        return niceOutput.toString();
+    }
+
+    public String getAmountString() {
+
+        double amount = getQuantity(getSolution().getVolume());
+        StringBuilder niceOutput = new StringBuilder(200);
         if (amount > 1) {
             niceOutput.append(String.format("%1$,.3f", amount));
             if (getFromStock()) {

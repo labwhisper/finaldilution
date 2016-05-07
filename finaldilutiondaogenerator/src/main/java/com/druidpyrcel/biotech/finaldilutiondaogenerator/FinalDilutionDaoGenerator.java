@@ -71,6 +71,7 @@ public class FinalDilutionDaoGenerator {
 
     private static Entity addComponent(Schema schema) {
         Entity component = schema.addEntity("Component");
+        component.addIdProperty().autoincrement();
         component.addBooleanProperty("fromStock").notNull();
         return component;
     }

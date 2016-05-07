@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:text="" />
@@ -44,7 +44,6 @@
         android:layout_toEndOf="@+id/checklist_mainTextView"
         android:layout_toLeftOf="@+id/checklist_centerShim"
         android:layout_toRightOf="@+id/checklist_mainTextView"
-        android:text="[%]"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -63,12 +62,9 @@
         android:id="@+id/checklist_extraTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/checklist_checkBox1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/checklist_checkBox1"
-        android:layout_toStartOf="@+id/checklist_checkBox1"
-        android:text="Extra Small Text"
+        android:layout_below="@+id/checklist_mainTextView"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

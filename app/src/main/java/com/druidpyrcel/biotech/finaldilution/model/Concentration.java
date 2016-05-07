@@ -54,6 +54,13 @@ public class Concentration {
     }
 
     // KEEP METHODS - put your custom methods here
+
+    @Override
+    public String toString() {
+
+        return getAmount() + " [" + type.toString() + "]";
+    }
+
     // KEEP METHODS END
 
 }

@@ -44,9 +44,7 @@ public class CompoundDao extends AbstractDao<Compound, String> {
         db.execSQL(sql);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     @Override
     protected void bindValues(SQLiteStatement stmt, Compound entity) {
         stmt.clearBindings();
@@ -79,14 +77,14 @@ public class CompoundDao extends AbstractDao<Compound, String> {
     public void readEntity(Cursor cursor, Compound entity, int offset) {
         entity.setShortName(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setMolarMass(cursor.getDouble(offset + 1));
-    }
-
+     }
+     
     /** @inheritdoc */
     @Override
     protected String updateKeyAfterInsert(Compound entity, long rowId) {
         return entity.getShortName();
     }
-
+    
     /** @inheritdoc */
     @Override
     public String getKey(Compound entity) {
@@ -96,7 +94,7 @@ public class CompoundDao extends AbstractDao<Compound, String> {
             return null;
         }
     }
-
+    
     /** @inheritdoc */
     @Override
     protected boolean isEntityUpdateable() {

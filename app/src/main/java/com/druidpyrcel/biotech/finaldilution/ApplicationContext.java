@@ -7,8 +7,8 @@ import com.druidpyrcel.biotech.finaldilution.model.Solution;
 import com.druidpyrcel.biotech.finaldilution.model.sqlite.DataProvider;
 
 public class ApplicationContext extends Application {
-    public static double SWIPE_MIN_VELOCITY = 200;
-    public static double SWIPE_MIN_DISTANCE = 100;
+    public static double SWIPE_MIN_VELOCITY = 100;
+    public static double SWIPE_MIN_DISTANCE = 50;
     private static ApplicationContext instance;
     private DataProvider db;
     private Solution currentSolution;

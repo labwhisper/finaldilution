@@ -18,7 +18,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 /** 
  * DAO for table "COMPONENT".
 */
-public class ComponentDao extends AbstractDao<Component, Void> {
+public class ComponentDao extends AbstractDao<Component, Long> {
 
     public static final String TABLENAME = "COMPONENT";
     private DaoSession daoSession;;
@@ -38,11 +38,12 @@ public class ComponentDao extends AbstractDao<Component, Void> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"COMPONENT\" (" + //
-                "\"FROM_STOCK\" INTEGER NOT NULL ," + // 0: fromStock
-                "\"SOLUTION_NAME\" TEXT NOT NULL ," + // 1: solutionName
-                "\"COMPOUND_SHORT_NAME\" TEXT NOT NULL ," + // 2: compoundShortName
-                "\"DES_CONC_ID\" INTEGER NOT NULL ," + // 3: desConcId
-                "\"AVAIL_CONC_ID\" INTEGER NOT NULL );"); // 4: availConcId
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"FROM_STOCK\" INTEGER NOT NULL ," + // 1: fromStock
+                "\"SOLUTION_NAME\" TEXT NOT NULL ," + // 2: solutionName
+                "\"COMPOUND_SHORT_NAME\" TEXT NOT NULL ," + // 3: compoundShortName
+                "\"DES_CONC_ID\" INTEGER NOT NULL ," + // 4: desConcId
+                "\"AVAIL_CONC_ID\" INTEGER NOT NULL );"); // 5: availConcId
         // Add Indexes
         db.execSQL("CREATE UNIQUE INDEX " + constraint + "IDX_COMPONENT_SOLUTION_NAME_COMPOUND_SHORT_NAME ON COMPONENT" +
                 " (\"SOLUTION_NAME\",\"COMPOUND_SHORT_NAME\");");
@@ -58,11 +59,16 @@ public class ComponentDao extends AbstractDao<Component, Void> {
     @Override
     protected void bindValues(SQLiteStatement stmt, Component entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getFromStock() ? 1L: 0L);
-        stmt.bindString(2, entity.getSolutionName());
-        stmt.bindString(3, entity.getCompoundShortName());
-        stmt.bindLong(4, entity.getDesConcId());
-        stmt.bindLong(5, entity.getAvailConcId());
+
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+        stmt.bindLong(2, entity.getFromStock() ? 1L : 0L);
+        stmt.bindString(3, entity.getSolutionName());
+        stmt.bindString(4, entity.getCompoundShortName());
+        stmt.bindLong(5, entity.getDesConcId());
+        stmt.bindLong(6, entity.getAvailConcId());
     }
 
     @Override
@@ -73,19 +79,20 @@ public class ComponentDao extends AbstractDao<Component, Void> {
 
     /** @inheritdoc */
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public Component readEntity(Cursor cursor, int offset) {
         Component entity = new Component( //
-            cursor.getShort(offset + 0) != 0, // fromStock
-            cursor.getString(offset + 1), // solutionName
-            cursor.getString(offset + 2), // compoundShortName
-            cursor.getLong(offset + 3), // desConcId
-            cursor.getLong(offset + 4) // availConcId
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+                cursor.getShort(offset + 1) != 0, // fromStock
+                cursor.getString(offset + 2), // solutionName
+                cursor.getString(offset + 3), // compoundShortName
+                cursor.getLong(offset + 4), // desConcId
+                cursor.getLong(offset + 5) // availConcId
         );
         return entity;
     }
@@ -93,24 +100,29 @@ public class ComponentDao extends AbstractDao<Component, Void> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Component entity, int offset) {
-        entity.setFromStock(cursor.getShort(offset + 0) != 0);
-        entity.setSolutionName(cursor.getString(offset + 1));
-        entity.setCompoundShortName(cursor.getString(offset + 2));
-        entity.setDesConcId(cursor.getLong(offset + 3));
-        entity.setAvailConcId(cursor.getLong(offset + 4));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setFromStock(cursor.getShort(offset + 1) != 0);
+        entity.setSolutionName(cursor.getString(offset + 2));
+        entity.setCompoundShortName(cursor.getString(offset + 3));
+        entity.setDesConcId(cursor.getLong(offset + 4));
+        entity.setAvailConcId(cursor.getLong(offset + 5));
      }
     
     /** @inheritdoc */
     @Override
-    protected Void updateKeyAfterInsert(Component entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected Long updateKeyAfterInsert(Component entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public Void getKey(Component entity) {
-        return null;
+    public Long getKey(Component entity) {
+        if (entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     /** @inheritdoc */
@@ -255,11 +267,12 @@ public class ComponentDao extends AbstractDao<Component, Void> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property FromStock = new Property(0, boolean.class, "fromStock", false, "FROM_STOCK");
-        public final static Property SolutionName = new Property(1, String.class, "solutionName", false, "SOLUTION_NAME");
-        public final static Property CompoundShortName = new Property(2, String.class, "compoundShortName", false, "COMPOUND_SHORT_NAME");
-        public final static Property DesConcId = new Property(3, long.class, "desConcId", false, "DES_CONC_ID");
-        public final static Property AvailConcId = new Property(4, long.class, "availConcId", false, "AVAIL_CONC_ID");
+    public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+    public final static Property FromStock = new Property(1, boolean.class, "fromStock", false, "FROM_STOCK");
+    public final static Property SolutionName = new Property(2, String.class, "solutionName", false, "SOLUTION_NAME");
+    public final static Property CompoundShortName = new Property(3, String.class, "compoundShortName", false, "COMPOUND_SHORT_NAME");
+    public final static Property DesConcId = new Property(4, long.class, "desConcId", false, "DES_CONC_ID");
+    public final static Property AvailConcId = new Property(5, long.class, "availConcId", false, "AVAIL_CONC_ID");
     }
  
 }

@@ -165,6 +165,16 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         return concentration;
     }
 
+    public void removeConcentration(Concentration concentration) {
+        if (concentration == null) {
+            return;
+        }
+        openWritableDb();
+        daoSession.getConcentrationDao().delete(concentration);
+        daoSession.clear();
+        Log.d(TAG, "Concentration " + concentration.getAmount() + " deleted");
+    }
+
     public void addComponent(Component component) {
         if (component == null) {
             return;
@@ -175,6 +185,45 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             //TODO replace with Component.tostring
             Log.d(TAG, "Component " + component.getCompound().getShortName()
                     + ", " + component.getSolutionName() + " added");
+            daoSession.clear();
+        } catch (SQLiteConstraintException e) {
+            //Tried to add the other the same component...
+            //this code shouldn't be achieved.
+        }
+    }
+
+    public void updateComponent(Component component) {
+        if (component == null) {
+            return;
+        }
+        openWritableDb();
+        try {
+            daoSession.getConcentrationDao().update(component.getDesiredConcentration());
+            if (component.getAvailableConcentration() != null) {
+                daoSession.getConcentrationDao().update(component.getAvailableConcentration());
+            }
+            daoSession.getComponentDao().update(component);
+            //daoSession.getComponentDao().update(component);
+            //TODO replace with Component.tostring
+            Log.d(TAG, "Component " + component.getCompound().getShortName()
+                    + ", " + component.getSolutionName() + " updated");
+            daoSession.clear();
+        } catch (SQLiteConstraintException e) {
+            //Tried to add the other the same component...
+            //this code shouldn't be achieved.
+        }
+    }
+
+    public void removeComponent(Component component) {
+        if (component == null) {
+            return;
+        }
+        openWritableDb();
+        try {
+            daoSession.getComponentDao().delete(component);
+            //TODO replace with Component.tostring
+            Log.d(TAG, "Component " + component.getCompound().getShortName()
+                    + ", " + component.getSolutionName() + " deleted");
             daoSession.clear();
         } catch (SQLiteConstraintException e) {
             //Tried to add the other the same component...
