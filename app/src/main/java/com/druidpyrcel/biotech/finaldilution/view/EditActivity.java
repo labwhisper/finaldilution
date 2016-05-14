@@ -29,6 +29,7 @@ import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
 import com.druidpyrcel.biotech.finaldilution.R;
 import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Compound;
+import com.druidpyrcel.biotech.finaldilution.model.Solution;
 
 import java.text.DecimalFormat;
 
@@ -72,7 +73,12 @@ public class EditActivity extends AppCompatActivity {
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
         //TODO NPE IN THE LINE BELOW SOMEWHERE
-        volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
+        if (volumeTextView != null) {
+            volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
+        }
+        if (volumeEditText == null) {
+            return;
+        }
         volumeEditText.setText(volFormat.format(appState.getCurrentSolution().getVolume()));
         volumeEditText.setSelectAllOnFocus(true);
         volumeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -141,6 +147,7 @@ public class EditActivity extends AppCompatActivity {
                 this, android.R.layout.simple_list_item_1, appState.getDb().getAllCompounds());
         compoundsListView.setAdapter(compoundListAdapter);
         compoundsListView.setOnItemClickListener(new CompoundChooseListener());
+        compoundsListView.setOnItemLongClickListener(new CompoundLongClickListener());
     }
 
     private void displayBeakerImage() {
@@ -187,15 +194,13 @@ public class EditActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
             final Component component = (Component) (parent.getAdapter().getItem(position));
+            if (component == null || component.getCompound() == null) {
+                return;
+            }
             Intent intent = new Intent(EditActivity.this, CompoundActivity.class);
             intent.putExtra("compound", component.getCompound());
             startActivity(intent);
-
-//            appState.getDb().removeComponent(component);
-//            appState.getCurrentSolution().resetComponents();
-//            displayComponentsList();
         }
     }
 
@@ -205,9 +210,8 @@ public class EditActivity extends AppCompatActivity {
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             ApplicationContext appState = ((ApplicationContext) getApplicationContext());
             final Component component = (Component) (parent.getAdapter().getItem(position));
-            appState.getDb().removeConcentration(component.getDesiredConcentration());
-            if (component.getFromStock()) {
-                appState.getDb().removeConcentration(component.getAvailableConcentration());
+            if (component == null || component.getCompound() == null) {
+                return false;
             }
             appState.getDb().removeComponent(component);
             appState.getDb().updateSolution(appState.getCurrentSolution());
@@ -238,6 +242,26 @@ public class EditActivity extends AppCompatActivity {
                 intent.putExtra("compound", compound);
                 startActivity(intent);
             }
+        }
+    }
+
+    class CompoundLongClickListener implements AdapterView.OnItemLongClickListener {
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+            final Compound compound = (Compound) (parent.getAdapter().getItem(position));
+            for (Solution solution : appState.getDb().getAllSolutions()) {
+                if (appState.getDb().getComponentWithCompound(solution, compound) != null) {
+                    appState.getDb().removeComponent(appState.getDb().getComponentWithCompound(solution, compound));
+                    appState.getDb().updateSolution(solution);
+                    appState.getCurrentSolution().resetComponents();
+                }
+            }
+            appState.getDb().removeCompound(compound);
+            displayComponentsList();
+            displayCompoundList();
+            return true;
         }
     }
 

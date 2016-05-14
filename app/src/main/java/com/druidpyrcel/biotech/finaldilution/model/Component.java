@@ -257,6 +257,9 @@ public class Component {
 
     @Override
     public String toString() {
+        if (getCompound() == null) {
+            return "";
+        }
         StringBuilder niceOutput = new StringBuilder(200);
         niceOutput.append(getCompound().getShortName());
         niceOutput.append(" : ");

@@ -135,6 +135,16 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         return compound;
     }
 
+    public void removeCompound(Compound compound) {
+        if (compound == null) {
+            return;
+        }
+        openWritableDb();
+        daoSession.getCompoundDao().delete(compound);
+        Log.d(TAG, "Compound " + compound.getShortName() + " deleted");
+        daoSession.clear();
+    }
+
     public List<Compound> getAllCompounds() {
         openReadableDb();
         List<Compound> compounds = daoSession.getCompoundDao().loadAll();
@@ -220,16 +230,17 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             return;
         }
         openWritableDb();
-        try {
-            daoSession.getComponentDao().delete(component);
-            //TODO replace with Component.tostring
-            Log.d(TAG, "Component " + component.getCompound().getShortName()
-                    + ", " + component.getSolutionName() + " deleted");
-            daoSession.clear();
-        } catch (SQLiteConstraintException e) {
-            //Tried to add the other the same component...
-            //this code shouldn't be achieved.
+        Log.d(TAG, "Concentration " + component.getDesiredConcentration().getAmount() + " deleted");
+        daoSession.getConcentrationDao().delete(component.getDesiredConcentration());
+        if (component.getFromStock()) {
+            Log.d(TAG, "Concentration " + component.getAvailableConcentration().getAmount() + " deleted");
+            daoSession.getConcentrationDao().delete(component.getAvailableConcentration());
         }
+        daoSession.getComponentDao().delete(component);
+        //TODO replace with Component.tostring
+        Log.d(TAG, "Component " + component.getCompound().getShortName()
+                + ", " + component.getSolutionName() + " deleted");
+        daoSession.clear();
     }
 
     public Component getComponentWithCompound(Solution solution, Compound compound) {
