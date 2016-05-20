@@ -33,8 +33,8 @@ public class StartupActivity extends AppCompatActivity {
         Button newSolutionButton = (Button) findViewById(R.id.addNewSolutionButton);
         newSolutionButton.setOnClickListener(new OnNewSolutionButtonClickListener());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
     }
 
     @Override
@@ -53,12 +53,12 @@ public class StartupActivity extends AppCompatActivity {
         }
         ListView solutionListView = (ListView) findViewById(R.id.solutionListView);
         ArrayAdapter<Solution> solutionListAdapter = new ArrayAdapter<Solution>(
-                this, android.R.layout.simple_list_item_2, android.R.id.text1, solutionList) {
+                this, R.layout.solution_list_item, R.id.solution_list_text1, solutionList) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                TextView text1 = (TextView) view.findViewById(R.id.solution_list_text1);
+                TextView text2 = (TextView) view.findViewById(R.id.solution_list_text2);
                 Solution solution = solutionList.get(position);
                 text1.setText(solution.getName());
                 text2.setText(volFormat.format(solution.getVolume()) + " ml  "

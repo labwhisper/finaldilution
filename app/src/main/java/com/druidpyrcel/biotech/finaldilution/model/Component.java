@@ -305,6 +305,10 @@ public class Component {
      */
     private double calcDesiredMass(double volume) {
 
+        if( getCompound() == null || getDesiredConcentration() == null ){
+            return 0;
+        }
+
         double c = getDesiredConcentration().getAmount();
         double M = getCompound().getMolarMass();
         switch (getDesiredConcentration().getType()) {
@@ -327,6 +331,10 @@ public class Component {
      * @return - volume[ml] of compound to be taken
      */
     private double calcVolumeForDesiredMass(double mass) {
+
+        if( getCompound() == null || getDesiredConcentration() == null ){
+            return 0;
+        }
 
         double c = getAvailableConcentration().getAmount();
         double M = getCompound().getMolarMass();
