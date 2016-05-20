@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -44,6 +45,12 @@ public class PrepActivity extends AppCompatActivity {
         ChecklistAdapter adapter = new ChecklistAdapter(appState.getCurrentSolution().getComponents());
         ListView componentListView = (ListView) findViewById(R.id.checklist_listView);
         componentListView.setAdapter(adapter);
+        componentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((CheckBox)view.findViewById(R.id.checklist_checkBox1)).toggle();
+            }
+        });
     }
 
     private void displayFromPrepToEditButton() {
