@@ -112,6 +112,19 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         return solutions;
     }
 
+    public void removeSolution(Solution solution) {
+        if (solution == null) {
+            return;
+        }
+        openWritableDb();
+        for( Component component : daoSession.getComponentDao()._querySolution_Components(solution.getName())){
+            removeComponentWithinSession(component);
+        }
+        daoSession.getSolutionDao().delete(solution);
+        daoSession.clear();
+        Log.d(TAG, "Solution " + solution.getName() + " removed");
+    }
+
 
     public void addCompound(Compound compound) {
         if (compound == null) {
@@ -230,6 +243,14 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             return;
         }
         openWritableDb();
+        removeComponentWithinSession(component);
+        daoSession.clear();
+    }
+
+    private void removeComponentWithinSession(Component component) {
+        if (component == null) {
+            return;
+        }
         Log.d(TAG, "Concentration " + component.getDesiredConcentration().getAmount() + " deleted");
         daoSession.getConcentrationDao().delete(component.getDesiredConcentration());
         if (component.getFromStock()) {
@@ -243,9 +264,10 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
             compoundName = component.getCompound().getShortName();
         }
         Log.d(TAG, "Component " + compoundName
-                + ", " + component.getSolutionName() + " deleted");
-        daoSession.clear();
+                + " from " + component.getSolutionName() + " deleted");
     }
+
+
 
     public Component getComponentWithCompound(Solution solution, Compound compound) {
         if (solution == null || compound == null) {

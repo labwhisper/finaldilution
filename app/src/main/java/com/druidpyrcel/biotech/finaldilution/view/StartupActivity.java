@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
 import com.druidpyrcel.biotech.finaldilution.R;
+import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
 
 import java.text.DecimalFormat;
@@ -68,6 +69,7 @@ public class StartupActivity extends AppCompatActivity {
         };
         solutionListView.setAdapter(solutionListAdapter);
         solutionListView.setOnItemClickListener(new SolutionChooseListener());
+        solutionListView.setOnItemLongClickListener(new SolutionLongClickListener());
     }
 
     private class OnNewSolutionButtonClickListener implements View.OnClickListener {
@@ -120,4 +122,20 @@ public class StartupActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+    class SolutionLongClickListener implements AdapterView.OnItemLongClickListener {
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+            final Solution solution = (Solution) (parent.getAdapter().getItem(position));
+            if (solution == null) {
+                return false;
+            }
+            appState.getDb().removeSolution(solution);
+            refreshSolutionList();
+            return true;
+        }
+    }
+
 }
