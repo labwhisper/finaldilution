@@ -238,7 +238,11 @@ public class DataProvider extends AssetDbHelper implements AsyncOperationListene
         }
         daoSession.getComponentDao().delete(component);
         //TODO replace with Component.tostring
-        Log.d(TAG, "Component " + component.getCompound().getShortName()
+        String compoundName = "";
+        if( component.getCompound() != null) {
+            compoundName = component.getCompound().getShortName();
+        }
+        Log.d(TAG, "Component " + compoundName
                 + ", " + component.getSolutionName() + " deleted");
         daoSession.clear();
     }

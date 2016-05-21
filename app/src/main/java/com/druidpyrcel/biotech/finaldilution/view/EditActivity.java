@@ -73,8 +73,16 @@ public class EditActivity extends AppCompatActivity {
         volumeTextView = (TextView) findViewById(R.id.beakerVolumeTextView);
         volumeEditText = (EditText) findViewById(R.id.beakerVolumeEditText);
         //TODO NPE IN THE LINE BELOW SOMEWHERE
-        if (volumeTextView != null) {
+        try {
             volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
+        } catch (NullPointerException e) {
+            Log.d(TAG,
+                    "volumeTextView=" + volumeTextView
+                            + " volFormat=" + volFormat
+                            + " appState=" + appState
+                            + " appState.getCurrentSolution()=" + appState.getCurrentSolution()
+                            + " appState.getCurrentSolution().getVolume()=" + appState.getCurrentSolution().getVolume()
+                    , e);
         }
         if (volumeEditText == null) {
             return;
@@ -133,6 +141,12 @@ public class EditActivity extends AppCompatActivity {
     private void displayComponentsList() {
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         ListView componentsListView = (ListView) findViewById(R.id.componentsTextView);
+        for (Component component : appState.getCurrentSolution().getComponents()) {
+            if (component.getCompound() == null) {
+                appState.getDb().removeComponent(component);
+                appState.getCurrentSolution().resetComponents();
+            }
+        }
         ArrayAdapter<Component> componentListAdapter = new ArrayAdapter<>(
                 this, R.layout.tiny_list, appState.getCurrentSolution().getComponents());
         componentsListView.setAdapter(componentListAdapter);
