@@ -119,6 +119,19 @@ public class Solution {
         }
         return niceOutput.toString();
     }
+
+    public boolean isOverflown() {
+        double allLiquidComponentsVolume = 0.0;
+        for (Component component : getComponents()) {
+            if (component.getFromStock()) {
+                allLiquidComponentsVolume += component.getQuantity(getVolume());
+            }
+        }
+        if (allLiquidComponentsVolume > getVolume()) {
+            return true;
+        }
+        return false;
+    }
     // KEEP METHODS END
 
 }

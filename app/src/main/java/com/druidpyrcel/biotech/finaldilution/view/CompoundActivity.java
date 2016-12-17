@@ -10,6 +10,7 @@ import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -270,18 +271,38 @@ public class CompoundActivity extends AppCompatActivity {
             return;
         }
 
+
         ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+
+
         Component component = appState.getDb().getComponentWithCompound(appState.getCurrentSolution(), compound);
 
         if (component != null) {
             updateComponent(component);
 
         } else {
-            createComponent();
+            component = createComponent();
         }
 
         appState.getDb().updateSolution(appState.getCurrentSolution());
         appState.getCurrentSolution().resetComponents();
+
+        double allComponentsVolume = 0.0;
+        for (Component c : appState.getCurrentSolution().getComponents()) {
+            if (c.getFromStock()) {
+                allComponentsVolume += c.getQuantity(appState.getCurrentSolution().getVolume());
+            }
+        }
+        double currentComponentVolume = 0.0;
+        if (fromStock) {
+            currentComponentVolume = component.getQuantity(appState.getCurrentSolution().getVolume());
+        }
+        if (allComponentsVolume + currentComponentVolume > appState.getCurrentSolution().getVolume()) {
+            //TODO Color?? move this code
+//            appState.getDb().removeComponent(component);
+//            appState.getDb().updateSolution(appState.getCurrentSolution());
+//            appState.getCurrentSolution().resetComponents();
+        }
 
         Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
         startActivity(intent);
@@ -309,7 +330,7 @@ public class CompoundActivity extends AppCompatActivity {
         }
     }
 
-    private void createComponent() {
+    private Component createComponent() {
         //TODO remove local vars
         ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
@@ -337,6 +358,7 @@ public class CompoundActivity extends AppCompatActivity {
         }
 
         appState.getDb().addComponent(component);
+        return component;
     }
 
     private void updateComponent(Component component) {
@@ -382,8 +404,9 @@ public class CompoundActivity extends AppCompatActivity {
 
                 @Override
                 public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
-                    if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                            (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    //TODO: Check this code for different versions of Android
+                    if (keyCode == EditorInfo.IME_ACTION_DONE || ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                            (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))) {
                         // hide virtual keyboard
                         InputMethodManager imm =
                                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

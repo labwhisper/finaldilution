@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -76,13 +77,12 @@ public class EditActivity extends AppCompatActivity {
         try {
             volumeTextView.setText(getResources().getString(R.string.volumeText) + volFormat.format(appState.getCurrentSolution().getVolume()) + "ml");
         } catch (NullPointerException e) {
-            Log.d(TAG,
-                    "volumeTextView=" + volumeTextView
-                            + " volFormat=" + volFormat
-                            + " appState=" + appState
-                            + " appState.getCurrentSolution()=" + appState.getCurrentSolution()
-                            + " appState.getCurrentSolution().getVolume()=" + appState.getCurrentSolution().getVolume()
-                    , e);
+            Log.d(TAG, "volumeTextView=" + volumeTextView, e);
+            Log.d(TAG, " volFormat=" + volFormat, e);
+            Log.d(TAG, " appState=" + appState, e);
+            Log.d(TAG, " appState.getCurrentSolution()=" + appState.getCurrentSolution(), e);
+            Log.d(TAG, " appState.getCurrentSolution().getVolume()=" + appState.getCurrentSolution().getVolume(), e);
+            throw new NullPointerException();
         }
         if (volumeEditText == null) {
             return;
@@ -147,11 +147,22 @@ public class EditActivity extends AppCompatActivity {
                 appState.getCurrentSolution().resetComponents();
             }
         }
+
         ArrayAdapter<Component> componentListAdapter = new ArrayAdapter<>(
                 this, R.layout.tiny_list, appState.getCurrentSolution().getComponents());
         componentsListView.setAdapter(componentListAdapter);
         componentsListView.setOnItemClickListener(new ComponentListItemListener());
         componentsListView.setOnItemLongClickListener(new ComponentLongClickListener());
+
+        if (appState.getCurrentSolution().isOverflown()) {
+            componentsListView.setBackgroundColor(Color.WHITE);
+            for (Component component : appState.getCurrentSolution().getComponents()) {
+                if (component.getFromStock()) {
+                    componentsListView.setBackgroundColor(Color.YELLOW);
+                    break;
+                }
+            }
+        }
     }
 
     private void displayCompoundList() {
