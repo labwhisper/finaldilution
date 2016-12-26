@@ -1,10 +1,9 @@
 package com.druidpyrcel.biotech.finaldilution.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +22,15 @@ import com.druidpyrcel.biotech.finaldilution.model.Solution;
 
 import java.util.List;
 
-public class PrepActivity extends AppCompatActivity {
+public class PrepActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prep);
+        setContentView(R.layout.content_prep);
 
         displayComponentListView();
         displayFromPrepToEditButton();
-
-        displayTitleToolbar();
 
         final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         setTitle("Prepare " + appState.getCurrentSolution().getName());
@@ -62,11 +59,6 @@ public class PrepActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private void displayTitleToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
 
     private class ChecklistAdapter extends BaseAdapter {

@@ -11,8 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".view.StartupActivity"
-            android:label="@string/title_activity_startup"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_activity_startup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,16 +20,13 @@
         </activity>
         <activity
             android:name=".view.EditActivity"
-            android:label="@string/title_activity_edit"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_edit"></activity>
         <activity
             android:name=".view.PrepActivity"
-            android:label="@string/title_activity_prepare"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_prepare"></activity>
         <activity
             android:name=".view.CompoundActivity"
-            android:label="@string/title_activity_compound"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_activity_compound">
         </activity>
     </application>
 

@@ -1,11 +1,10 @@
 package com.druidpyrcel.biotech.finaldilution.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -18,24 +17,20 @@ import android.widget.TextView;
 
 import com.druidpyrcel.biotech.finaldilution.ApplicationContext;
 import com.druidpyrcel.biotech.finaldilution.R;
-import com.druidpyrcel.biotech.finaldilution.model.Component;
 import com.druidpyrcel.biotech.finaldilution.model.Solution;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class StartupActivity extends AppCompatActivity {
+public class StartupActivity extends Activity {
 
     DecimalFormat volFormat = new DecimalFormat("0.##");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_startup);
+        setContentView(R.layout.content_startup);
         Button newSolutionButton = (Button) findViewById(R.id.addNewSolutionButton);
         newSolutionButton.setOnClickListener(new OnNewSolutionButtonClickListener());
-
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
     }
 
     @Override

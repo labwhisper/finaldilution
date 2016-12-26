@@ -1,11 +1,10 @@
 package com.druidpyrcel.biotech.finaldilution.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,7 +27,7 @@ import com.druidpyrcel.biotech.finaldilution.model.ConcentrationType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompoundActivity extends AppCompatActivity {
+public class CompoundActivity extends Activity {
 
     Compound compound;
     ConcentrationType desiredConcType = ConcentrationType.MOLAR;
@@ -45,9 +44,7 @@ public class CompoundActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compound);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.content_compound);
 
         desiredButtonList = new ArrayList<>();
         desiredButtonList.add((RadioButton) findViewById(R.id.desiredPercentageConcButton));

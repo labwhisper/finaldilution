@@ -1,5 +1,6 @@
 package com.druidpyrcel.biotech.finaldilution.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,9 +8,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -37,19 +35,19 @@ import java.text.DecimalFormat;
 import static com.druidpyrcel.biotech.finaldilution.ApplicationContext.SWIPE_MIN_DISTANCE;
 import static com.druidpyrcel.biotech.finaldilution.ApplicationContext.SWIPE_MIN_VELOCITY;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends Activity {
 
     private static final String TAG = "Edit Activity";
     ViewSwitcher switcher = null;
     TextView volumeTextView = null;
     TextView volumeEditText = null;
     DecimalFormat volFormat = new DecimalFormat("0.##");
-    private GestureDetectorCompat detector;
+    private GestureDetector detector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.content_edit);
 
         displayVolumeText();
         displayComponentsList();
@@ -57,9 +55,8 @@ public class EditActivity extends AppCompatActivity {
         displayBeakerImage();
         displayFromEditToPrepButton();
         displayNewCompoundButton();
-        displayTitleToolbar();
 
-        detector = new GestureDetectorCompat(this, new EditGestureListener());
+        detector = new GestureDetector(this, new EditGestureListener());
     }
 
     @Override
@@ -206,13 +203,6 @@ public class EditActivity extends AppCompatActivity {
     private void displayNewCompoundButton() {
         Button newCompoundButton = (Button) findViewById(R.id.newCompoundButton);
         newCompoundButton.setOnClickListener(new OnNewCompoundButtonClickListener());
-    }
-
-    private void displayTitleToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        setTitle("Edit " + appState.getCurrentSolution().getName());
     }
 
     class ComponentListItemListener implements AdapterView.OnItemClickListener {
