@@ -1,1 +1,1 @@
-include ':app', ':finaldilutiondaogenerator'
+include ':app'

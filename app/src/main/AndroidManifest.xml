@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.druidpyrcel.biotech.finaldilution">
+    package="com.labessence.biotech.finaldilution">
 
     <application
-        android:name=".ApplicationContext"
+        android:name="com.labessence.biotech.finaldilution.ApplicationContext"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
         <activity
-            android:name=".view.StartupActivity"
-            android:label="@string/title_activity_startup">
+            android:name=".peripherals.view.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,13 +19,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.EditActivity"
+            android:name=".peripherals.view.StartupActivity"
+            android:label="@string/title_activity_startup" />
+        <activity
+            android:name=".solution.view.EditActivity"
             android:label="@string/title_activity_edit" />
         <activity
-            android:name=".view.PrepActivity"
+            android:name=".solution.view.PrepActivity"
             android:label="@string/title_activity_prepare" />
         <activity
-            android:name=".view.CompoundActivity"
+            android:name=".concentration.view.CompoundActivity"
             android:label="@string/title_activity_compound" />
     </application>
 
