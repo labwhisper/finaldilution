@@ -28,7 +28,7 @@
             android:name=".solution.view.PrepActivity"
             android:label="@string/title_activity_prepare" />
         <activity
-            android:name=".concentration.view.CompoundActivity"
+            android:name=".component.view.CompoundActivity"
             android:label="@string/title_activity_compound" />
     </application>
 

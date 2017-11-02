@@ -1,4 +1,4 @@
-package com.labessence.biotech.finaldilution.concentration.view;
+package com.labessence.biotech.finaldilution.component.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,10 +19,10 @@ import android.widget.ToggleButton;
 
 import com.labessence.biotech.finaldilution.ApplicationContext;
 import com.labessence.biotech.finaldilution.R;
+import com.labessence.biotech.finaldilution.component.Component;
+import com.labessence.biotech.finaldilution.component.Concentration;
+import com.labessence.biotech.finaldilution.component.ConcentrationType;
 import com.labessence.biotech.finaldilution.compound.Compound;
-import com.labessence.biotech.finaldilution.concentration.Component;
-import com.labessence.biotech.finaldilution.concentration.Concentration;
-import com.labessence.biotech.finaldilution.concentration.ConcentrationType;
 import com.labessence.biotech.finaldilution.peripherals.view.Anim;
 import com.labessence.biotech.finaldilution.solution.Solution;
 import com.labessence.biotech.finaldilution.solution.view.EditActivity;
@@ -62,21 +62,21 @@ public class CompoundActivity extends Activity {
         stockButtonList.add((RadioButton) findViewById(R.id.stockMgMlConcButton));
 
         desiredViewsList = new ArrayList<>();
-        desiredViewsList.add(findViewById(R.id.desiredConcEditText));
-        desiredViewsList.add(findViewById(R.id.desiredConcButtonsBar));
-        desiredViewsList.add(findViewById(R.id.desiredConcTextView));
+        desiredViewsList.add((View) findViewById(R.id.desiredConcEditText));
+        desiredViewsList.add((View) findViewById(R.id.desiredConcButtonsBar));
+        desiredViewsList.add((View) findViewById(R.id.desiredConcTextView));
         desiredViewsList.addAll(desiredButtonList);
 
         stockViewsList = new ArrayList<>();
-        stockViewsList.add(findViewById(R.id.stockConcEditText));
-        stockViewsList.add(findViewById(R.id.stockConcButtonsBar));
-        stockViewsList.add(findViewById(R.id.stockConcTextView));
+        stockViewsList.add((View) findViewById(R.id.stockConcEditText));
+        stockViewsList.add((View) findViewById(R.id.stockConcButtonsBar));
+        stockViewsList.add((View) findViewById(R.id.stockConcTextView));
         stockViewsList.addAll(stockButtonList);
 
         compound = (Compound) getIntent().getSerializableExtra("compound");
         setTitle("Add " + compound.getShortName());
 
-        findViewById(R.id.desiredConcButtonsBar).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        ((View) findViewById(R.id.desiredConcButtonsBar)).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 renderButtonsSquare();
@@ -293,7 +293,7 @@ public class CompoundActivity extends Activity {
         }
         if (allComponentsVolume + currentComponentVolume > currentSolution.getVolume()) {
             //TODO Color?? move this code
-//            appState.getDb().removeComponent(component);
+//            appState.getDb().removeComponentFromCurrentSolution(component);
 //            appState.getDb().update(appState.getCurrentSolution());
 //            appState.getCurrentSolution().resetComponents();
         }
@@ -338,8 +338,9 @@ public class CompoundActivity extends Activity {
             component.setAvailableConcentration(concentration);
         }
 
-        appState.getCurrentSolution().addComponent(component);
-        appState.getSolutionGateway().update(appState.getCurrentSolution());
+        Solution solution = appState.getCurrentSolution();
+        solution.addComponent(component);
+        appState.getSolutionGateway().update(solution);
         return component;
     }
 

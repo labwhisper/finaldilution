@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.labessence.biotech.finaldilution.ApplicationContext;
 import com.labessence.biotech.finaldilution.R;
+import com.labessence.biotech.finaldilution.component.Component;
 import com.labessence.biotech.finaldilution.compound.Compound;
-import com.labessence.biotech.finaldilution.concentration.Component;
 import com.labessence.biotech.finaldilution.solution.Solution;
 
 import java.util.List;

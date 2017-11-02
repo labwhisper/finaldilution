@@ -1,4 +1,4 @@
-package com.labessence.biotech.finaldilution.concentration;
+package com.labessence.biotech.finaldilution.component;
 
 public enum ConcentrationType {
     PERCENTAGE(0),
