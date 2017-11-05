@@ -14,6 +14,11 @@ public class Compound implements Item {
         this.shortName = shortName;
     }
 
+    public Compound(String shortName, double molarMass) {
+        this.shortName = shortName;
+        this.molarMass = molarMass;
+    }
+
     public String getShortName() {
         return shortName;
     }

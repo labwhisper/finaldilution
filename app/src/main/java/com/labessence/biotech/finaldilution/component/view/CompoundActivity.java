@@ -8,13 +8,11 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.labessence.biotech.finaldilution.ApplicationContext;
@@ -76,12 +74,7 @@ public class CompoundActivity extends Activity {
         compound = (Compound) getIntent().getSerializableExtra("compound");
         setTitle("Add " + compound.getShortName());
 
-        ((View) findViewById(R.id.desiredConcButtonsBar)).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                renderButtonsSquare();
-            }
-        });
+        ((View) findViewById(R.id.desiredConcButtonsBar)).getViewTreeObserver().addOnGlobalLayoutListener(this::renderButtonsSquare);
 
         setKeyboardOnInputs();
         bindListeners();
@@ -91,97 +84,53 @@ public class CompoundActivity extends Activity {
     }
 
     private void bindListeners() {
-        findViewById(R.id.desiredPercentageConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                desiredConcType = ConcentrationType.PERCENTAGE;
-                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("%");
-            }
+        findViewById(R.id.desiredPercentageConcButton).setOnClickListener(v -> {
+            desiredConcType = ConcentrationType.PERCENTAGE;
+            ((EditText) findViewById(R.id.desiredConcEditText)).setHint("%");
         });
 
-        findViewById(R.id.desiredMolarConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                desiredConcType = ConcentrationType.MOLAR;
-                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("M/l");
-            }
+        findViewById(R.id.desiredMolarConcButton).setOnClickListener(v -> {
+            desiredConcType = ConcentrationType.MOLAR;
+            ((EditText) findViewById(R.id.desiredConcEditText)).setHint("M/l");
         });
 
-        findViewById(R.id.desiredMilimolarConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                desiredConcType = ConcentrationType.MILIMOLAR;
-                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mM/l");
-            }
+        findViewById(R.id.desiredMilimolarConcButton).setOnClickListener(v -> {
+            desiredConcType = ConcentrationType.MILIMOLAR;
+            ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mM/l");
         });
 
-        findViewById(R.id.desiredMgMlConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                desiredConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
-                ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mg/ml");
-            }
+        findViewById(R.id.desiredMgMlConcButton).setOnClickListener(v -> {
+            desiredConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
+            ((EditText) findViewById(R.id.desiredConcEditText)).setHint("mg/ml");
         });
 
-        findViewById(R.id.stockPercentageConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stockConcType = ConcentrationType.PERCENTAGE;
-                ((EditText) findViewById(R.id.stockConcEditText)).setHint("%");
-            }
+        findViewById(R.id.stockPercentageConcButton).setOnClickListener(v -> {
+            stockConcType = ConcentrationType.PERCENTAGE;
+            ((EditText) findViewById(R.id.stockConcEditText)).setHint("%");
         });
 
-        findViewById(R.id.stockMolarConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stockConcType = ConcentrationType.MOLAR;
-                ((EditText) findViewById(R.id.stockConcEditText)).setHint("M/l");
-            }
+        findViewById(R.id.stockMolarConcButton).setOnClickListener(v -> {
+            stockConcType = ConcentrationType.MOLAR;
+            ((EditText) findViewById(R.id.stockConcEditText)).setHint("M/l");
         });
 
-        findViewById(R.id.stockMilimolarConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stockConcType = ConcentrationType.MILIMOLAR;
-                ((EditText) findViewById(R.id.stockConcEditText)).setHint("mM/l");
-            }
+        findViewById(R.id.stockMilimolarConcButton).setOnClickListener(v -> {
+            stockConcType = ConcentrationType.MILIMOLAR;
+            ((EditText) findViewById(R.id.stockConcEditText)).setHint("mM/l");
         });
 
-        findViewById(R.id.stockMgMlConcButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stockConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
-                ((EditText) findViewById(R.id.stockConcEditText)).setHint("mg/ml");
-            }
+        findViewById(R.id.stockMgMlConcButton).setOnClickListener(v -> {
+            stockConcType = ConcentrationType.MILIGRAM_PER_MILLILITER;
+            ((EditText) findViewById(R.id.stockConcEditText)).setHint("mg/ml");
         });
 
-        findViewById(R.id.enableStockDilutionButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleSolutionFromStock();
-            }
-        });
+        findViewById(R.id.enableStockDilutionButton).setOnClickListener(v -> toggleSolutionFromStock());
 
-        findViewById(R.id.buttonAddCompoundDone).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onAcceptComponent();
-            }
-        });
+        findViewById(R.id.buttonAddCompoundDone).setOnClickListener(v -> onAcceptComponent());
 
-        findViewById(R.id.buttonAddCompoundCancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCancelComponent();
-            }
-        });
+        findViewById(R.id.buttonAddCompoundCancel).setOnClickListener(v -> onCancelComponent());
 
-        findViewById(R.id.buttonAddCompoundDelete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDeleteComponent();
-            }
-        });
+        findViewById(R.id.buttonAddCompoundDelete).setOnClickListener(v -> onDeleteComponent());
 
     }
 
@@ -284,8 +233,6 @@ public class CompoundActivity extends Activity {
             component = createComponent();
         }
 
-        appState.getSolutionGateway().update(currentSolution);
-
         double allComponentsVolume = currentSolution.getAllLiquidComponentsVolume();
         double currentComponentVolume = 0.0;
         if (fromStock) {
@@ -312,7 +259,6 @@ public class CompoundActivity extends Activity {
             onCancelComponent();
         } else {
             appState.getCurrentSolution().removeComponent(component);
-            appState.getSolutionGateway().update(appState.getCurrentSolution());
             Intent intent = new Intent(CompoundActivity.this, EditActivity.class);
             startActivity(intent);
         }
@@ -340,13 +286,11 @@ public class CompoundActivity extends Activity {
 
         Solution solution = appState.getCurrentSolution();
         solution.addComponent(component);
-        appState.getSolutionGateway().update(solution);
         return component;
     }
 
     private void updateComponent(Component component) {
         //TODO remove local vars
-        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
         EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
         EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
         boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
@@ -364,7 +308,6 @@ public class CompoundActivity extends Activity {
             component.getAvailableConcentration().setAmount(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
         }
         component.setFromStock(fromStock);
-        appState.getSolutionGateway().update(appState.getCurrentSolution());
     }
 
 
@@ -376,21 +319,19 @@ public class CompoundActivity extends Activity {
 
             editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
             editText.setRawInputType(Configuration.KEYBOARD_12KEY);
-            editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-                @Override
-                public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
-                    //TODO: Check this code for different versions of Android
-                    if (keyCode == EditorInfo.IME_ACTION_DONE || ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                            (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))) {
-                        // hide virtual keyboard
-                        InputMethodManager imm =
-                                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            editText.setOnEditorActionListener((v, keyCode, event) -> {
+                //TODO: Check this code for different versions of Android
+                if (keyCode == EditorInfo.IME_ACTION_DONE || ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (event.getKeyCode() == KeyEvent.KEYCODE_ENTER))) {
+                    // hide virtual keyboard
+                    InputMethodManager imm =
+                            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        return true;
                     }
-                    return false;
+                    return true;
                 }
+                return false;
             });
         }
     }

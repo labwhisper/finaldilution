@@ -82,10 +82,8 @@ class VolumePanel {
         }
     }
 
-    //TODO Probably Move Setting volumePanel to different component
     private void updateVolume(double volume) {
         appState.getCurrentSolution().setVolume(volume);
-        appState.getSolutionGateway().update(appState.getCurrentSolution());
     }
 
     @NonNull

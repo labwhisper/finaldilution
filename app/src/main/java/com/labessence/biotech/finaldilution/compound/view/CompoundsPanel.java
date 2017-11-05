@@ -77,4 +77,7 @@ public class CompoundsPanel {
     }
 
 
+    public void displayNewCompoundButton() {
+        new NewCompoundCreator(activity).displayNewCompoundButton();
+    }
 }

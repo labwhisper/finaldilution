@@ -45,7 +45,6 @@ public class ApplicationContext extends Application {
                 Log.d(TAG, "Retrieved current solution using preferences : " + storedSolutionName);
             }
         }
-        //currentSolution = solutionGateway.load(currentSolution.getName());
         return currentSolution;
     }
 
@@ -75,6 +74,7 @@ public class ApplicationContext extends Application {
     }
 
     public void removeCompoundFromEverywhere(Compound compound) {
+        saveCurrentWorkOnSolution();
         for (Solution solution : getSolutionGateway().loadAll()) {
             if (solution.getComponentWithCompound(compound) != null) {
                 solution.removeComponent(solution.getComponentWithCompound(compound));
@@ -87,4 +87,7 @@ public class ApplicationContext extends Application {
         getCompoundGateway().remove(compound);
     }
 
+    public void saveCurrentWorkOnSolution() {
+        getSolutionGateway().update(getCurrentSolution());
+    }
 }

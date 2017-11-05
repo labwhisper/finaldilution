@@ -42,6 +42,19 @@ public class ComponentsPanel {
         updateOverflowState(componentsListView);
     }
 
+    private void updateOverflowState(ListView componentsListView) {
+        componentsListView.setBackgroundColor(Color.WHITE);
+        if (appState.getCurrentSolution().isOverflown())
+            highlightAllLiquidComponents(componentsListView);
+    }
+
+    private void highlightAllLiquidComponents(ListView componentsListView) {
+        for (Component component : appState.getCurrentSolution().getComponents())
+            if (component.getFromStock()) {
+                componentsListView.setBackgroundColor(Color.YELLOW);
+            }
+    }
+
     @NonNull
     private AdapterView.OnItemClickListener getComponentClickListener() {
         return (parent, view, position, id) -> {
@@ -51,21 +64,6 @@ public class ComponentsPanel {
             }
             activity.startComponentEdition(component.getCompound());
         };
-    }
-
-    private void highlightAllLiquidComponents(ListView componentsListView) {
-        for (Component component : appState.getCurrentSolution().getComponents()) {
-            if (component.getFromStock()) {
-                componentsListView.setBackgroundColor(Color.YELLOW);
-                break;
-            }
-        }
-    }
-
-    @NonNull
-    private ArrayAdapter<Component> getComponentListAdapter() {
-        List<Component> components = appState.getCurrentSolution().getComponents();
-        return new ArrayAdapter<>(activity, R.layout.tiny_list, components);
     }
 
     @NonNull
@@ -81,9 +79,10 @@ public class ComponentsPanel {
         };
     }
 
-    private void updateOverflowState(ListView componentsListView) {
-        componentsListView.setBackgroundColor(Color.WHITE);
-        if (appState.getCurrentSolution().isOverflown())
-            highlightAllLiquidComponents(componentsListView);
+    @NonNull
+    private ArrayAdapter<Component> getComponentListAdapter() {
+        List<Component> components = appState.getCurrentSolution().getComponents();
+        return new ArrayAdapter<>(activity, R.layout.tiny_list, components);
     }
+
 }

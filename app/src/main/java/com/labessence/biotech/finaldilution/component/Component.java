@@ -3,6 +3,7 @@ package com.labessence.biotech.finaldilution.component;
 import com.labessence.biotech.finaldilution.compound.Compound;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public class Component implements Serializable {
 
@@ -11,16 +12,25 @@ public class Component implements Serializable {
     private Concentration desiredConcentration;
     private Concentration availableConcentration;
     private Compound compound;
-    private double solutionVolume;
-
-    //TODO Remove empty constructor without solution - used only in tests
-    Component() {
-    }
+    private double solutionVolume = 0;
 
     public Component(boolean fromStock, double solutionVolume, Compound compound) {
         this.fromStock = fromStock;
         this.solutionVolume = solutionVolume;
         this.compound = compound;
+    }
+
+    Component(Compound compound, Concentration desired, Concentration stock) {
+        this.compound = compound;
+        desiredConcentration = desired;
+        fromStock = true;
+        availableConcentration = stock;
+    }
+
+    Component(Compound compound, Concentration desired) {
+        this.compound = compound;
+        desiredConcentration = desired;
+        fromStock = false;
     }
 
     public boolean getFromStock() {
@@ -44,14 +54,14 @@ public class Component implements Serializable {
         double amount = getQuantity(volume);
         StringBuilder niceOutput = new StringBuilder(200);
         if (amount > 1) {
-            niceOutput.append(String.format("%1$,.3f", amount));
+            niceOutput.append(String.format(Locale.ENGLISH, "%1$,.3f", amount));
             if (getFromStock()) {
                 niceOutput.append(" ml");
             } else {
                 niceOutput.append(" g");
             }
         } else {
-            niceOutput.append(String.format("%1$,.1f", amount * 1000));
+            niceOutput.append(String.format(Locale.ENGLISH, "%1$,.1f", amount * 1000));
             if (getFromStock()) {
                 niceOutput.append(" ul");
             } else {

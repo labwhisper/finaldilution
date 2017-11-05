@@ -18,16 +18,16 @@ import com.labessence.biotech.finaldilution.solution.view.EditActivity;
  * Created by dawid.chmielewski on 11/2/2017.
  */
 
-public class NewCompoundCreator {
+class NewCompoundCreator {
     private final EditActivity activity;
     private final ApplicationContext appState;
 
-    public NewCompoundCreator(EditActivity activity) {
+    NewCompoundCreator(EditActivity activity) {
         this.activity = activity;
         appState = ((ApplicationContext) activity.getApplicationContext());
     }
 
-    public void displayNewCompoundButton() {
+    void displayNewCompoundButton() {
         Button newCompoundButton = (Button) activity.findViewById(R.id.newCompoundButton);
         newCompoundButton.setOnClickListener(getNewCompoundClickListener());
     }

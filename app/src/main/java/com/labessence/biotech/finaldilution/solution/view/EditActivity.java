@@ -7,12 +7,12 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Button;
 
+import com.labessence.biotech.finaldilution.ApplicationContext;
 import com.labessence.biotech.finaldilution.R;
 import com.labessence.biotech.finaldilution.component.view.ComponentsPanel;
 import com.labessence.biotech.finaldilution.component.view.CompoundActivity;
 import com.labessence.biotech.finaldilution.compound.Compound;
 import com.labessence.biotech.finaldilution.compound.view.CompoundsPanel;
-import com.labessence.biotech.finaldilution.compound.view.NewCompoundCreator;
 import com.labessence.biotech.finaldilution.peripherals.view.EditGestureListener;
 
 public class EditActivity extends Activity {
@@ -33,9 +33,7 @@ public class EditActivity extends Activity {
 
         compoundsPanel = new CompoundsPanel(this);
         compoundsPanel.displayCompoundList();
-
-        NewCompoundCreator newCompoundCreator = new NewCompoundCreator(this);
-        newCompoundCreator.displayNewCompoundButton();
+        compoundsPanel.displayNewCompoundButton();
 
         componentsPanel = new ComponentsPanel(this);
         componentsPanel.displayComponentList();
@@ -50,7 +48,13 @@ public class EditActivity extends Activity {
         return super.onTouchEvent(event);
     }
 
-    //TODO Maybe this method should be standard ACTIVITY's Refresh/update
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ApplicationContext appState = ((ApplicationContext) getApplicationContext());
+        appState.saveCurrentWorkOnSolution();
+    }
+
     public void refresh() {
         componentsPanel.updateComponentList();
         compoundsPanel.updateCompoundList();
