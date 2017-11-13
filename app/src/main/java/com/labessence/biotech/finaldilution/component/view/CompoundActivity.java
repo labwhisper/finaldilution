@@ -140,11 +140,12 @@ public class CompoundActivity extends Activity {
         if (component != null) {
             desiredConcType = component.getDesiredConcentration().getType();
             EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
-            desiredConcEditText.setText(Double.toString(component.getDesiredConcentration().getAmount()));
+            desiredConcEditText.setText(Double.toString(component.getDesiredConcentration()
+                    .getConcentration()));
             if (component.getFromStock()) {
                 EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
                 stockConcType = component.getAvailableConcentration().getType();
-                stockConcEditText.setText(Double.toString(component.getAvailableConcentration().getAmount()));
+                stockConcEditText.setText(Double.toString(component.getAvailableConcentration().getConcentration()));
 
             }
             setConcentrationButtonsState(component.getFromStock());
@@ -273,13 +274,13 @@ public class CompoundActivity extends Activity {
         Component component = new Component(fromStock, appState.getCurrentSolution().getVolume(), compound);
 
         Concentration concentration = new Concentration();
-        concentration.setAmount(Double.parseDouble(desiredConcEditText.getText().toString().replace(',', '.')));
+        concentration.setConcentration(Double.parseDouble(desiredConcEditText.getText().toString().replace(',', '.')));
         concentration.setType(desiredConcType);
         component.setDesiredConcentration(concentration);
 
         if (fromStock) {
             concentration = new Concentration();
-            concentration.setAmount(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
+            concentration.setConcentration(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
             concentration.setType(stockConcType);
             component.setAvailableConcentration(concentration);
         }
@@ -295,17 +296,19 @@ public class CompoundActivity extends Activity {
         EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
         boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
         component.getDesiredConcentration().setType(desiredConcType);
-        component.getDesiredConcentration().setAmount(Double.parseDouble(desiredConcEditText.getText().toString().replace(',', '.')));
+        component.getDesiredConcentration().setConcentration(Double.parseDouble
+                (desiredConcEditText.getText().toString().replace(',', '.')));
         if (fromStock) {
             if (!component.getFromStock()) {
                 //from stock was added, so need to create concentration object
                 Concentration concentration = new Concentration();
                 concentration.setType(stockConcType);
-                concentration.setAmount(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
+                concentration.setConcentration(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
                 component.setAvailableConcentration(concentration);
             }
             component.getAvailableConcentration().setType(stockConcType);
-            component.getAvailableConcentration().setAmount(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
+            component.getAvailableConcentration().setConcentration(Double.parseDouble
+                    (stockConcEditText.getText().toString().replace(',', '.')));
         }
         component.setFromStock(fromStock);
     }
