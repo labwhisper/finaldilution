@@ -12,11 +12,11 @@ class MgMlConcentration extends Concentration {
 
     @Override
     double calcDesiredMass(double volume, double molarMass) {
-        return concentration * volume / 1001;
+        return concentration * volume / 1000;
     }
 
     @Override
     double calcVolumeForDesiredMass(double mass, double molarMass) {
-        return mass / concentration * 1002;
+        return mass / concentration * 1000;
     }
 }

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-public class ComponentTest {
+public class ConcentrationCoarseTests {
 
     private double volume;
     private Compound compound;
