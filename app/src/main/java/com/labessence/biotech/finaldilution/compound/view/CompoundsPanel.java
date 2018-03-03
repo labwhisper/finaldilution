@@ -5,10 +5,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.labessence.biotech.finaldilution.ApplicationContext;
-import com.labessence.biotech.finaldilution.R;
 import com.labessence.biotech.finaldilution.compound.Compound;
 import com.labessence.biotech.finaldilution.peripherals.view.Anim;
 import com.labessence.biotech.finaldilution.solution.view.EditActivity;
@@ -28,18 +26,18 @@ public class CompoundsPanel {
         this.activity = activity;
         appState = ((ApplicationContext) activity.getApplicationContext());
     }
-
-    public void displayCompoundList() {
-        ListView compoundsListView = (ListView) activity.findViewById(R.id.compoundsListView);
-        compoundsListView.setOnItemClickListener(getCompoundClickListener());
-        compoundsListView.setOnItemLongClickListener(getCompoundLongClickListener());
-        updateCompoundList();
-    }
-
-    public void updateCompoundList() {
-        ListView compoundsListView = (ListView) activity.findViewById(R.id.compoundsListView);
-        compoundsListView.setAdapter(getCompoundListAdapter());
-    }
+//
+//    public void displayCompoundList() {
+//        ListView compoundsListView = (ListView) activity.findViewById(R.id.compoundsListView);
+//        compoundsListView.setOnItemClickListener(getCompoundClickListener());
+//        compoundsListView.setOnItemLongClickListener(getCompoundLongClickListener());
+//        updateCompoundList();
+//    }
+//
+//    public void updateCompoundList() {
+//        ListView compoundsListView = (ListView) activity.findViewById(R.id.compoundsListView);
+//        compoundsListView.setAdapter(getCompoundListAdapter());
+//    }
 
     @NonNull
     private ArrayAdapter<Compound> getCompoundListAdapter() {
@@ -76,8 +74,8 @@ public class CompoundsPanel {
         };
     }
 
-
-    public void displayNewCompoundButton() {
-        new NewCompoundCreator(activity).displayNewCompoundButton();
-    }
+//
+//    public void displayNewCompoundButton() {
+//        new NewCompoundCreator(activity).displayNewCompoundButton();
+//    }
 }

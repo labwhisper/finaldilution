@@ -12,13 +12,12 @@ import com.labessence.biotech.finaldilution.R;
 import com.labessence.biotech.finaldilution.component.view.ComponentsPanel;
 import com.labessence.biotech.finaldilution.component.view.CompoundActivity;
 import com.labessence.biotech.finaldilution.compound.Compound;
-import com.labessence.biotech.finaldilution.compound.view.CompoundsPanel;
 import com.labessence.biotech.finaldilution.peripherals.view.EditGestureListener;
 
 public class EditActivity extends Activity {
 
     private VolumePanel volumePanel;
-    private CompoundsPanel compoundsPanel;
+    //private CompoundsPanel compoundsPanel;
     private ComponentsPanel componentsPanel;
     private GestureDetector detector;
 
@@ -31,9 +30,9 @@ public class EditActivity extends Activity {
         volumePanel.displayVolumeText();
         volumePanel.displayBeakerImage();
 
-        compoundsPanel = new CompoundsPanel(this);
-        compoundsPanel.displayCompoundList();
-        compoundsPanel.displayNewCompoundButton();
+//        compoundsPanel = new CompoundsPanel(this);
+//        compoundsPanel.displayCompoundList();
+//        compoundsPanel.displayNewCompoundButton();
 
         componentsPanel = new ComponentsPanel(this);
         componentsPanel.displayComponentList();
@@ -57,7 +56,7 @@ public class EditActivity extends Activity {
 
     public void refresh() {
         componentsPanel.updateComponentList();
-        compoundsPanel.updateCompoundList();
+        //compoundsPanel.updateCompoundList();
         volumePanel.updateVolumeTextView();
     }
 

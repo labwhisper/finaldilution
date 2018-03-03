@@ -11,28 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".solution.view.EditActivity">
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight=".5">
-
-        <ListView
-            android:id="@+id/compoundsListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/newCompoundButton"
-            android:choiceMode="multipleChoice" />
-
-        <Button
-            android:id="@+id/newCompoundButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/buttonNewCompound" />
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -61,15 +39,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/fromEditToPreparebutton"
-                android:layout_below="@+id/volumeViewSwitcher"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:contentDescription="@string/beakerDescription"
                 android:src="@drawable/beaker" />
 
             <ViewSwitcher
                 android:id="@+id/volumeViewSwitcher"
-                android:layout_width="181dp"
+                android:layout_width="121dp"
                 android:layout_height="46dp"
-                android:layout_gravity="start|top">
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginEnd="96dp"
+                android:layout_marginRight="96dp">
 
 
                 <RelativeLayout
@@ -84,6 +68,7 @@
                         android:layout_toLeftOf="@+id/textView"
                         android:layout_toStartOf="@+id/textView"
                         android:focusableInTouchMode="true"
+                        android:gravity="end"
                         android:inputType="numberDecimal"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -105,8 +90,11 @@
                     android:id="@+id/beakerVolumeTextView"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:gravity="end"
                     android:text="@string/volumeText"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#85D3FA"
+                    android:textSize="30sp" />
 
             </ViewSwitcher>
 

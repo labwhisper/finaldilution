@@ -18,7 +18,7 @@ import android.widget.ToggleButton;
 import com.labessence.biotech.finaldilution.ApplicationContext;
 import com.labessence.biotech.finaldilution.R;
 import com.labessence.biotech.finaldilution.component.Component;
-import com.labessence.biotech.finaldilution.component.Concentration;
+import com.labessence.biotech.finaldilution.component.ConcentrationFactory;
 import com.labessence.biotech.finaldilution.component.ConcentrationType;
 import com.labessence.biotech.finaldilution.compound.Compound;
 import com.labessence.biotech.finaldilution.peripherals.view.Anim;
@@ -266,24 +266,10 @@ public class CompoundActivity extends Activity {
     }
 
     private Component createComponent() {
-        //TODO remove local vars
         ApplicationContext appState = ((ApplicationContext) getApplicationContext());
-        EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
-        EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
-        boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
-        Component component = new Component(fromStock, appState.getCurrentSolution().getVolume(), compound);
+        Component component = new Component(appState.getCurrentSolution().getVolume(), compound);
 
-        Concentration concentration = new Concentration();
-        concentration.setConcentration(Double.parseDouble(desiredConcEditText.getText().toString().replace(',', '.')));
-        concentration.setType(desiredConcType);
-        component.setDesiredConcentration(concentration);
-
-        if (fromStock) {
-            concentration = new Concentration();
-            concentration.setConcentration(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
-            concentration.setType(stockConcType);
-            component.setAvailableConcentration(concentration);
-        }
+        updateComponent(component);
 
         Solution solution = appState.getCurrentSolution();
         solution.addComponent(component);
@@ -291,28 +277,26 @@ public class CompoundActivity extends Activity {
     }
 
     private void updateComponent(Component component) {
-        //TODO remove local vars
         EditText desiredConcEditText = (EditText) findViewById(R.id.desiredConcEditText);
         EditText stockConcEditText = (EditText) findViewById(R.id.stockConcEditText);
         boolean fromStock = ((ToggleButton) findViewById(R.id.enableStockDilutionButton)).isChecked();
-        component.getDesiredConcentration().setType(desiredConcType);
-        component.getDesiredConcentration().setConcentration(Double.parseDouble
-                (desiredConcEditText.getText().toString().replace(',', '.')));
+
+        double concentrationValue = parseDoubleFromEditText(desiredConcEditText);
+        component.setDesiredConcentration(
+                ConcentrationFactory.createConcentration(desiredConcType, concentrationValue));
+
         if (fromStock) {
-            if (!component.getFromStock()) {
-                //from stock was added, so need to create concentration object
-                Concentration concentration = new Concentration();
-                concentration.setType(stockConcType);
-                concentration.setConcentration(Double.parseDouble(stockConcEditText.getText().toString().replace(',', '.')));
-                component.setAvailableConcentration(concentration);
-            }
-            component.getAvailableConcentration().setType(stockConcType);
-            component.getAvailableConcentration().setConcentration(Double.parseDouble
-                    (stockConcEditText.getText().toString().replace(',', '.')));
+            double stockConcentrationValue = parseDoubleFromEditText(stockConcEditText);
+            component.setAvailableConcentration(ConcentrationFactory.createConcentration
+                    (stockConcType, stockConcentrationValue));
         }
         component.setFromStock(fromStock);
     }
 
+    private double parseDoubleFromEditText(EditText desiredConcEditText) {
+        return Double.parseDouble(
+                desiredConcEditText.getText().toString().replace(',', '.'));
+    }
 
     private void setKeyboardOnInputs() {
         List<EditText> concEditTexts = new ArrayList<>();

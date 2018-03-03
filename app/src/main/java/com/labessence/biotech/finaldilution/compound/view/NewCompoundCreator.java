@@ -5,11 +5,9 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.labessence.biotech.finaldilution.ApplicationContext;
-import com.labessence.biotech.finaldilution.R;
 import com.labessence.biotech.finaldilution.compound.Compound;
 import com.labessence.biotech.finaldilution.solution.view.EditActivity;
 
@@ -26,11 +24,11 @@ class NewCompoundCreator {
         this.activity = activity;
         appState = ((ApplicationContext) activity.getApplicationContext());
     }
-
-    void displayNewCompoundButton() {
-        Button newCompoundButton = (Button) activity.findViewById(R.id.newCompoundButton);
-        newCompoundButton.setOnClickListener(getNewCompoundClickListener());
-    }
+//
+//    void displayNewCompoundButton() {
+//        Button newCompoundButton = (Button) activity.findViewById(R.id.newCompoundButton);
+//        newCompoundButton.setOnClickListener(getNewCompoundClickListener());
+//    }
 
     @NonNull
     private View.OnClickListener getNewCompoundClickListener() {

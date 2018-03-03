@@ -73,8 +73,7 @@ class VolumePanel {
     }
 
     void updateVolumeTextView() {
-        volumeTextView.setText(String.format("%s%sml",
-                activity.getResources().getString(R.string.volumeText),
+        volumeTextView.setText(String.format("%sml",
                 volFormat.format(appState.getCurrentSolution().getVolume())));
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {

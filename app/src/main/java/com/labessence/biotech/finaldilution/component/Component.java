@@ -14,8 +14,7 @@ public class Component implements Serializable {
     private Compound compound;
     private double solutionVolume = 0;
 
-    public Component(boolean fromStock, double solutionVolume, Compound compound) {
-        this.fromStock = fromStock;
+    public Component(double solutionVolume, Compound compound) {
         this.solutionVolume = solutionVolume;
         this.compound = compound;
     }
