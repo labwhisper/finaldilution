@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.text.InputType;
+import android.view.GestureDetector;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -12,6 +13,8 @@ import android.widget.ViewSwitcher;
 
 import com.labessence.biotech.finaldilution.ApplicationContext;
 import com.labessence.biotech.finaldilution.R;
+import com.labessence.biotech.finaldilution.peripherals.gestures.TapGestureController;
+import com.labessence.biotech.finaldilution.peripherals.gestures.TapGestureListener;
 
 import java.text.DecimalFormat;
 
@@ -20,8 +23,9 @@ import java.text.DecimalFormat;
  * Created by dawid.chmielewski on 11/2/2017.
  */
 
-class VolumePanel {
+public class VolumePanel implements TapGestureController {
 
+    private static final String TAG = "Volume panel ";
     private final EditActivity activity;
     private final ApplicationContext appState;
     private ViewSwitcher switcher = null;
@@ -62,10 +66,16 @@ class VolumePanel {
 
     void displayBeakerImage() {
         View beakerImage = activity.findViewById(R.id.beakerRectangle);
-        beakerImage.setOnClickListener(v -> startVolumeEdition());
+        GestureDetector tapDetector = new GestureDetector(activity,
+                new TapGestureListener(this));
+        beakerImage.setOnTouchListener((view, motionEvent) -> {
+            //Log.d(TAG, motionEvent.toString());
+            tapDetector.onTouchEvent(motionEvent);
+            return true;
+        });
     }
 
-    private void startVolumeEdition() {
+    public void startVolumeEdition() {
         if (switcher.getCurrentView().equals(volumeTextView)) {
             switcher.showNext();
             volumeEditText.requestFocus();
@@ -104,5 +114,10 @@ class VolumePanel {
             }
             return true;
         };
+    }
+
+    @Override
+    public void onTap() {
+        startVolumeEdition();
     }
 }

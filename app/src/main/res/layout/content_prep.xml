@@ -9,21 +9,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".solution.view.PrepActivity">
 
-    <Button
-        android:id="@+id/fromPrepToEditButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="@string/fromPrepToEditButtonText" />
+    <com.labessence.biotech.finaldilution.compound.view.TriangleShapeView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <ListView
-        android:id="@+id/checklist_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        <Button
+            android:id="@+id/fromPrepToEditButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/fromPrepToEditButtonText" />
+
+        <ListView
+            android:id="@+id/checklist_listView"
+            android:layout_width="wrap_content"
+            android:layout_height="167dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+    </com.labessence.biotech.finaldilution.compound.view.TriangleShapeView>
 
 </RelativeLayout>

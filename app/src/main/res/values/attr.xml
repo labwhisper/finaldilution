@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TriangleShapeView">
+        <attr name="shape_bg_color" format="color" />
+        <attr name="shape_direction" format="enum">
+            <enum name="top_arrow" value="0" />
+            <enum name="right_arrow" value="1" />
+            <enum name="bottom_arrow" value="2" />
+            <enum name="left_arrow" value="3" />
+            <enum name="promotion_arrow" value="4" />
+        </attr>
+    </declare-styleable>
+</resources>

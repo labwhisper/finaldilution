@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.labessence.biotech.finaldilution.component.Concentration;
 import com.labessence.biotech.finaldilution.genericitem.Item;
 import com.labessence.biotech.finaldilution.peripherals.DataGatewayOperations;
 
@@ -23,7 +24,9 @@ public class SharedPreferencesStore<T extends Item> implements DataGatewayOperat
     private static final String TAG = "File DataGateway";
     //private static final File COMPOUNDS_FILE = new File("compounds.json");
     private final SharedPreferences sharedPreferences;
-    private Gson gson = new GsonBuilder().create();
+    private Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Concentration.class, new ConcentrationDeserializer())
+            .create();
     private TypeToken<List<T>> listType;
 
 

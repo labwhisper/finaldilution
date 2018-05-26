@@ -5,9 +5,6 @@ abstract public class Concentration {
     double concentration;
     private ConcentrationType type;
 
-    public Concentration() {
-    }
-
     public Concentration(double concentration, ConcentrationType type) {
         this.concentration = concentration;
         this.type = type;

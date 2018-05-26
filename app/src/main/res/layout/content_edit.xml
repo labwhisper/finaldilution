@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:baselineAligned="true"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".solution.view.EditActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_weight=".5"
-        android:orientation="vertical">
+        android:baselineAligned="true"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".solution.view.EditActivity">
 
         <ListView
             android:id="@+id/componentsTextView"
@@ -104,15 +100,27 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentStart="true"
                 android:text="@string/FromEditToPrepButtonText" />
+
+            <Button
+                android:id="@+id/addCompoundButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/beaker"
+                android:layout_centerHorizontal="true"
+                android:text="+" />
 
         </RelativeLayout>
 
 
     </LinearLayout>
 
-</LinearLayout>
+    <fragment
+        android:id="@+id/compoundsFragment"
+        class="com.labessence.biotech.finaldilution.compound.view.CompoundsPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
+</FrameLayout>

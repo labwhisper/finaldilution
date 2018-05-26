@@ -12,8 +12,6 @@ import com.labessence.biotech.finaldilution.solution.Solution;
 public class ApplicationContext extends Application {
     private static final String TAG = "Application Context";
     public static final String FINAL_DILUTION_PREFERENCES = "FINAL_DILUTION_PREFERENCES";
-    public static double SWIPE_MIN_VELOCITY = 100;
-    public static double SWIPE_MIN_DISTANCE = 50;
     private static ApplicationContext instance;
     //TODO Remove currentSolution from here and pass it with Activities
     private Solution currentSolution;
@@ -63,6 +61,12 @@ public class ApplicationContext extends Application {
 
     public void setCompoundGateway(DataGatewayOperations<Compound> compoundGateway) {
         this.compoundGateway = compoundGateway;
+//        this.compoundGateway.save(new Compound("KCl", 74.55));
+//        this.compoundGateway.save(new Compound("NaCl", 58.44));
+//        this.compoundGateway.save(new Compound("EDTA", 372.24));
+//        this.compoundGateway.save(new Compound("MgCl2", 95.21));
+//        this.compoundGateway.save(new Compound("TRIS", 121.14));
+//        this.compoundGateway.save(new Compound("SDS", 288.372));
     }
 
     public DataGatewayOperations<Solution> getSolutionGateway() {

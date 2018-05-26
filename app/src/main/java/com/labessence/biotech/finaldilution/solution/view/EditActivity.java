@@ -1,25 +1,28 @@
 package com.labessence.biotech.finaldilution.solution.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.Button;
+import android.view.View;
 
 import com.labessence.biotech.finaldilution.ApplicationContext;
 import com.labessence.biotech.finaldilution.R;
 import com.labessence.biotech.finaldilution.component.view.ComponentsPanel;
 import com.labessence.biotech.finaldilution.component.view.CompoundActivity;
 import com.labessence.biotech.finaldilution.compound.Compound;
-import com.labessence.biotech.finaldilution.peripherals.view.EditGestureListener;
+import com.labessence.biotech.finaldilution.peripherals.gestures.CompoundListGestureListener;
+import com.labessence.biotech.finaldilution.peripherals.gestures.EditGestureListener;
 
 public class EditActivity extends Activity {
 
+    private static final String TAG = "Edit Activity";
     private VolumePanel volumePanel;
-    //private CompoundsPanel compoundsPanel;
     private ComponentsPanel componentsPanel;
-    private GestureDetector detector;
+    private GestureDetector screenGestureDetector;
+    private GestureDetector compoundListGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,20 +33,18 @@ public class EditActivity extends Activity {
         volumePanel.displayVolumeText();
         volumePanel.displayBeakerImage();
 
-//        compoundsPanel = new CompoundsPanel(this);
-//        compoundsPanel.displayCompoundList();
-//        compoundsPanel.displayNewCompoundButton();
-
         componentsPanel = new ComponentsPanel(this);
         componentsPanel.displayComponentList();
-        displayToPrepActivityButton();
+        displayAddCompoundFragment();
 
-        detector = new GestureDetector(this, new EditGestureListener(this));
+        screenGestureDetector = new GestureDetector(this, new EditGestureListener(this));
+        View addCompoundButton = findViewById(R.id.addCompoundButton);
+        compoundListGestureDetector = new GestureDetector(this, new CompoundListGestureListener(this, addCompoundButton));
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        detector.onTouchEvent(event);
+        screenGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
@@ -54,17 +55,23 @@ public class EditActivity extends Activity {
         appState.saveCurrentWorkOnSolution();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refresh();
+    }
+
     public void refresh() {
         componentsPanel.updateComponentList();
-        //compoundsPanel.updateCompoundList();
         volumePanel.updateVolumeTextView();
     }
 
-    private void displayToPrepActivityButton() {
-        Button fromEditToPrepareButton = (Button) findViewById(R.id.fromEditToPreparebutton);
-        fromEditToPrepareButton.setOnClickListener(v -> {
-            Intent intent = new Intent(EditActivity.this, PrepActivity.class);
-            startActivity(intent);
+    @SuppressLint("ClickableViewAccessibility")
+    private void displayAddCompoundFragment() {
+        View addCompoundButton = findViewById(R.id.addCompoundButton);
+        addCompoundButton.setOnTouchListener((view, motionEvent) -> {
+            compoundListGestureDetector.onTouchEvent(motionEvent);
+            return true;
         });
     }
 
