@@ -25,9 +25,6 @@
             android:name=".solution.view.EditActivity"
             android:label="@string/title_activity_edit" />
         <activity
-            android:name=".solution.view.PrepActivity"
-            android:label="@string/title_activity_prepare" />
-        <activity
             android:name=".component.view.CompoundActivity"
             android:label="@string/title_activity_compound" />
     </application>

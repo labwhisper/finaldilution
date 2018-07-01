@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 
 import com.labessence.biotech.finaldilution.peripherals.view.StartupActivity;
 import com.labessence.biotech.finaldilution.solution.view.EditActivity;
-import com.labessence.biotech.finaldilution.solution.view.PrepActivity;
 
 /**
  * Project: FinalDilution
@@ -42,10 +41,7 @@ public class EditGestureListener extends GestureDetector.SimpleOnGestureListener
         if (!isTrulyHorizontal(xdistance, ydistance)) {
             return false;
         }
-        if (e1.getX() > e2.getX()) {
-            Intent intent = new Intent(editActivity, PrepActivity.class);
-            editActivity.startActivity(intent);
-        } else {
+        if (e1.getX() <= e2.getX()) {
             Intent intent = new Intent(editActivity, StartupActivity.class);
             editActivity.startActivity(intent);
             editActivity.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);

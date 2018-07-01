@@ -13,4 +13,5 @@
     <string name="buttonNewCompound">+</string>
     <string name="mililiters">ml</string>
     <string name="solutionListPrepFormat">%s ml  %d components</string>
+    <string name="compound_list">Compound List</string>
 </resources>

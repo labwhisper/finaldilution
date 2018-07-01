@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.labessence.biotech.finaldilution.compound.view.CompoundListLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/compoundsList"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:background="#00ffffff">
+    android:layout_height="300dp"
+    android:background="#00ffffff"
+    android:elevation="40dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="54dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <com.labessence.biotech.finaldilution.compound.view.AddCompoundButtonView
+        android:id="@+id/compoundsListHeader"
+        style="@style/FinalDilutionH1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/buttonNewCompound"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/compoundsListTitle"
+        style="@style/FinalDilutionH1"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="@string/compound_list"
+        android:textSize="28sp"
+        android:background="@color/grey1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/compoundsListHeader" />
 
     <ListView
         android:id="@+id/compoundsListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#EDEDED" />
-</com.labessence.biotech.finaldilution.compound.view.CompoundListLayout>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/grey1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/compoundsListTitle" />
+</android.support.constraint.ConstraintLayout>
