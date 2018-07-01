@@ -127,7 +127,7 @@ class CompoundActivity : Activity() {
 
     private fun fillComponentFields() {
         val appState = applicationContext as ApplicationContext
-        val component = appState.currentSolution.getComponentWithCompound(compound)
+        val component = appState.currentSolution!!.getComponentWithCompound(compound)
         if (component != null) {
             desiredConcType = component.desiredConcentration!!.type
             val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
@@ -199,7 +199,7 @@ class CompoundActivity : Activity() {
         val appState = applicationContext as ApplicationContext
         val currentSolution = appState.currentSolution
 
-        var component = currentSolution.getComponentWithCompound(compound)
+        var component = currentSolution!!.getComponentWithCompound(compound)
 
         if (component != null) {
             updateComponent(component)
@@ -229,11 +229,11 @@ class CompoundActivity : Activity() {
     private fun onDeleteComponent() {
 
         val appState = applicationContext as ApplicationContext
-        val component = appState.currentSolution.getComponentWithCompound(compound)
+        val component = appState.currentSolution!!.getComponentWithCompound(compound)
         if (component == null) {
             onCancelComponent()
         } else {
-            appState.currentSolution.removeComponent(component)
+            appState.currentSolution!!.removeComponent(component)
             val intent = Intent(this@CompoundActivity, EditActivity::class.java)
             startActivity(intent)
         }
@@ -241,12 +241,11 @@ class CompoundActivity : Activity() {
 
     private fun createComponent(): Component {
         val appState = applicationContext as ApplicationContext
-        val component = Component(appState.currentSolution.volume, compound)
+        val component = Component(appState.currentSolution!!.volume, compound)
 
         updateComponent(component)
 
-        val solution = appState.currentSolution
-        solution.addComponent(component)
+        appState.currentSolution!!.addComponent(component)
         return component
     }
 
