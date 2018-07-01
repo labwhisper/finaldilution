@@ -23,7 +23,7 @@ class ConcentrationDeserializer implements JsonDeserializer<Concentration> {
     public Concentration deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext
             context) throws JsonParseException {
         ConcentrationType type = new Gson().fromJson(json.getAsJsonObject().get("type"), ConcentrationType.class);
-        return ConcentrationFactory.createConcentration(type,
+        return ConcentrationFactory.INSTANCE.createConcentration(type,
                 json.getAsJsonObject().get("concentration").getAsDouble());
     }
 }
