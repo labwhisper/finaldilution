@@ -1,4 +1,4 @@
-package com.labessence.biotech.finaldilution.component;
+package com.labessence.biotech.finaldilution.component.concentration;
 
 abstract public class Concentration {
 
@@ -37,7 +37,7 @@ abstract public class Concentration {
      * @param volume - volume[ml] of the final solution
      * @return - desired mass[g]
      */
-    abstract double calcDesiredMass(double volume, double molarMass);
+    public abstract double calcDesiredMass(double volume, double molarMass);
 
     /**
      * Calculate component volume using calculated desired mass
@@ -45,5 +45,5 @@ abstract public class Concentration {
      * @param mass - mass[g] required in final solution
      * @return - volume[ml] of compound to be taken
      */
-    abstract double calcVolumeForDesiredMass(double mass, double molarMass);
+    public abstract double calcVolumeForDesiredMass(double mass, double molarMass);
 }

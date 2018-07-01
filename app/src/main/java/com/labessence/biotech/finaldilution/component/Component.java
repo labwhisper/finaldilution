@@ -1,5 +1,6 @@
 package com.labessence.biotech.finaldilution.component;
 
+import com.labessence.biotech.finaldilution.component.concentration.Concentration;
 import com.labessence.biotech.finaldilution.compound.Compound;
 
 import java.io.Serializable;
@@ -102,10 +103,6 @@ public class Component implements Serializable {
 
     public void setAvailableConcentration(Concentration availableConcentration) {
         this.availableConcentration = availableConcentration;
-    }
-
-    public double getSolutionVolume() {
-        return solutionVolume;
     }
 
     public void setSolutionVolume(double solutionVolume) {

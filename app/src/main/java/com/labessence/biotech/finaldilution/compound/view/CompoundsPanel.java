@@ -21,7 +21,7 @@ import com.labessence.biotech.finaldilution.peripherals.view.Anim;
  */
 
 public class CompoundsPanel {
-    private final Activity activity;// extends BottomSheetDialogFragment {
+    private final Activity activity;
 
     public CompoundsPanel(Activity activity) {
         this.activity = activity;

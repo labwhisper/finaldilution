@@ -5,9 +5,9 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.labessence.biotech.finaldilution.component.Concentration;
-import com.labessence.biotech.finaldilution.component.ConcentrationFactory;
-import com.labessence.biotech.finaldilution.component.ConcentrationType;
+import com.labessence.biotech.finaldilution.component.concentration.Concentration;
+import com.labessence.biotech.finaldilution.component.concentration.ConcentrationFactory;
+import com.labessence.biotech.finaldilution.component.concentration.ConcentrationType;
 
 import java.lang.reflect.Type;
 

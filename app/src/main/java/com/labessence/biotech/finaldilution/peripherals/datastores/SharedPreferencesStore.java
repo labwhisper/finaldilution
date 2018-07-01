@@ -6,7 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.labessence.biotech.finaldilution.component.Concentration;
+import com.labessence.biotech.finaldilution.component.concentration.Concentration;
 import com.labessence.biotech.finaldilution.genericitem.Item;
 import com.labessence.biotech.finaldilution.peripherals.DataGatewayOperations;
 

@@ -1,22 +1,22 @@
-package com.labessence.biotech.finaldilution.component;
+package com.labessence.biotech.finaldilution.component.concentration;
 
 /**
  * Project: FinalDilution
  * Created by dawid.chmielewski on 11/11/2017.
  */
 
-class PercentageConcentration extends Concentration {
+public class PercentageConcentration extends Concentration {
     public PercentageConcentration(double amount) {
         super(amount, ConcentrationType.PERCENTAGE);
     }
 
     @Override
-    double calcDesiredMass(double volume, double molarMass) {
+    public double calcDesiredMass(double volume, double molarMass) {
         return concentration * volume / 100;
     }
 
     @Override
-    double calcVolumeForDesiredMass(double mass, double molarMass) {
+    public double calcVolumeForDesiredMass(double mass, double molarMass) {
         return mass / concentration * 100;
     }
 }

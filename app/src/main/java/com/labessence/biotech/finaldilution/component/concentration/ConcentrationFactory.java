@@ -1,4 +1,4 @@
-package com.labessence.biotech.finaldilution.component;
+package com.labessence.biotech.finaldilution.component.concentration;
 
 public class ConcentrationFactory {
     public static Concentration createConcentration(ConcentrationType type, double amount) {
