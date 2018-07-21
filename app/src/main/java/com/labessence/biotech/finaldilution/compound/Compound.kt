@@ -5,7 +5,7 @@ import com.labessence.biotech.finaldilution.genericitem.Item
 class Compound : Item {
     override val name: String
 
-    var shortName: String? = null
+    var shortName: String
     var molarMass: Double = 0.toDouble()
     private val longName: String? = null
     private val chemicalFormula: String? = null
@@ -30,15 +30,15 @@ class Compound : Item {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
 
-        val compound = other as Compound?
+        val compound = other as Compound
 
-        if (shortName != compound!!.shortName) return false
+        if (shortName != compound.shortName) return false
         return if (chemicalFormula != null) chemicalFormula == compound.chemicalFormula else compound.chemicalFormula == null
 
     }
 
     override fun hashCode(): Int {
-        var result = shortName!!.hashCode()
+        var result = shortName.hashCode()
         result = 31 * result + (chemicalFormula?.hashCode() ?: 0)
         return result
     }

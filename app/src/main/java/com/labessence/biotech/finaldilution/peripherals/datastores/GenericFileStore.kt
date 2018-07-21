@@ -20,8 +20,10 @@ class GenericFileStore<T : Item>
 // solution created - saved.
 
 
-(//private static final File COMPOUNDS_FILE = new File("compounds.json");
-        private val file: File) : DataGatewayOperations<T> {
+    (//private static final File COMPOUNDS_FILE = new File("compounds.json");
+    private val file: File
+) : DataGatewayOperations<T> {
+
     private val gson = GsonBuilder().create()
 
     private val itemListFormFile: MutableList<T>
@@ -39,6 +41,8 @@ class GenericFileStore<T : Item>
             }.type
             return gson.fromJson<MutableList<T>>(reader, collectionType) ?: return ArrayList()
         }
+
+    override fun size() = itemListFormFile.size
 
     override fun save(item: T) {
         //TODO performance

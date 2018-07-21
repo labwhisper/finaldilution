@@ -17,55 +17,58 @@ import android.widget.ToggleButton
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.Component
+import com.labessence.biotech.finaldilution.component.concentration.Concentration
 import com.labessence.biotech.finaldilution.component.concentration.ConcentrationFactory
 import com.labessence.biotech.finaldilution.component.concentration.ConcentrationType
 import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.peripherals.view.Anim
+import com.labessence.biotech.finaldilution.peripherals.view.StartupActivity
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
 import java.util.*
 
 class CompoundActivity : Activity() {
 
     internal lateinit var compound: Compound
-    internal var desiredConcType: ConcentrationType? = ConcentrationType.MOLAR
+    internal var desiredConcType: ConcentrationType = ConcentrationType.MOLAR
     internal var stockConcType: ConcentrationType? = null
-    private var desiredViewsList: MutableList<View>? = null
-    private var stockViewsList: MutableList<View>? = null
-    private var desiredButtonList: MutableList<RadioButton>? = null
-    private var stockButtonList: MutableList<RadioButton>? = null
+    private lateinit var desiredViewsList: MutableList<View>
+    private lateinit var stockViewsList: MutableList<View>
+    private lateinit var desiredButtonList: MutableList<RadioButton>
+    private lateinit var stockButtonList: MutableList<RadioButton>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_compound)
 
         desiredButtonList = ArrayList()
-        desiredButtonList!!.add(findViewById<View>(R.id.desiredPercentageConcButton) as RadioButton)
-        desiredButtonList!!.add(findViewById<View>(R.id.desiredMolarConcButton) as RadioButton)
-        desiredButtonList!!.add(findViewById<View>(R.id.desiredMilimolarConcButton) as RadioButton)
-        desiredButtonList!!.add(findViewById<View>(R.id.desiredMgMlConcButton) as RadioButton)
+        desiredButtonList.add(findViewById<View>(R.id.desiredPercentageConcButton) as RadioButton)
+        desiredButtonList.add(findViewById<View>(R.id.desiredMolarConcButton) as RadioButton)
+        desiredButtonList.add(findViewById<View>(R.id.desiredMilimolarConcButton) as RadioButton)
+        desiredButtonList.add(findViewById<View>(R.id.desiredMgMlConcButton) as RadioButton)
 
         stockButtonList = ArrayList()
-        stockButtonList!!.add(findViewById<View>(R.id.stockPercentageConcButton) as RadioButton)
-        stockButtonList!!.add(findViewById<View>(R.id.stockMolarConcButton) as RadioButton)
-        stockButtonList!!.add(findViewById<View>(R.id.stockMilimolarConcButton) as RadioButton)
-        stockButtonList!!.add(findViewById<View>(R.id.stockMgMlConcButton) as RadioButton)
+        stockButtonList.add(findViewById<View>(R.id.stockPercentageConcButton) as RadioButton)
+        stockButtonList.add(findViewById<View>(R.id.stockMolarConcButton) as RadioButton)
+        stockButtonList.add(findViewById<View>(R.id.stockMilimolarConcButton) as RadioButton)
+        stockButtonList.add(findViewById<View>(R.id.stockMgMlConcButton) as RadioButton)
 
         desiredViewsList = ArrayList()
-        desiredViewsList!!.add(findViewById(R.id.desiredConcEditText) as View)
-        desiredViewsList!!.add(findViewById(R.id.desiredConcButtonsBar) as View)
-        desiredViewsList!!.add(findViewById(R.id.desiredConcTextView) as View)
-        desiredViewsList!!.addAll(desiredButtonList!!)
+        desiredViewsList.add(findViewById<View>(R.id.desiredConcEditText))
+        desiredViewsList.add(findViewById<View>(R.id.desiredConcButtonsBar))
+        desiredViewsList.add(findViewById<View>(R.id.desiredConcTextView))
+        desiredViewsList.addAll(desiredButtonList)
 
         stockViewsList = ArrayList()
-        stockViewsList!!.add(findViewById(R.id.stockConcEditText) as View)
-        stockViewsList!!.add(findViewById(R.id.stockConcButtonsBar) as View)
-        stockViewsList!!.add(findViewById(R.id.stockConcTextView) as View)
-        stockViewsList!!.addAll(stockButtonList!!)
+        stockViewsList.add(findViewById<View>(R.id.stockConcEditText))
+        stockViewsList.add(findViewById<View>(R.id.stockConcButtonsBar))
+        stockViewsList.add(findViewById<View>(R.id.stockConcTextView))
+        stockViewsList.addAll(stockButtonList)
 
         compound = intent.getSerializableExtra("compound") as Compound
         title = "Add " + compound.shortName
 
-        (findViewById(R.id.desiredConcButtonsBar) as View).viewTreeObserver.addOnGlobalLayoutListener({ this.renderButtonsSquare() })
+        (findViewById<View>(R.id.desiredConcButtonsBar)).viewTreeObserver.addOnGlobalLayoutListener(
+            { this.renderButtonsSquare() })
 
         setKeyboardOnInputs()
         bindListeners()
@@ -127,15 +130,19 @@ class CompoundActivity : Activity() {
 
     private fun fillComponentFields() {
         val appState = applicationContext as ApplicationContext
-        val component = appState.currentSolution!!.getComponentWithCompound(compound)
+        val component = appState.currentSolution?.getComponentWithCompound(compound)
         if (component != null) {
-            desiredConcType = component.desiredConcentration!!.type
-            val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
-            desiredConcEditText.setText(java.lang.Double.toString(component.desiredConcentration!!.concentration))
+            component.desiredConcentration?.let {
+                desiredConcType = it.type
+                val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
+                desiredConcEditText.setText(java.lang.Double.toString(it.concentration))
+            }
             if (component.fromStock) {
-                val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
-                stockConcType = component.availableConcentration!!.type
-                stockConcEditText.setText(java.lang.Double.toString(component.availableConcentration!!.concentration))
+                component.availableConcentration?.let {
+                    val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
+                    stockConcType = it.type
+                    stockConcEditText.setText(java.lang.Double.toString(it.concentration))
+                }
 
             }
             setConcentrationButtonsState(component.fromStock)
@@ -171,11 +178,20 @@ class CompoundActivity : Activity() {
 
     //TODO run this listener also on back and generally close?
     private fun onAcceptComponent() {
-        val fromStock = (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
+
+        val appState = applicationContext as ApplicationContext
+
+        if (appState.currentSolution == null) {
+            val intent = Intent(this@CompoundActivity, StartupActivity::class.java)
+            startActivity(intent)
+        }
+
+        val fromStock =
+            (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
         //TODO Add all checks!
         val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
         val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
-        if (desiredConcEditText.text.toString().trim { it <= ' ' }.length == 0) {
+        if (desiredConcEditText.text.toString().trim { it <= ' ' }.isEmpty()) {
             Anim().blink(desiredConcEditText)
             return
         }
@@ -185,39 +201,29 @@ class CompoundActivity : Activity() {
             return
         }
 
-        if (desiredConcType == null) {
-            //TODO Add animation to buttons
-            return
-        }
-
         if (fromStock && stockConcType == null) {
             //TODO Add animation to buttons
             return
         }
 
 
-        val appState = applicationContext as ApplicationContext
-        val currentSolution = appState.currentSolution
+        val component: Component = (appState.currentSolution?.getComponentWithCompound(compound)
+                ?: createComponent()).also { updateComponent(it) }
 
-        var component = currentSolution!!.getComponentWithCompound(compound)
-
-        if (component != null) {
-            updateComponent(component)
-
-        } else {
-            component = createComponent()
-        }
-
-        val allComponentsVolume = currentSolution.allLiquidComponentsVolume
         var currentComponentVolume = 0.0
         if (fromStock) {
-            currentComponentVolume = component.getQuantity(currentSolution.volume)
+            appState.currentSolution?.run {
+                currentComponentVolume = component.getQuantity(volume)
+            }
         }
-        if (allComponentsVolume + currentComponentVolume > currentSolution.volume) {
-            //TODO Color?? move this code
-            //            appState.getDb().removeComponentFromCurrentSolution(component);
-            //            appState.getDb().update(appState.getCurrentSolution());
-            //            appState.getCurrentSolution().resetComponents();
+        appState.currentSolution?.run {
+            val allComponentsVolume = allLiquidComponentsVolume
+            if (allComponentsVolume + currentComponentVolume > volume) {
+                //TODO Color?? move this code
+                //            appState.getDb().removeComponentFromCurrentSolution(component);
+                //            appState.getDb().update(appState.getCurrentSolution());
+                //            appState.getCurrentSolution().resetComponents();
+            }
         }
 
         val intent = Intent(this@CompoundActivity, EditActivity::class.java)
@@ -229,11 +235,11 @@ class CompoundActivity : Activity() {
     private fun onDeleteComponent() {
 
         val appState = applicationContext as ApplicationContext
-        val component = appState.currentSolution!!.getComponentWithCompound(compound)
+        val component = appState.currentSolution?.getComponentWithCompound(compound)
         if (component == null) {
             onCancelComponent()
         } else {
-            appState.currentSolution!!.removeComponent(component)
+            appState.currentSolution?.removeComponent(component)
             val intent = Intent(this@CompoundActivity, EditActivity::class.java)
             startActivity(intent)
         }
@@ -241,32 +247,43 @@ class CompoundActivity : Activity() {
 
     private fun createComponent(): Component {
         val appState = applicationContext as ApplicationContext
-        val component = Component(appState.currentSolution!!.volume, compound)
+        val component = Component(compound, retrieveDesiredConc(), retrieveStockConc())
 
-        updateComponent(component)
-
-        appState.currentSolution!!.addComponent(component)
+        appState.currentSolution?.addComponent(component)
         return component
+    }
+
+    private fun retrieveStockConc(): Concentration? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun retrieveDesiredConc(): Concentration {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun updateComponent(component: Component) {
         val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
         val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
-        val fromStock = (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
+        val fromStock =
+            (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
 
         val concentrationValue = parseDoubleFromEditText(desiredConcEditText)
-        component.desiredConcentration = ConcentrationFactory.createConcentration(desiredConcType!!, concentrationValue)
+        component.desiredConcentration =
+                ConcentrationFactory.createConcentration(desiredConcType, concentrationValue)
 
         if (fromStock) {
             val stockConcentrationValue = parseDoubleFromEditText(stockConcEditText)
-            component.availableConcentration = ConcentrationFactory.createConcentration(stockConcType!!, stockConcentrationValue)
+            stockConcType?.let {
+                component.availableConcentration =
+                        ConcentrationFactory.createConcentration(it, stockConcentrationValue)
+            }
         }
-        component.fromStock = fromStock
     }
 
     private fun parseDoubleFromEditText(desiredConcEditText: EditText): Double {
         return java.lang.Double.parseDouble(
-                desiredConcEditText.text.toString().replace(',', '.'))
+            desiredConcEditText.text.toString().replace(',', '.')
+        )
     }
 
     private fun setKeyboardOnInputs() {
@@ -299,8 +316,9 @@ class CompoundActivity : Activity() {
     }
 
     private fun toggleSolutionFromStock() {
-        val fromStock = (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
-        for (stockView in stockViewsList!!) {
+        val fromStock =
+            (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
+        for (stockView in stockViewsList) {
             if (fromStock) {
                 stockView.visibility = View.VISIBLE
             } else {

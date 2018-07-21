@@ -5,37 +5,19 @@ import com.labessence.biotech.finaldilution.compound.Compound
 import java.io.Serializable
 import java.util.*
 
-class Component : Serializable {
+class Component(var compound: Compound, desired: Concentration, stock: Concentration? = null) :
+    Serializable {
 
-    var fromStock: Boolean = false
+    var fromStock
+        get() = availableConcentration != null
+        private set(value) {}
 
-    var desiredConcentration: Concentration? = null
-    var availableConcentration: Concentration? = null
-    var compound: Compound? = null
+    var desiredConcentration: Concentration = desired
+    var availableConcentration: Concentration? = stock
     private var solutionVolume = 0.0
 
-    constructor(solutionVolume: Double, compound: Compound) {
-        this.solutionVolume = solutionVolume
-        this.compound = compound
-    }
-
-    internal constructor(compound: Compound, desired: Concentration, stock: Concentration) {
-        this.compound = compound
-        desiredConcentration = desired
-        fromStock = true
-        availableConcentration = stock
-    }
-
-    internal constructor(compound: Compound, desired: Concentration) {
-        this.compound = compound
-        desiredConcentration = desired
-        fromStock = false
-    }
-
     override fun toString(): String {
-        return if (compound == null) {
-            ""
-        } else compound!!.shortName + " : " + getAmountString(solutionVolume)
+        return compound.shortName + " : " + getAmountString(solutionVolume)
     }
 
     fun getAmountString(volume: Double): String {
@@ -61,12 +43,13 @@ class Component : Serializable {
     }
 
     fun getQuantity(volume: Double): Double {
-        val M = compound!!.molarMass
+        val M = compound.molarMass
         return if (fromStock) {
-            availableConcentration!!.calcVolumeForDesiredMass(desiredConcentration!!
-                    .calcDesiredMass(volume, M), M)
+            availableConcentration!!.calcVolumeForDesiredMass(
+                desiredConcentration.calcDesiredMass(volume, M), M
+            )
         } else {
-            desiredConcentration!!.calcDesiredMass(volume, M)
+            desiredConcentration.calcDesiredMass(volume, M)
         }
     }
 

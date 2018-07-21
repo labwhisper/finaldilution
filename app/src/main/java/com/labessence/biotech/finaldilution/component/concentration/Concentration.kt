@@ -1,9 +1,9 @@
 package com.labessence.biotech.finaldilution.component.concentration
 
-abstract class Concentration(var concentration: Double, var type: ConcentrationType?) {
+abstract class Concentration(var concentration: Double, var type: ConcentrationType) {
 
     override fun toString(): String {
-        return concentration.toString() + " [" + type!!.toString() + "]"
+        return concentration.toString() + " [" + type.toString() + "]"
     }
 
     /**

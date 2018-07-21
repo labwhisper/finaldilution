@@ -20,11 +20,9 @@ import com.labessence.biotech.finaldilution.solution.view.EditActivity
 class ComponentsPanel(private val activity: EditActivity) {
     private val appState: ApplicationContext
 
-    private//return new ArrayAdapter<>(activity, R.layout.tiny_list, components);
-    val componentListAdapter: ChecklistAdapter
+    private val componentListAdapter: ChecklistAdapter
         get() {
             val components = appState.currentSolution?.components ?: ArrayList()
-            Log.d(TAG, "Components: $components")
             return ChecklistAdapter(components)
         }
 
@@ -39,20 +37,19 @@ class ComponentsPanel(private val activity: EditActivity) {
         updateComponentList()
     }
 
-    private val componentClick: (AdapterView<*>, View, Int, Long) -> Unit = onClick@{ parent, view, position, id ->
-        val component = parent.adapter.getItem(position) as Component
-        if (component.compound == null) {
-            return@onClick
+    private val componentClick: (AdapterView<*>, View, Int, Long) -> Unit =
+        onClick@{ parent, view, position, id ->
+            val component = parent.adapter.getItem(position) as Component
+            component.compound.let { activity.startComponentEdition(it) }
         }
-        component.compound?.let { activity.startComponentEdition(it) }
-    }
 
-    private val componentLongClick: (AdapterView<*>, View, Int, Long) -> Boolean = { parent, view, position, id ->
-        val component = parent.adapter.getItem(position) as Component
-        appState.currentSolution!!.removeComponent(component)
-        activity.refresh()
-        true
-    }
+    private val componentLongClick: (AdapterView<*>, View, Int, Long) -> Boolean =
+        { parent, view, position, id ->
+            val component = parent.adapter.getItem(position) as Component
+            appState.currentSolution?.removeComponent(component)
+            activity.refresh()
+            true
+        }
 
     fun updateComponentList() {
         val componentsListView = activity.findViewById<View>(R.id.componentsTextView) as ListView
@@ -62,19 +59,23 @@ class ComponentsPanel(private val activity: EditActivity) {
 
     private fun updateOverflowState(componentsListView: ListView) {
         componentsListView.setBackgroundColor(Color.WHITE)
-        if (appState.currentSolution!!.isOverflown)
-            highlightAllLiquidComponents(componentsListView)
+        appState.currentSolution?.let {
+            if (it.isOverflown) highlightAllLiquidComponents(componentsListView)
+        }
     }
 
     private fun highlightAllLiquidComponents(componentsListView: ListView) {
-        for (component in appState.currentSolution!!.components)
-            if (component.fromStock) {
-                componentsListView.setBackgroundColor(Color.YELLOW)
-            }
+        appState.currentSolution?.let {
+            for (component in it.components)
+                if (component.fromStock) {
+                    componentsListView.setBackgroundColor(Color.YELLOW)
+                }
+        }
     }
 
 
-    private inner class ChecklistAdapter(private val componentList: ArrayList<Component>) : BaseAdapter() {
+    private inner class ChecklistAdapter(private val componentList: ArrayList<Component>) :
+        BaseAdapter() {
 
         override fun getCount(): Int {
             return componentList.size
@@ -91,34 +92,33 @@ class ComponentsPanel(private val activity: EditActivity) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             var convertedView = convertView
 
-            val holder: ViewHolder
-
-            if (convertedView == null) {
+            val holder: ViewHolder = if (convertedView != null) convertedView.tag as ViewHolder
+            else {
                 val vi = activity.getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                    Context.LAYOUT_INFLATER_SERVICE
+                ) as LayoutInflater
                 convertedView = vi.inflate(R.layout.checklist, null)
 
-                holder = ViewHolder()
-                holder.compoundTextView = convertedView!!.findViewById<View>(R.id
-                        .checklist_mainTextView) as TextView
-                holder.percentageTextView = convertedView.findViewById<View>(R.id
-                        .checklist_percentageTextView) as TextView
-                holder.unitTextView = convertedView.findViewById<View>(R.id
-                        .checklist_unitextView) as TextView
-                holder.extraTextView = convertedView.findViewById<View>(R.id
-                        .checklist_extraTextView) as TextView
-                holder.checkBox = convertedView.findViewById<View>(R.id.checklist_checkBox1) as CheckBox
-                convertedView.tag = holder
+                val vh = ViewHolder()
+                vh.compoundTextView =
+                        convertedView.findViewById<View>(R.id.checklist_mainTextView) as TextView
+                vh.percentageTextView =
+                        convertedView.findViewById<View>(R.id.checklist_percentageTextView) as TextView
+                vh.unitTextView =
+                        convertedView.findViewById<View>(R.id.checklist_unitextView) as TextView
+                vh.extraTextView =
+                        convertedView.findViewById<View>(R.id.checklist_extraTextView) as TextView
+                vh.checkBox = convertedView.findViewById<View>(R.id.checklist_checkBox1) as CheckBox
+                convertedView.tag = vh
+                vh
 
-                //                holder.name.setOnClickListener(new View.OnClickListener() {
+                //                vh.name.setOnClickListener(new View.OnClickListener() {
                 //                    public void onClick(View view) {
                 //                        CheckBox cb = (CheckBox) view;
                 //                        Compound compound = (Compound) cb.getTag();
                 //                        compound.setSelected(cb.isChecked());
                 //                    }
                 //                });
-            } else {
-                holder = convertedView.tag as ViewHolder
             }
 
 
@@ -130,27 +130,27 @@ class ComponentsPanel(private val activity: EditActivity) {
             Log.d(TAG, "Solution: $solution")
             Log.d(TAG, "Component: $component")
             Log.d(TAG, "Component stock: " + component.availableConcentration)
-            Log.d(TAG, "Compound: " + compound!!)
-            holder.compoundTextView!!.text = component.compound!!.shortName
+            Log.d(TAG, "Compound: " + compound)
+            holder.compoundTextView.text = component.compound.shortName
             if (solution != null) {
-                holder.unitTextView!!.text = component.getAmountString(solution.volume)
+                holder.unitTextView.text = component.getAmountString(solution.volume)
             }
             if (component.fromStock) {
-                holder.extraTextView!!.text = component.availableConcentration!!.toString()
+                holder.extraTextView.text = component.availableConcentration?.toString() ?: ""
             }
-            holder.checkBox!!.isChecked = false
-            holder.checkBox!!.tag = compound
+            holder.checkBox.isChecked = false
+            holder.checkBox.tag = compound
 
-            return convertedView
+            return convertedView!!
 
         }
 
         private inner class ViewHolder {
-            internal var compoundTextView: TextView? = null
-            internal var percentageTextView: TextView? = null
-            internal var unitTextView: TextView? = null
-            internal var extraTextView: TextView? = null
-            internal var checkBox: CheckBox? = null
+            internal lateinit var compoundTextView: TextView
+            internal lateinit var percentageTextView: TextView
+            internal lateinit var unitTextView: TextView
+            internal lateinit var extraTextView: TextView
+            internal lateinit var checkBox: CheckBox
         }
 
     }

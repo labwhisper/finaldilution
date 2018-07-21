@@ -3,8 +3,10 @@ package com.labessence.biotech.finaldilution
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import com.google.gson.reflect.TypeToken
 import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.peripherals.DataGatewayOperations
+import com.labessence.biotech.finaldilution.peripherals.datastores.SharedPreferencesStore
 import com.labessence.biotech.finaldilution.solution.Solution
 
 class ApplicationContext : Application() {
@@ -15,17 +17,36 @@ class ApplicationContext : Application() {
             setCurrentSolutionOrCreate(value)
             field = value
         }
-    var solutionGateway: DataGatewayOperations<Solution>? = null
-    //        this.compoundGateway.save(new Compound("KCl", 74.55));
-    //        this.compoundGateway.save(new Compound("NaCl", 58.44));
-    //        this.compoundGateway.save(new Compound("EDTA", 372.24));
-    //        this.compoundGateway.save(new Compound("MgCl2", 95.21));
-    //        this.compoundGateway.save(new Compound("TRIS", 121.14));
-    //        this.compoundGateway.save(new Compound("SDS", 288.372));
-    var compoundGateway: DataGatewayOperations<Compound>? = null
+    val solutionGateway: DataGatewayOperations<Solution> by lazy {
+        SharedPreferencesStore(
+            getSharedPreferences("solutions", Context.MODE_PRIVATE),
+            object : TypeToken<List<Solution>>() {})
+
+    }
+
+    val compoundGateway: DataGatewayOperations<Compound> by lazy {
+        val store = SharedPreferencesStore(
+            getSharedPreferences("compounds", Context.MODE_PRIVATE),
+            object : TypeToken<List<Compound>>() {})
+        if (store.size() == 0) {
+            initEmptyCompoundList(store)
+        }
+        store
+    }
 
     init {
+        Log.d(TAG, "Creating an application context")
         instance = this
+    }
+
+    fun initEmptyCompoundList(store: DataGatewayOperations<Compound>) {
+        Log.d(TAG, "No compounds found. Creating initial compound list")
+        store.save(Compound("KCl", 74.55))
+        store.save(Compound("NaCl", 58.44))
+        store.save(Compound("EDTA", 372.24))
+        store.save(Compound("MgCl2", 95.21))
+        store.save(Compound("TRIS", 121.14))
+        store.save(Compound("SDS", 288.372))
     }
 
     override fun onTerminate() {
@@ -40,7 +61,7 @@ class ApplicationContext : Application() {
         val settings = getSharedPreferences(FINAL_DILUTION_PREFERENCES, 0)
         val storedSolutionName = settings.getString("currentSolution", null)
         if (storedSolutionName != null) {
-            solution = solutionGateway!!.load(storedSolutionName) ?: null
+            solution = solutionGateway.load(storedSolutionName)
             Log.d(TAG, "Retrieved current solution using preferences : $storedSolutionName")
         }
         return solution
@@ -56,20 +77,21 @@ class ApplicationContext : Application() {
 
     fun removeCompoundFromEverywhere(compound: Compound) {
         saveCurrentWorkOnSolution()
-        for (solution in solutionGateway!!.loadAll()) {
-            if (solution.getComponentWithCompound(compound) != null) {
-                solution.removeComponent(solution.getComponentWithCompound(compound)!!)
-                solutionGateway!!.update(solution)
+        for (solution in solutionGateway.loadAll()) {
+            val component = solution.getComponentWithCompound(compound)
+            if (component != null) {
+                solution.removeComponent(component)
+                solutionGateway.update(solution)
             }
         }
-        if (currentSolution!!.getComponentWithCompound(compound) != null) {
-            currentSolution!!.removeComponent(currentSolution!!.getComponentWithCompound(compound)!!)
+        currentSolution?.run {
+            getComponentWithCompound(compound)?.let { removeComponent(it) }
         }
-        compoundGateway!!.remove(compound)
+        compoundGateway.remove(compound)
     }
 
     fun saveCurrentWorkOnSolution() {
-        solutionGateway!!.update(this.currentSolution!!)
+        this.currentSolution?.let { solutionGateway.update(it) }
     }
 
     companion object {

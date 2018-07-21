@@ -28,11 +28,11 @@ class EditActivity : AppCompatActivity() {
         setContentView(R.layout.content_edit)
 
         volumePanel = VolumePanel(this)
-        volumePanel!!.displayVolumeText()
-        volumePanel!!.displayBeakerImage()
+        volumePanel?.displayVolumeText()
+        volumePanel?.displayBeakerImage()
 
         componentsPanel = ComponentsPanel(this)
-        componentsPanel!!.displayComponentList()
+        componentsPanel?.displayComponentList()
 
         displayAddCompoundFragment()
         screenGestureDetector = GestureDetector(this, EditGestureListener(this))
@@ -43,7 +43,7 @@ class EditActivity : AppCompatActivity() {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        screenGestureDetector!!.onTouchEvent(event)
+        screenGestureDetector?.onTouchEvent(event)
         return super.onTouchEvent(event)
     }
 
@@ -59,8 +59,8 @@ class EditActivity : AppCompatActivity() {
     }
 
     fun refresh() {
-        componentsPanel!!.updateComponentList()
-        volumePanel!!.updateVolumeTextView()
+        componentsPanel?.updateComponentList()
+        volumePanel?.updateVolumeTextView()
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -14,18 +14,19 @@ import java.util.*
  * Created by dawid.chmielewski on 4/3/2017.
  */
 
-class SharedPreferencesStore<T : Item>
 //TODO gson.toJsonTree(compound);
 // if found - load, if not create.
 // not found : no solutions.
 // solution created - saved.
 
+//private static final File COMPOUNDS_FILE = new File("compounds.json");
+class SharedPreferencesStore<T : Item>(
+    private val sharedPreferences: SharedPreferences, private val listType: TypeToken<List<T>>
+) : DataGatewayOperations<T> {
 
-(//private static final File COMPOUNDS_FILE = new File("compounds.json");
-        private val sharedPreferences: SharedPreferences, private val listType: TypeToken<List<T>>) : DataGatewayOperations<T> {
     private val gson = GsonBuilder()
-            .registerTypeAdapter(Concentration::class.java, ConcentrationDeserializer())
-            .create()
+        .registerTypeAdapter(Concentration::class.java, ConcentrationDeserializer())
+        .create()
 
     private val itemListFormPreferences: MutableList<T>
         get() {
@@ -40,6 +41,9 @@ class SharedPreferencesStore<T : Item>
             return loadedList as MutableList<T>
         }
 
+    override fun size() = itemListFormPreferences.size
+
+
     override fun save(item: T) {
         //TODO performance
         // Could use append
@@ -52,6 +56,7 @@ class SharedPreferencesStore<T : Item>
         }
         itemList.add(item)
         putItemListToPreferences(itemList)
+        Log.d(TAG, "Item " + item.name + " added.")
     }
 
 
@@ -72,6 +77,7 @@ class SharedPreferencesStore<T : Item>
 
         itemList.add(item)
         putItemListToPreferences(itemList)
+        Log.d(TAG, "Item " + item.name + " updated.")
     }
 
     override fun remove(item: T) {
@@ -81,6 +87,7 @@ class SharedPreferencesStore<T : Item>
         }
         itemList.remove(item)
         putItemListToPreferences(itemList)
+        Log.d(TAG, "Item " + item.name + " removed.")
     }
 
     override fun load(name: String): T? {

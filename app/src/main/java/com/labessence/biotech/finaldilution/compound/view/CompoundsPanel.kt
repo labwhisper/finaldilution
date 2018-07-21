@@ -24,24 +24,27 @@ class CompoundsPanel(private val activity: Activity) {
 
     private val compoundListAdapter: ArrayAdapter<Compound>
         get() = ArrayAdapter(
-                activity, android.R.layout.simple_list_item_1, appState.compoundGateway!!.loadAll())
+            activity, android.R.layout.simple_list_item_1, appState.compoundGateway.loadAll()
+        )
 
     private// TODO Refresh activity if needed.
     // activity.refresh();
-    val compoundLongClickListener: (AdapterView<*>, View, Int, Long) -> Boolean = { parent, view, position, id ->
-        val compound = parent.getAdapter().getItem(position) as Compound
-        appState.removeCompoundFromEverywhere(compound)
-        true
-    }
-
-    private val compoundClickListener: (AdapterView<*>, View, Int, Long) -> Unit = OnClick@{ parent, view, position, id ->
-        val compound = parent.getAdapter().getItem(position) as Compound
-        if (appState.currentSolution!!.getComponentWithCompound(compound) != null) {
-            informAboutCompoundAlreadyAdded(view, compound)
-            return@OnClick
+    val compoundLongClickListener: (AdapterView<*>, View, Int, Long) -> Boolean =
+        { parent, view, position, id ->
+            val compound = parent.getAdapter().getItem(position) as Compound
+            appState.removeCompoundFromEverywhere(compound)
+            true
         }
-        startComponentEdition(compound)
-    }
+
+    private val compoundClickListener: (AdapterView<*>, View, Int, Long) -> Unit =
+        OnClick@{ parent, view, position, id ->
+            val compound = parent.getAdapter().getItem(position) as Compound
+            if (appState.currentSolution?.getComponentWithCompound(compound) != null) {
+                informAboutCompoundAlreadyAdded(view, compound)
+                return@OnClick
+            }
+            startComponentEdition(compound)
+        }
 
     fun displayCompoundList() {
         val compoundsListView = activity.findViewById<ListView>(R.id.compoundsListView)
@@ -57,7 +60,10 @@ class CompoundsPanel(private val activity: Activity) {
 
     private fun informAboutCompoundAlreadyAdded(view: View, compound: Compound) {
         Anim().blinkWithRed(view)
-        Log.d(TAG, "Compound (" + compound.shortName + ") already in solution (" + appState.currentSolution!!.name + ")")
+        Log.d(
+            TAG,
+            "Compound (" + compound.shortName + ") already in solution (" + appState.currentSolution?.name + ")"
+        )
     }
 
     private fun startComponentEdition(compound: Compound) {

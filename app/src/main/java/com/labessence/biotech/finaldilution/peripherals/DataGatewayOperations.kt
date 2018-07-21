@@ -17,4 +17,6 @@ interface DataGatewayOperations<T : Item> {
     fun load(name: String): T?
 
     fun loadAll(): List<T>
+
+    fun size(): Int
 }

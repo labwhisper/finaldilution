@@ -28,15 +28,15 @@ internal class NewCompoundCreator(private val activity: EditActivity) {
 
         val alertDialogBuilder = AlertDialog.Builder(activity)
         alertDialogBuilder.setView(compoundNamePicker)
-                .setMessage("Enter new compound parameters: ")
-                .setCancelable(false)
-                .setPositiveButton("OK", getOnAcceptNewCompoundListener(compoundNamePicker))
-                .setNegativeButton("Cancel", null)
+            .setMessage("Enter new compound parameters: ")
+            .setCancelable(false)
+            .setPositiveButton("OK", getOnAcceptNewCompoundListener(compoundNamePicker))
+            .setNegativeButton("Cancel", null)
         val alertDialog = alertDialogBuilder.create()
 
         compoundNamePicker.setOnFocusChangeListener { v1, hasFocus ->
-            if (hasFocus && alertDialog.window != null) {
-                alertDialog.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            if (hasFocus) {
+                alertDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
             }
         }
         alertDialog.show()
@@ -46,15 +46,16 @@ internal class NewCompoundCreator(private val activity: EditActivity) {
         appState = activity.applicationContext as ApplicationContext
     }
 
-    private fun getOnAcceptNewCompoundListener(compoundNamePicker: EditText): (DialogInterface, Int) -> Unit = label@{ dialog, which ->
-        if (compoundNamePicker.text.length == 0) {
-            return@label
+    private fun getOnAcceptNewCompoundListener(compoundNamePicker: EditText): (DialogInterface, Int) -> Unit =
+        label@{ dialog, which ->
+            if (compoundNamePicker.text.length == 0) {
+                return@label
+            }
+            val compound = Compound(compoundNamePicker.text.toString())
+            //TODO Add nice dialog with molar mass
+            compound.molarMass = 40.0
+            //TODO Save or not save here...
+            appState.compoundGateway.save(compound)
+            activity.refresh()
         }
-        val compound = Compound(compoundNamePicker.text.toString())
-        //TODO Add nice dialog with molar mass
-        compound.molarMass = 40.0
-        //TODO Save or not save here...
-        appState.compoundGateway!!.save(compound)
-        activity.refresh()
-    }
 }
