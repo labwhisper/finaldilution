@@ -4,7 +4,6 @@
     <string name="beakerDescription">beaker</string>
     <string name="volumeText">Volume:</string>
     <string name="title_activity_startup">Select solution</string>
-    <string name="title_activity_edit">Edit solution</string>
     <string name="title_activity_prepare">Prepare solution</string>
     <string name="title_activity_compound">Add compound</string>
     <string name="add_new_solution_button_text">"+    NEW"</string>

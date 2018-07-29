@@ -1,15 +1,12 @@
 package com.labessence.biotech.finaldilution.solution.view
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
-import android.view.View
-
+import android.widget.TextView
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.view.ComponentsPanel
@@ -38,10 +35,6 @@ class EditActivity : AppCompatActivity() {
         screenGestureDetector = GestureDetector(this, EditGestureListener(this))
     }
 
-    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        return super.onCreateView(name, context, attrs)
-    }
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         screenGestureDetector?.onTouchEvent(event)
         return super.onTouchEvent(event)
@@ -55,7 +48,9 @@ class EditActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        refresh()
+        findViewById<TextView>(R.id.solution_toolbar_text).text =
+                (applicationContext as ApplicationContext).currentSolution?.name
+                ?: "Current solution"
     }
 
     fun refresh() {

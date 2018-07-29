@@ -1,107 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/bottom_sheet_collapsed_height"
         android:baselineAligned="true"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".solution.view.EditActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/componentsTextView"
+            app:layout_constraintVertical_weight="0.1"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <TextView
+                android:id="@+id/solution_toolbar_text"
+                style="@style/FinalDilutionH1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                tools:text="Solution name" />
+
+        </android.support.v7.widget.Toolbar>
 
         <ListView
             android:id="@+id/componentsTextView"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight=".5"
             android:ems="10"
-            android:text="" />
+            android:text=""
+            app:layout_constraintBottom_toTopOf="@+id/beaker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintVertical_weight="0.5" />
 
-        <RelativeLayout
-            android:id="@+id/beakerRectangle"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/beaker"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight=".5"
-            android:focusable="true"
-            android:clickable="true">
+            android:contentDescription="@string/beakerDescription"
+            android:src="@drawable/beaker"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/componentsTextView"
+            app:layout_constraintVertical_weight="0.4" />
 
-            <ImageView
-                android:id="@+id/beaker"
+        <ViewSwitcher
+            android:id="@+id/volumeViewSwitcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/beaker"
+            app:layout_constraintEnd_toEndOf="@+id/beaker"
+            app:layout_constraintStart_toStartOf="@+id/beaker"
+            app:layout_constraintTop_toTopOf="@+id/beaker">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/relativeLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/fromEditToPreparebutton"
-                android:layout_alignParentStart="true"
-                android:contentDescription="@string/beakerDescription"
-                android:src="@drawable/beaker" />
-
-            <ViewSwitcher
-                android:id="@+id/volumeViewSwitcher"
-                android:layout_width="121dp"
-                android:layout_height="46dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_marginEnd="96dp">
+                android:layout_height="match_parent">
 
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-
-                    <EditText
-                        android:id="@+id/beakerVolumeEditText"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_toStartOf="@+id/textView"
-                        android:focusableInTouchMode="true"
-                        android:gravity="end"
-                        android:inputType="numberDecimal"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:gravity="center_vertical"
-                        android:text="@string/mililiters"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                </RelativeLayout>
+                <EditText
+                    android:id="@+id/beakerVolumeEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:focusableInTouchMode="true"
+                    android:gravity="end"
+                    android:inputType="numberDecimal"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    app:layout_constraintEnd_toStartOf="@+id/textView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/beakerVolumeTextView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:gravity="end"
-                    android:text="@string/volumeText"
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mililiters"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#85D3FA"
-                    android:textSize="30sp" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/beakerVolumeEditText"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </ViewSwitcher>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Button
-                android:id="@+id/fromEditToPreparebutton"
+            <TextView
+                android:id="@+id/beakerVolumeTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="@string/FromEditToPrepButtonText" />
+                android:layout_height="fill_parent"
+                android:gravity="end"
+                android:text="@string/volumeText"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#85D3FA"
+                android:textSize="30sp"
+                tools:text="34543 ml" />
 
-        </RelativeLayout>
+        </ViewSwitcher>
 
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/compound_list" />
 

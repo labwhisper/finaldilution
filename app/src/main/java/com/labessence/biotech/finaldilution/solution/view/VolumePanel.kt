@@ -71,7 +71,7 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     }
 
     internal fun displayBeakerImage() {
-        val beakerImage = activity.findViewById<View>(R.id.beakerRectangle)
+        val beakerImage = activity.findViewById<View>(R.id.beaker)
         val tapDetector = GestureDetector(
             activity,
             TapGestureListener(this)

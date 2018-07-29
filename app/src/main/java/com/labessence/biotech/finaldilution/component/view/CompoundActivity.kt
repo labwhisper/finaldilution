@@ -40,6 +40,8 @@ class CompoundActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_compound)
 
+        // TODO use getChildAt instead of creaing such lists
+
         desiredButtonList = ArrayList()
         desiredButtonList.add(findViewById<View>(R.id.desiredPercentageConcButton) as RadioButton)
         desiredButtonList.add(findViewById<View>(R.id.desiredMolarConcButton) as RadioButton)
@@ -69,7 +71,6 @@ class CompoundActivity : Activity() {
 
         (findViewById<View>(R.id.desiredConcButtonsBar)).viewTreeObserver.addOnGlobalLayoutListener(
             { this.renderButtonsSquare() })
-
         setKeyboardOnInputs()
         bindListeners()
         setConcentrationButtonsState(false)
@@ -77,45 +78,23 @@ class CompoundActivity : Activity() {
         toggleSolutionFromStock()
     }
 
+
     private fun bindListeners() {
-        findViewById<View>(R.id.desiredPercentageConcButton).setOnClickListener { v ->
-            desiredConcType = ConcentrationType.PERCENTAGE
-            (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = "%"
+
+        for ((i, concentrationButton) in desiredButtonList.withIndex()) {
+            concentrationButton.setOnClickListener({ v ->
+                desiredConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
+                    (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = hint()
+                }
+            })
         }
 
-        findViewById<View>(R.id.desiredMolarConcButton).setOnClickListener { v ->
-            desiredConcType = ConcentrationType.MOLAR
-            (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = "M/l"
-        }
-
-        findViewById<View>(R.id.desiredMilimolarConcButton).setOnClickListener { v ->
-            desiredConcType = ConcentrationType.MILIMOLAR
-            (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = "mM/l"
-        }
-
-        findViewById<View>(R.id.desiredMgMlConcButton).setOnClickListener { v ->
-            desiredConcType = ConcentrationType.MILIGRAM_PER_MILLILITER
-            (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = "mg/ml"
-        }
-
-        findViewById<View>(R.id.stockPercentageConcButton).setOnClickListener { v ->
-            stockConcType = ConcentrationType.PERCENTAGE
-            (findViewById<View>(R.id.stockConcEditText) as EditText).hint = "%"
-        }
-
-        findViewById<View>(R.id.stockMolarConcButton).setOnClickListener { v ->
-            stockConcType = ConcentrationType.MOLAR
-            (findViewById<View>(R.id.stockConcEditText) as EditText).hint = "M/l"
-        }
-
-        findViewById<View>(R.id.stockMilimolarConcButton).setOnClickListener { v ->
-            stockConcType = ConcentrationType.MILIMOLAR
-            (findViewById<View>(R.id.stockConcEditText) as EditText).hint = "mM/l"
-        }
-
-        findViewById<View>(R.id.stockMgMlConcButton).setOnClickListener { v ->
-            stockConcType = ConcentrationType.MILIGRAM_PER_MILLILITER
-            (findViewById<View>(R.id.stockConcEditText) as EditText).hint = "mg/ml"
+        for ((i, concentrationButton) in stockButtonList.withIndex()) {
+            concentrationButton.setOnClickListener({ v ->
+                stockConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
+                    (findViewById<View>(R.id.stockConcEditText) as EditText).hint = hint()
+                }
+            })
         }
 
         findViewById<View>(R.id.enableStockDilutionButton).setOnClickListener { toggleSolutionFromStock() }
@@ -132,11 +111,10 @@ class CompoundActivity : Activity() {
         val appState = applicationContext as ApplicationContext
         val component = appState.currentSolution?.getComponentWithCompound(compound)
         if (component != null) {
-            component.desiredConcentration?.let {
-                desiredConcType = it.type
-                val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
-                desiredConcEditText.setText(java.lang.Double.toString(it.concentration))
-            }
+            desiredConcType = component.desiredConcentration.type
+            val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
+            desiredConcEditText.setText(java.lang.Double.toString(component.desiredConcentration.concentration))
+
             if (component.fromStock) {
                 component.availableConcentration?.let {
                     val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
@@ -196,7 +174,7 @@ class CompoundActivity : Activity() {
             return
         }
 
-        if (fromStock && stockConcEditText.text.toString().trim { it <= ' ' }.length == 0) {
+        if (fromStock && stockConcEditText.text.toString().trim { it <= ' ' }.isEmpty()) {
             Anim().blink(stockConcEditText)
             return
         }
@@ -207,8 +185,10 @@ class CompoundActivity : Activity() {
         }
 
 
-        val component: Component = (appState.currentSolution?.getComponentWithCompound(compound)
-                ?: createComponent()).also { updateComponent(it) }
+        val component: Component =
+            (appState.currentSolution?.getComponentWithCompound(compound)?.also {
+                updateComponent(it)
+            } ?: createComponent())
 
         var currentComponentVolume = 0.0
         if (fromStock) {
@@ -247,37 +227,36 @@ class CompoundActivity : Activity() {
 
     private fun createComponent(): Component {
         val appState = applicationContext as ApplicationContext
-        val component = Component(compound, retrieveDesiredConc(), retrieveStockConc())
+        val component =
+            Component(compound, retrieveDesiredConcFromInput(), retrieveStockConcFromInput())
 
         appState.currentSolution?.addComponent(component)
         return component
     }
 
-    private fun retrieveStockConc(): Concentration? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private fun retrieveStockConcFromInput(): Concentration? {
+        val fromStock =
+            (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
+        if (!fromStock) {
+            return null
+        }
+        val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
+        val stockConcentrationValue = parseDoubleFromEditText(stockConcEditText)
+        stockConcType?.let {
+            return ConcentrationFactory.createConcentration(it, stockConcentrationValue)
+        }
+        return null
     }
 
-    private fun retrieveDesiredConc(): Concentration {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private fun retrieveDesiredConcFromInput(): Concentration {
+        val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
+        val concentrationValue = parseDoubleFromEditText(desiredConcEditText)
+        return ConcentrationFactory.createConcentration(desiredConcType, concentrationValue)
     }
 
     private fun updateComponent(component: Component) {
-        val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
-        val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
-        val fromStock =
-            (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
-
-        val concentrationValue = parseDoubleFromEditText(desiredConcEditText)
-        component.desiredConcentration =
-                ConcentrationFactory.createConcentration(desiredConcType, concentrationValue)
-
-        if (fromStock) {
-            val stockConcentrationValue = parseDoubleFromEditText(stockConcEditText)
-            stockConcType?.let {
-                component.availableConcentration =
-                        ConcentrationFactory.createConcentration(it, stockConcentrationValue)
-            }
-        }
+        component.desiredConcentration = retrieveDesiredConcFromInput()
+        component.availableConcentration = retrieveStockConcFromInput()
     }
 
     private fun parseDoubleFromEditText(desiredConcEditText: EditText): Double {

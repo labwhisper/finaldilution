@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,62 +12,65 @@
         android:id="@+id/checklist_checkBox1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="" />
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/checklist_mainTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="Compound"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Compound" />
 
     <View
         android:id="@+id/checklist_centerShim"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/checklist_extraTextView"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/checklist_extraTextView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
     <TextView
         android:id="@+id/checklist_percentageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@+id/checklist_mainTextView"
-        android:layout_toLeftOf="@+id/checklist_centerShim"
-        android:layout_toRightOf="@+id/checklist_mainTextView"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constraintLeft_toRightOf="@+id/checklist_mainTextView"
+        app:layout_constraintRight_toLeftOf="@+id/checklist_centerShim"
+        app:layout_constraintStart_toEndOf="@+id/checklist_mainTextView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/checklist_unitextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checklist_centerShim"
-        android:layout_alignStart="@+id/checklist_centerShim"
-        android:layout_alignTop="@+id/checklist_checkBox1"
-        android:layout_toLeftOf="@+id/checklist_checkBox1"
-        android:layout_toStartOf="@+id/checklist_checkBox1"
-        android:text="Unit"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constraintEnd_toStartOf="@+id/checklist_checkBox1"
+        app:layout_constraintLeft_toLeftOf="@+id/checklist_centerShim"
+        app:layout_constraintRight_toLeftOf="@+id/checklist_checkBox1"
+        app:layout_constraintStart_toStartOf="@+id/checklist_centerShim"
+        app:layout_constraintTop_toTopOf="@+id/checklist_checkBox1"
+        tools:text="60.15 ml" />
 
     <TextView
         android:id="@+id/checklist_extraTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/checklist_mainTextView"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checklist_mainTextView"
+        tools:text="36.0 [%]" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

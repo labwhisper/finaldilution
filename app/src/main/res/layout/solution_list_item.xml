@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -13,6 +14,7 @@
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:textAppearance="@android:style/TextAppearance.Medium"
+        tools:text="Solution X"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -21,6 +23,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        tools:text="578ml 2 components"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:textSize="12sp"
         />
