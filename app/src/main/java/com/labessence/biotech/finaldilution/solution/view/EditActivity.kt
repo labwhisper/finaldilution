@@ -13,15 +13,19 @@ import com.labessence.biotech.finaldilution.component.view.ComponentsPanel
 import com.labessence.biotech.finaldilution.component.view.CompoundActivity
 import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.compound.view.CompoundsPanel
+import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.peripherals.gestures.EditGestureListener
+import com.labessence.biotech.finaldilution.solution.Solution
 
 class EditActivity : AppCompatActivity() {
     private var volumePanel: VolumePanel? = null
     private var componentsPanel: ComponentsPanel? = null
     private var screenGestureDetector: GestureDetector? = null
+    lateinit var solution: Solution
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        solution = intent.getSerializableExtra("SOLUTION") as Solution
         setContentView(R.layout.content_edit)
 
         volumePanel = VolumePanel(this)
@@ -43,14 +47,12 @@ class EditActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         val appState = applicationContext as ApplicationContext
-        appState.saveCurrentWorkOnSolution()
+        appState.saveCurrentWorkOnSolution(solution)
     }
 
     override fun onResume() {
         super.onResume()
-        findViewById<TextView>(R.id.solution_toolbar_text).text =
-                (applicationContext as ApplicationContext).currentSolution?.name
-                ?: "Current solution"
+        findViewById<TextView>(R.id.solution_toolbar_text).text = solution.name
     }
 
     fun refresh() {
@@ -66,7 +68,8 @@ class EditActivity : AppCompatActivity() {
 
     fun startComponentEdition(compound: Compound) {
         val intent = Intent(this, CompoundActivity::class.java)
-        intent.putExtra("compound", compound)
+        intent.putExtra(compound)
+        intent.putExtra(solution)
         startActivity(intent)
     }
 

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.ViewSwitcher
-import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.peripherals.gestures.TapGestureController
 import com.labessence.biotech.finaldilution.peripherals.gestures.TapGestureListener
@@ -20,7 +19,6 @@ import java.text.DecimalFormat
  */
 
 class VolumePanel internal constructor(private val activity: EditActivity) : TapGestureController {
-    private val appState: ApplicationContext = activity.applicationContext as ApplicationContext
     private val switcher by lazy<ViewSwitcher> { activity.findViewById(R.id.volumeViewSwitcher) }
     private val volumeTextView by lazy<TextView> { activity.findViewById(R.id.beakerVolumeTextView) }
     private val volumeEditText by lazy<TextView> { activity.findViewById(R.id.beakerVolumeEditText) }
@@ -49,7 +47,7 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
 
     internal fun displayVolumeText() {
         updateVolumeTextView()
-        volumeEditText.text = volFormat.format(appState.currentSolution?.volume ?: 0.0)
+        volumeEditText.text = volFormat.format(activity.solution.volume)
         volumeEditText.setSelectAllOnFocus(true)
         volumeEditText.setOnEditorActionListener(onVolumeEditorActionListener)
 
@@ -61,7 +59,7 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
             if (hasFocus)
                 imm.showSoftInput(v, 0)
         }
-        volumeTextView.setOnFocusChangeListener { v, hasFocus ->
+        volumeTextView.setOnFocusChangeListener { _, hasFocus ->
             val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             if (hasFocus) {
                 imm.hideSoftInputFromWindow(volumeEditText.windowToken, 0)
@@ -92,24 +90,19 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     internal fun updateVolumeTextView() {
         volumeTextView.text = String.format(
             "%sml",
-            volFormat.format(appState.currentSolution?.volume ?: 0.0)
+            volFormat.format(activity.solution.volume)
         )
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(volumeEditText.windowToken, 0)
     }
 
     private fun updateVolume(volume: Double) {
-        appState.currentSolution?.volume = volume
-        appState.currentSolution?.recalculateVolume(volume)
+        activity.solution.volume = volume
+        activity.solution.recalculateVolume(volume)
     }
 
     override fun onTap() {
         startVolumeEdition()
-    }
-
-    companion object {
-
-        private val TAG = "Volume panel "
     }
 
 }

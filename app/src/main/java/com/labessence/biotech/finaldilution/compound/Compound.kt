@@ -4,6 +4,8 @@ import com.labessence.biotech.finaldilution.genericitem.Item
 
 class Compound : Item {
     override val name: String
+    override val seriesName: String
+        get() = "COMPOUND"
 
     var shortName: String
     var molarMass: Double = 0.toDouble()

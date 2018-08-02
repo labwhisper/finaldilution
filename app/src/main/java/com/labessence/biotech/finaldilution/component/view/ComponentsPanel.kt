@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.Component
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
@@ -18,17 +17,12 @@ import com.labessence.biotech.finaldilution.solution.view.EditActivity
  */
 
 class ComponentsPanel(private val activity: EditActivity) {
-    private val appState: ApplicationContext
 
     private val componentListAdapter: ChecklistAdapter
         get() {
-            val components = appState.currentSolution?.components ?: ArrayList()
+            val components = activity.solution.components
             return ChecklistAdapter(components)
         }
-
-    init {
-        appState = activity.applicationContext as ApplicationContext
-    }
 
     fun displayComponentList() {
         val componentsListView = activity.findViewById<View>(R.id.componentsTextView) as ListView
@@ -46,7 +40,7 @@ class ComponentsPanel(private val activity: EditActivity) {
     private val componentLongClick: (AdapterView<*>, View, Int, Long) -> Boolean =
         { parent, view, position, id ->
             val component = parent.adapter.getItem(position) as Component
-            appState.currentSolution?.removeComponent(component)
+            activity.solution.removeComponent(component)
             activity.refresh()
             true
         }
@@ -59,18 +53,14 @@ class ComponentsPanel(private val activity: EditActivity) {
 
     private fun updateOverflowState(componentsListView: ListView) {
         componentsListView.setBackgroundColor(Color.WHITE)
-        appState.currentSolution?.let {
-            if (it.isOverflown) highlightAllLiquidComponents(componentsListView)
-        }
+        if (activity.solution.isOverflown) highlightAllLiquidComponents(componentsListView)
     }
 
     private fun highlightAllLiquidComponents(componentsListView: ListView) {
-        appState.currentSolution?.let {
-            for (component in it.components)
-                if (component.fromStock) {
-                    componentsListView.setBackgroundColor(Color.YELLOW)
-                }
-        }
+        for (component in activity.solution.components)
+            if (component.fromStock) {
+                componentsListView.setBackgroundColor(Color.YELLOW)
+            }
     }
 
 
@@ -122,18 +112,16 @@ class ComponentsPanel(private val activity: EditActivity) {
             }
 
 
-            val appState = activity.applicationContext as ApplicationContext
-
-            val solution = appState.currentSolution
             val component = getItem(position) as Component
             val compound = component.compound
-            Log.d(TAG, "Solution: $solution")
+            Log.d(TAG, "Solution: ${activity.solution}")
             Log.d(TAG, "Component: $component")
             Log.d(TAG, "Component stock: " + component.availableConcentration)
             Log.d(TAG, "Compound: " + compound)
             holder.compoundTextView.text = component.compound.shortName
-            if (solution != null) {
-                holder.unitTextView.text = component.getAmountString(solution.volume)
+            if (activity.solution != null) {
+                holder.unitTextView.text =
+                        component.getAmountString(activity.solution.volume)
             }
             if (component.fromStock) {
                 holder.extraTextView.text = component.availableConcentration?.toString() ?: ""

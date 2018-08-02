@@ -1,25 +1,25 @@
 package com.labessence.biotech.finaldilution.compound.view
 
-import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
-
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.view.CompoundActivity
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.peripherals.view.Anim
+import com.labessence.biotech.finaldilution.solution.view.EditActivity
 
 /**
  * Project: FinalDilution
  * Created by dawid.chmielewski on 11/2/2017.
  */
 
-class CompoundsPanel(private val activity: Activity) {
+class CompoundsPanel(private val activity: EditActivity) {
     private val appState: ApplicationContext = activity.applicationContext as ApplicationContext
 
     private val compoundListAdapter: ArrayAdapter<Compound>
@@ -31,15 +31,17 @@ class CompoundsPanel(private val activity: Activity) {
     // activity.refresh();
     val compoundLongClickListener: (AdapterView<*>, View, Int, Long) -> Boolean =
         { parent, view, position, id ->
-            val compound = parent.getAdapter().getItem(position) as Compound
+            val compound = parent.adapter.getItem(position) as Compound
+            appState.saveCurrentWorkOnSolution(activity.solution)
             appState.removeCompoundFromEverywhere(compound)
+            activity.solution = appState.reloadSolution(activity.solution)!!
             true
         }
 
     private val compoundClickListener: (AdapterView<*>, View, Int, Long) -> Unit =
         OnClick@{ parent, view, position, id ->
-            val compound = parent.getAdapter().getItem(position) as Compound
-            if (appState.currentSolution?.getComponentWithCompound(compound) != null) {
+            val compound = parent.adapter.getItem(position) as Compound
+            if (activity.solution.getComponentWithCompound(compound) != null) {
                 informAboutCompoundAlreadyAdded(view, compound)
                 return@OnClick
             }
@@ -62,13 +64,14 @@ class CompoundsPanel(private val activity: Activity) {
         Anim().blinkWithRed(view)
         Log.d(
             TAG,
-            "Compound (" + compound.shortName + ") already in solution (" + appState.currentSolution?.name + ")"
+            "Compound (" + compound.shortName + ") already in solution (" + activity.solution.name + ")"
         )
     }
 
     private fun startComponentEdition(compound: Compound) {
         val intent = Intent(activity, CompoundActivity::class.java)
-        intent.putExtra("compound", compound)
+        intent.putExtra(compound)
+        intent.putExtra(activity.solution)
         activity.startActivity(intent)
     }
 
@@ -78,3 +81,5 @@ class CompoundsPanel(private val activity: Activity) {
     }
 
 }
+
+

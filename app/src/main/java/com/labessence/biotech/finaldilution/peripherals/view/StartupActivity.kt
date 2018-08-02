@@ -11,11 +11,14 @@ import android.view.WindowManager
 import android.widget.*
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
+import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.solution.Solution
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
 import java.text.DecimalFormat
 
 class StartupActivity : Activity() {
+
+    private var solution: Solution? = null
 
     internal var volFormat = DecimalFormat("0.##")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +41,7 @@ class StartupActivity : Activity() {
         val solutionList = appState.solutionGateway.loadAll()
         if (!solutionList.isEmpty()) {
             //TODO Save and set last solution
-            appState.currentSolution = appState.solutionGateway.loadAll()[0]
+            solution = appState.solutionGateway.loadAll()[0]
         }
         val solutionListView = findViewById<View>(R.id.solutionListView) as ListView
         val solutionListAdapter = object : ArrayAdapter<Solution>(
@@ -49,7 +52,7 @@ class StartupActivity : Activity() {
                 val text1 = view.findViewById<View>(R.id.solution_list_text1) as TextView
                 val text2 = view.findViewById<View>(R.id.solution_list_text2) as TextView
                 val solution = solutionList[position]
-                text1.setText(solution.name)
+                text1.text = solution.name
                 text2.text = String.format(
                     getString(R.string.solutionListPrepFormat),
                     volFormat.format(solution.volume),
@@ -80,10 +83,13 @@ class StartupActivity : Activity() {
                         solution.name = solutionNamePicker.text.toString()
                         appState.solutionGateway.save(solution)
                         refreshSolutionList()
-                        appState.currentSolution =
+                        this@StartupActivity.solution =
                                 appState.solutionGateway.load(solutionNamePicker.text.toString())
-                        val intent = Intent(this@StartupActivity, EditActivity::class.java)
-                        startActivity(intent)
+                        this@StartupActivity.solution?.let {
+                            val intent = Intent(this@StartupActivity, EditActivity::class.java)
+                            intent.putExtra(it)
+                            startActivity(intent)
+                        }
                     }
                 }
                 .setNegativeButton("Cancel", null)
@@ -101,10 +107,12 @@ class StartupActivity : Activity() {
     private inner class SolutionChooseListener : AdapterView.OnItemClickListener {
 
         override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-            val appState = applicationContext as ApplicationContext
-            appState.currentSolution = parent.adapter.getItem(position) as Solution
-            val intent = Intent(this@StartupActivity, EditActivity::class.java)
-            startActivity(intent)
+            solution = parent.adapter.getItem(position) as Solution
+            solution?.let {
+                val intent = Intent(this@StartupActivity, EditActivity::class.java)
+                intent.putExtra(it)
+                startActivity(intent)
+            }
         }
     }
 

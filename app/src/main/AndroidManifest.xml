@@ -24,6 +24,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".component.view.CompoundActivity"
+            android:noHistory="true"
             android:label="@string/title_activity_compound" />
     </application>
 

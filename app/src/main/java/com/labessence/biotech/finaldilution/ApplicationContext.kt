@@ -10,13 +10,7 @@ import com.labessence.biotech.finaldilution.peripherals.datastores.SharedPrefere
 import com.labessence.biotech.finaldilution.solution.Solution
 
 class ApplicationContext : Application() {
-    //TODO Remove currentSolution from here and pass it with Activities
-    var currentSolution: Solution? = null
-        get() = field ?: loadSolution()
-        set(value) {
-            setCurrentSolutionOrCreate(value)
-            field = value
-        }
+
     val solutionGateway: DataGatewayOperations<Solution> by lazy {
         SharedPreferencesStore(
             getSharedPreferences("solutions", Context.MODE_PRIVATE),
@@ -49,34 +43,7 @@ class ApplicationContext : Application() {
         store.save(Compound("SDS", 288.372))
     }
 
-    override fun onTerminate() {
-        //TODO Clear DataGateway
-        super.onTerminate()
-    }
-
-    fun loadSolution(): Solution? {
-        //TODO Current Solution bedzie przechowywane w podrecznych danych androida.
-        //TODO Przeniesc mechanizm zapisywania stanu do nowego komponentu
-        var solution: Solution? = null
-        val settings = getSharedPreferences(FINAL_DILUTION_PREFERENCES, 0)
-        val storedSolutionName = settings.getString("currentSolution", null)
-        if (storedSolutionName != null) {
-            solution = solutionGateway.load(storedSolutionName)
-            Log.d(TAG, "Retrieved current solution using preferences : $storedSolutionName")
-        }
-        return solution
-    }
-
-    fun setCurrentSolutionOrCreate(currentSolution: Solution?) {
-        val settings = getSharedPreferences(FINAL_DILUTION_PREFERENCES, 0)
-        val editor = settings.edit()
-        editor.putString("currentSolution", currentSolution?.name)
-        editor.apply()
-        Log.d(TAG, "Stored current solution to preferences : " + (currentSolution?.name ?: "NULL"))
-    }
-
     fun removeCompoundFromEverywhere(compound: Compound) {
-        saveCurrentWorkOnSolution()
         for (solution in solutionGateway.loadAll()) {
             val component = solution.getComponentWithCompound(compound)
             if (component != null) {
@@ -84,14 +51,15 @@ class ApplicationContext : Application() {
                 solutionGateway.update(solution)
             }
         }
-        currentSolution?.run {
-            getComponentWithCompound(compound)?.let { removeComponent(it) }
-        }
         compoundGateway.remove(compound)
     }
 
-    fun saveCurrentWorkOnSolution() {
-        this.currentSolution?.let { solutionGateway.update(it) }
+    fun saveCurrentWorkOnSolution(solution: Solution) {
+        solutionGateway.update(solution)
+    }
+
+    fun reloadSolution(solution: Solution): Solution? {
+        return solutionGateway.load(solution.name)
     }
 
     companion object {

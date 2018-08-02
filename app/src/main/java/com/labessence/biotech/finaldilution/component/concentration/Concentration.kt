@@ -1,6 +1,9 @@
 package com.labessence.biotech.finaldilution.component.concentration
 
-abstract class Concentration(var concentration: Double, var type: ConcentrationType) {
+import java.io.Serializable
+
+abstract class Concentration(var concentration: Double, var type: ConcentrationType) :
+    Serializable {
 
     override fun toString(): String {
         return concentration.toString() + " [" + type.toString() + "]"

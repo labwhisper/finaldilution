@@ -8,6 +8,8 @@ import java.util.*
 class Solution : Item {
 
     override var name: String = ""
+    override val seriesName: String
+        get() = "SOLUTION"
     var volume: Double = 0.toDouble()
 
     val components = ArrayList<Component>()
@@ -26,7 +28,7 @@ class Solution : Item {
             return allLiquidComponentsVolume
         }
 
-    constructor() {}
+    constructor()
 
     constructor(name: String) {
         this.name = name

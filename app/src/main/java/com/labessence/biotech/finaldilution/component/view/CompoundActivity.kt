@@ -14,20 +14,21 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.ToggleButton
-import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.Component
 import com.labessence.biotech.finaldilution.component.concentration.Concentration
 import com.labessence.biotech.finaldilution.component.concentration.ConcentrationFactory
 import com.labessence.biotech.finaldilution.component.concentration.ConcentrationType
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.peripherals.view.Anim
-import com.labessence.biotech.finaldilution.peripherals.view.StartupActivity
+import com.labessence.biotech.finaldilution.solution.Solution
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
 import java.util.*
 
 class CompoundActivity : Activity() {
 
+    private lateinit var solution: Solution
     internal lateinit var compound: Compound
     internal var desiredConcType: ConcentrationType = ConcentrationType.MOLAR
     internal var stockConcType: ConcentrationType? = null
@@ -35,6 +36,7 @@ class CompoundActivity : Activity() {
     private lateinit var stockViewsList: MutableList<View>
     private lateinit var desiredButtonList: MutableList<RadioButton>
     private lateinit var stockButtonList: MutableList<RadioButton>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +68,8 @@ class CompoundActivity : Activity() {
         stockViewsList.add(findViewById<View>(R.id.stockConcTextView))
         stockViewsList.addAll(stockButtonList)
 
-        compound = intent.getSerializableExtra("compound") as Compound
+        compound = intent.getSerializableExtra("COMPOUND") as Compound
+        solution = intent.getSerializableExtra("SOLUTION") as Solution
         title = "Add " + compound.shortName
 
         (findViewById<View>(R.id.desiredConcButtonsBar)).viewTreeObserver.addOnGlobalLayoutListener(
@@ -82,19 +85,19 @@ class CompoundActivity : Activity() {
     private fun bindListeners() {
 
         for ((i, concentrationButton) in desiredButtonList.withIndex()) {
-            concentrationButton.setOnClickListener({ v ->
+            concentrationButton.setOnClickListener { v ->
                 desiredConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
                     (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = hint()
                 }
-            })
+            }
         }
 
         for ((i, concentrationButton) in stockButtonList.withIndex()) {
-            concentrationButton.setOnClickListener({ v ->
+            concentrationButton.setOnClickListener { v ->
                 stockConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
                     (findViewById<View>(R.id.stockConcEditText) as EditText).hint = hint()
                 }
-            })
+            }
         }
 
         findViewById<View>(R.id.enableStockDilutionButton).setOnClickListener { toggleSolutionFromStock() }
@@ -108,8 +111,7 @@ class CompoundActivity : Activity() {
     }
 
     private fun fillComponentFields() {
-        val appState = applicationContext as ApplicationContext
-        val component = appState.currentSolution?.getComponentWithCompound(compound)
+        val component = solution.getComponentWithCompound(compound)
         if (component != null) {
             desiredConcType = component.desiredConcentration.type
             val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
@@ -151,18 +153,13 @@ class CompoundActivity : Activity() {
 
     private fun onCancelComponent() {
         val intent = Intent(this@CompoundActivity, EditActivity::class.java)
+        intent.putExtra(solution)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
 
     //TODO run this listener also on back and generally close?
     private fun onAcceptComponent() {
-
-        val appState = applicationContext as ApplicationContext
-
-        if (appState.currentSolution == null) {
-            val intent = Intent(this@CompoundActivity, StartupActivity::class.java)
-            startActivity(intent)
-        }
 
         val fromStock =
             (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked
@@ -186,27 +183,25 @@ class CompoundActivity : Activity() {
 
 
         val component: Component =
-            (appState.currentSolution?.getComponentWithCompound(compound)?.also {
+            (solution.getComponentWithCompound(compound)?.also {
                 updateComponent(it)
             } ?: createComponent())
 
         var currentComponentVolume = 0.0
         if (fromStock) {
-            appState.currentSolution?.run {
-                currentComponentVolume = component.getQuantity(volume)
-            }
+            currentComponentVolume = component.getQuantity(solution.volume)
         }
-        appState.currentSolution?.run {
-            val allComponentsVolume = allLiquidComponentsVolume
-            if (allComponentsVolume + currentComponentVolume > volume) {
-                //TODO Color?? move this code
-                //            appState.getDb().removeComponentFromCurrentSolution(component);
-                //            appState.getDb().update(appState.getCurrentSolution());
-                //            appState.getCurrentSolution().resetComponents();
-            }
+        val allComponentsVolume = solution.allLiquidComponentsVolume
+        if (allComponentsVolume + currentComponentVolume > solution.volume) {
+            //TODO Color?? move this code
+            //            appState.getDb().removeComponentFromCurrentSolution(component);
+            //            appState.getDb().update(appState.getSolution());
+            //            appState.getSolution().resetComponents();
         }
 
         val intent = Intent(this@CompoundActivity, EditActivity::class.java)
+        intent.putExtra(solution)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         //TODO WHEN ITEM EXISTS SHOW STH? OR BEFORE EVEN OPENING COMP.ACTIVITY?
 
@@ -214,23 +209,23 @@ class CompoundActivity : Activity() {
 
     private fun onDeleteComponent() {
 
-        val appState = applicationContext as ApplicationContext
-        val component = appState.currentSolution?.getComponentWithCompound(compound)
+        val component = solution.getComponentWithCompound(compound)
         if (component == null) {
             onCancelComponent()
         } else {
-            appState.currentSolution?.removeComponent(component)
+            solution.removeComponent(component)
             val intent = Intent(this@CompoundActivity, EditActivity::class.java)
+            intent.putExtra(solution)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
     }
 
     private fun createComponent(): Component {
-        val appState = applicationContext as ApplicationContext
         val component =
             Component(compound, retrieveDesiredConcFromInput(), retrieveStockConcFromInput())
 
-        appState.currentSolution?.addComponent(component)
+        solution.addComponent(component)
         return component
     }
 
