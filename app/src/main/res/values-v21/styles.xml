@@ -13,6 +13,13 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
+    <style name="FinalDilutionMem">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">60sp</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="FinalDilutionH1">
         <item name="android:textColor">@color/light_blue</item>
         <item name="android:textSize">28sp</item>

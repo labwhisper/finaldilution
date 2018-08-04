@@ -13,4 +13,9 @@
     <string name="mililiters">ml</string>
     <string name="solutionListPrepFormat">%s ml  %d components</string>
     <string name="compound_list">Compound List</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="application_name">Final Dilution</string>
+    <string name="application_name_first_word">Final</string>
+    <string name="application_name_second_word">Dilution</string>
+    <string name="professore">Professore</string>
 </resources>
