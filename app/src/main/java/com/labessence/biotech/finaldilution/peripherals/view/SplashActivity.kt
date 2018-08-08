@@ -3,7 +3,6 @@ package com.labessence.biotech.finaldilution.peripherals.view
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import com.labessence.biotech.finaldilution.R
 
 /**
@@ -16,12 +15,8 @@ class SplashActivity : Activity() {
 
         setContentView(R.layout.activity_splash)
 
-        val waitHandler = Handler()
-
-        waitHandler.postDelayed({
-            val intent = Intent(this, StartupActivity::class.java)
-            startActivity(intent)
-            finish()
-        }, 1000)
+        val intent = Intent(this, StartupActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
