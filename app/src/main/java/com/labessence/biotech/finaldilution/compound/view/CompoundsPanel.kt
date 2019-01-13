@@ -72,6 +72,7 @@ class CompoundsPanel(private val activity: EditActivity) {
         val intent = Intent(activity, CompoundActivity::class.java)
         intent.putExtra(compound)
         intent.putExtra(activity.solution)
+        intent.putExtra("CARE_TAKER", activity.solutionCareTaker)
         activity.startActivity(intent)
     }
 

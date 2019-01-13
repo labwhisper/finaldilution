@@ -23,6 +23,7 @@ import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.peripherals.view.Anim
 import com.labessence.biotech.finaldilution.solution.Solution
+import com.labessence.biotech.finaldilution.solution.SolutionCareTaker
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
 import java.util.*
 
@@ -36,6 +37,7 @@ class CompoundActivity : Activity() {
     private lateinit var stockViewsList: MutableList<View>
     private lateinit var desiredButtonList: MutableList<RadioButton>
     private lateinit var stockButtonList: MutableList<RadioButton>
+    private lateinit var solutionCareTaker: SolutionCareTaker
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +72,7 @@ class CompoundActivity : Activity() {
 
         compound = intent.getSerializableExtra("COMPOUND") as Compound
         solution = intent.getSerializableExtra("SOLUTION") as Solution
+        solutionCareTaker = intent.getSerializableExtra("CARE_TAKER") as SolutionCareTaker
         title = "Add " + compound.shortName
 
         (findViewById<View>(R.id.desiredConcButtonsBar)).viewTreeObserver.addOnGlobalLayoutListener(
@@ -154,6 +157,7 @@ class CompoundActivity : Activity() {
     private fun onCancelComponent() {
         val intent = Intent(this@CompoundActivity, EditActivity::class.java)
         intent.putExtra(solution)
+        intent.putExtra("CARE_TAKER", solutionCareTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
@@ -201,6 +205,7 @@ class CompoundActivity : Activity() {
 
         val intent = Intent(this@CompoundActivity, EditActivity::class.java)
         intent.putExtra(solution)
+        intent.putExtra("CARE_TAKER", solutionCareTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         //TODO WHEN ITEM EXISTS SHOW STH? OR BEFORE EVEN OPENING COMP.ACTIVITY?
@@ -216,6 +221,7 @@ class CompoundActivity : Activity() {
             solution.removeComponent(component)
             val intent = Intent(this@CompoundActivity, EditActivity::class.java)
             intent.putExtra(solution)
+            intent.putExtra("CARE_TAKER", solutionCareTaker)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }

@@ -64,7 +64,7 @@ class ComponentsPanel(private val activity: EditActivity) {
     }
 
 
-    private inner class ChecklistAdapter(private val componentList: ArrayList<Component>) :
+    private inner class ChecklistAdapter(private val componentList: MutableList<Component>) :
         BaseAdapter() {
 
         override fun getCount(): Int {

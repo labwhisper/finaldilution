@@ -13,6 +13,7 @@ import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.solution.Solution
+import com.labessence.biotech.finaldilution.solution.SolutionCareTaker
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
 import java.text.DecimalFormat
 
@@ -41,7 +42,7 @@ class StartupActivity : Activity() {
         val solutionList = appState.solutionGateway.loadAll()
         if (!solutionList.isEmpty()) {
             //TODO Save and set last solution
-            solution = appState.solutionGateway.loadAll()[0]
+            solution = solutionList[0]
         }
         val solutionListView = findViewById<View>(R.id.solutionListView) as ListView
         val solutionListAdapter = object : ArrayAdapter<Solution>(
@@ -79,8 +80,7 @@ class StartupActivity : Activity() {
                 .setPositiveButton("OK") { dialog, which ->
                     if (solutionNamePicker.text.length != 0) {
                         //TODO Extract those 3 lines into app entities or no?
-                        val solution = Solution()
-                        solution.name = solutionNamePicker.text.toString()
+                        val solution = Solution(solutionNamePicker.text.toString())
                         appState.solutionGateway.save(solution)
                         refreshSolutionList()
                         this@StartupActivity.solution =
@@ -111,6 +111,7 @@ class StartupActivity : Activity() {
             solution?.let {
                 val intent = Intent(this@StartupActivity, EditActivity::class.java)
                 intent.putExtra(it)
+                intent.putExtra("CARE_TAKER", SolutionCareTaker())
                 startActivity(intent)
             }
         }

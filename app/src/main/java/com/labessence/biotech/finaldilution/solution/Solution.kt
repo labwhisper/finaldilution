@@ -5,14 +5,12 @@ import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.genericitem.Item
 import java.util.*
 
-class Solution : Item {
+data class Solution(override var name: String, var volume: Double = 0.0) : Item {
 
-    override var name: String = ""
     override val seriesName: String
         get() = "SOLUTION"
-    var volume: Double = 0.toDouble()
 
-    val components = ArrayList<Component>()
+    val components: MutableList<Component> = ArrayList()
 
     val isOverflown: Boolean
         get() = allLiquidComponentsVolume > volume
@@ -27,17 +25,6 @@ class Solution : Item {
             }
             return allLiquidComponentsVolume
         }
-
-    constructor()
-
-    constructor(name: String) {
-        this.name = name
-    }
-
-    constructor(name: String, volume: Double) {
-        this.name = name
-        this.volume = volume
-    }
 
     fun recalculateVolume(volume: Double) {
         this.volume = volume
@@ -56,10 +43,6 @@ class Solution : Item {
     }
 
 
-    fun getComponents(): List<Component> {
-        return components
-    }
-
     fun removeComponent(component: Component) {
         components.remove(component)
     }
@@ -77,4 +60,32 @@ class Solution : Item {
     fun addComponent(component: Component) {
         components.add(component)
     }
+
+    fun deepCopy(): Solution {
+        val deepCopy = Solution(name, volume)
+        deepCopy.components.apply { addAll(components) }
+        return deepCopy
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Solution
+
+        if (name != other.name) return false
+        if (volume != other.volume) return false
+        if (components != other.components) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + volume.hashCode()
+        result = 31 * result + components.hashCode()
+        return result
+    }
+
+
 }
