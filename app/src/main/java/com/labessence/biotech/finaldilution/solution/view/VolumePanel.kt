@@ -6,6 +6,7 @@ import android.text.InputType
 import android.view.GestureDetector
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.ViewSwitcher
 import com.labessence.biotech.finaldilution.R
@@ -24,26 +25,26 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     private val volumeEditText by lazy<TextView> { activity.findViewById(R.id.beakerVolumeEditText) }
     private val volFormat = DecimalFormat("0.##")
 
-    private//Switch to Edit Text
-    // TODO NumberFormatException... get back old text
-    val onVolumeEditorActionListener: TextView.OnEditorActionListener =
-        TextView.OnEditorActionListener()
-        { v, _, _ ->
-            if (switcher.currentView != volumeTextView) {
-                switcher.showNext()
-            }
-            try {
-                val s = v.text
-                if (s.isNotEmpty()) {
-                    val volume = java.lang.Double.parseDouble(s.toString().replace(',', '.'))
-                    updateVolume(volume)
-                    activity.refresh()
-                }
-            } catch (e: NumberFormatException) {
-            }
-
+    private val onVolumeEditorActionListener =
+        TextView.OnEditorActionListener { textView, _, _ ->
+            updateVolumeAndStopEdition(textView.text)
             true
         }
+
+    private fun updateVolumeAndStopEdition(text: CharSequence) {
+        if (switcher.currentView != volumeTextView) {
+            switcher.showNext()
+        }
+        try {
+            if (text.isNotEmpty()) {
+                val volume = java.lang.Double.parseDouble(text.toString().replace(',', '.'))
+                updateVolume(volume)
+                activity.refresh()
+            }
+        } catch (e: NumberFormatException) {
+            // TODO NumberFormatException... get back old text
+        }
+    }
 
     internal fun displayVolumeText() {
         updateVolumeTextView()
@@ -56,8 +57,8 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
         volumeEditText.setRawInputType(Configuration.KEYBOARD_12KEY)
         volumeEditText.setOnFocusChangeListener { v, hasFocus ->
             val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            if (hasFocus)
-                imm.showSoftInput(v, 0)
+            if (hasFocus) imm.showSoftInput(v, 0)
+            else updateVolumeAndStopEdition((v as EditText).text)
         }
         volumeTextView.setOnFocusChangeListener { _, hasFocus ->
             val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

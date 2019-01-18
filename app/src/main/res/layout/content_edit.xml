@@ -24,13 +24,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/componentsTextView"
             app:layout_constraintVertical_weight="0.1"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <TextView
+            <EditText
                 android:id="@+id/solution_toolbar_text"
                 style="@style/FinalDilutionH1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
                 android:gravity="center"
                 tools:text="Solution name" />
 

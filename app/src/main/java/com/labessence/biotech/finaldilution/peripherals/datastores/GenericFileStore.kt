@@ -58,6 +58,9 @@ class GenericFileStore<T : Item>
         putItemListToFile(itemList)
     }
 
+    override fun rename(item: T, oldName: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun update(item: T) {
         val itemList = itemListFormFile

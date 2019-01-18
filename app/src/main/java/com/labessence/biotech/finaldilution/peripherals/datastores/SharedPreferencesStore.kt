@@ -60,6 +60,19 @@ class SharedPreferencesStore<T : Item>(
     }
 
 
+    override fun rename(item: T, oldName: String) {
+        val itemList = itemListFormPreferences
+        if (itemList.isEmpty()) {
+            return
+        }
+
+        removeItemByName(itemList, oldName)
+
+        itemList.add(item)
+        putItemListToPreferences(itemList)
+        Log.d(TAG, "Item " + oldName + " renamed to " + item.name)
+    }
+
     override fun update(item: T) {
         val itemList = itemListFormPreferences
         //TODO Add means to update
@@ -67,17 +80,21 @@ class SharedPreferencesStore<T : Item>(
             return
         }
 
-        val i = itemList.iterator()
-        while (i.hasNext()) {
-            val currentItem = i.next()
-            if (currentItem.name == item.name) {
-                i.remove()
-            }
-        }
+        removeItemByName(itemList, item.name)
 
         itemList.add(item)
         putItemListToPreferences(itemList)
         Log.d(TAG, "Item " + item.name + " updated.")
+    }
+
+    private fun removeItemByName(itemList: MutableList<T>, name: String) {
+        val i = itemList.iterator()
+        while (i.hasNext()) {
+            val currentItem = i.next()
+            if (currentItem.name == name) {
+                i.remove()
+            }
+        }
     }
 
     override fun remove(item: T) {
@@ -85,7 +102,7 @@ class SharedPreferencesStore<T : Item>(
         if (itemList.isEmpty()) {
             return
         }
-        itemList.remove(item)
+        removeItemByName(itemList, item.name)
         putItemListToPreferences(itemList)
         Log.d(TAG, "Item " + item.name + " removed.")
     }

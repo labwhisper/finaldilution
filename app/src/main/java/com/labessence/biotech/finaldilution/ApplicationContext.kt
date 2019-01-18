@@ -58,6 +58,10 @@ class ApplicationContext : Application() {
         solutionGateway.update(solution)
     }
 
+    fun renameSolution(solution: Solution, oldName: String) {
+        solutionGateway.rename(solution, oldName)
+    }
+
     fun reloadSolution(solution: Solution): Solution? {
         return solutionGateway.load(solution.name)
     }

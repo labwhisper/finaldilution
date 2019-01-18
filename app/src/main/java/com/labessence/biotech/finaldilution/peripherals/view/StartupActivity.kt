@@ -78,18 +78,24 @@ class StartupActivity : Activity() {
                 .setMessage("Enter new solution name: ")
                 .setCancelable(false)
                 .setPositiveButton("OK") { dialog, which ->
-                    if (solutionNamePicker.text.length != 0) {
-                        //TODO Extract those 3 lines into app entities or no?
-                        val solution = Solution(solutionNamePicker.text.toString())
-                        appState.solutionGateway.save(solution)
-                        refreshSolutionList()
-                        this@StartupActivity.solution =
-                                appState.solutionGateway.load(solutionNamePicker.text.toString())
-                        this@StartupActivity.solution?.let {
-                            val intent = Intent(this@StartupActivity, EditActivity::class.java)
-                            intent.putExtra(it)
-                            startActivity(intent)
-                        }
+                    if (!solutionNamePicker.text.isNotEmpty()) {
+                        return@setPositiveButton
+                    }
+                    //TODO Extract those 3 lines into app entities or no?
+                    val newName = solutionNamePicker.text.toString()
+                    if (appState.solutionGateway.load(newName) != null) {
+                        return@setPositiveButton
+                    }
+                    val solution = Solution(newName)
+                    appState.solutionGateway.save(solution)
+                    refreshSolutionList()
+                    this@StartupActivity.solution =
+                            appState.solutionGateway.load(newName)
+                    this@StartupActivity.solution?.let {
+                        val intent = Intent(this@StartupActivity, EditActivity::class.java)
+                        intent.putExtra(it)
+                        intent.putExtra("CARE_TAKER", SolutionCareTaker())
+                        startActivity(intent)
                     }
                 }
                 .setNegativeButton("Cancel", null)

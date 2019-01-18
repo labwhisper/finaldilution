@@ -1,15 +1,15 @@
 package com.labessence.biotech.finaldilution.solution.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.GestureDetector
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.widget.TextView
+import android.view.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.view.ComponentsPanel
@@ -22,6 +22,7 @@ import com.labessence.biotech.finaldilution.solution.RedoOnLastChangeException
 import com.labessence.biotech.finaldilution.solution.Solution
 import com.labessence.biotech.finaldilution.solution.SolutionCareTaker
 import com.labessence.biotech.finaldilution.solution.UndoOnEmptyListException
+
 
 class EditActivity : AppCompatActivity() {
     private var volumePanel: VolumePanel? = null
@@ -40,6 +41,7 @@ class EditActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        enableSolutionRenaming()
 
         volumePanel = VolumePanel(this)
         volumePanel?.displayVolumeText()
@@ -52,6 +54,21 @@ class EditActivity : AppCompatActivity() {
         screenGestureDetector = GestureDetector(this, EditGestureListener(this))
     }
 
+    private fun enableSolutionRenaming() {
+        val title = findViewById<EditText>(R.id.solution_toolbar_text)
+        title.onFocusChangeListener = View.OnFocusChangeListener { p0, p1 ->
+            if (p1 == true) return@OnFocusChangeListener
+            val text = (p0 as EditText).text
+            if (text.isNullOrBlank()) return@OnFocusChangeListener
+            if (text.toString() == solution.name) return@OnFocusChangeListener
+            val appState = applicationContext as ApplicationContext
+            val oldName = solution.name
+            solution.name = text.toString()
+            appState.renameSolution(solution, oldName)
+            refresh()
+        }
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -62,7 +79,7 @@ class EditActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item == null) {
-            return super.onOptionsItemSelected(item)
+            return super.onOptionsItemSelected(null)
         }
         val appState = applicationContext as ApplicationContext
         when (item.itemId) {
@@ -71,21 +88,29 @@ class EditActivity : AppCompatActivity() {
                 return true
             }
             R.id.action_undo -> {
-                try {
-                    solution = solutionCareTaker.undo()
+                return try {
+                    val newSolution = solutionCareTaker.undo()
+                    if (newSolution.name != solution.name) {
+                        appState.renameSolution(newSolution, solution.name)
+                    }
+                    solution = newSolution
                     refresh()
-                    return true
+                    true
                 } catch (e: UndoOnEmptyListException) {
-                    return false
+                    false
                 }
             }
             R.id.action_redo -> {
-                try {
-                    solution = solutionCareTaker.redo()
+                return try {
+                    val newSolution = solutionCareTaker.redo()
+                    if (newSolution.name != solution.name) {
+                        appState.renameSolution(newSolution, solution.name)
+                    }
+                    solution = newSolution
                     refresh()
-                    return true
+                    true
                 } catch (e: RedoOnLastChangeException) {
-                    return false
+                    false
                 }
             }
         }
@@ -106,13 +131,16 @@ class EditActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         solutionCareTaker.addMemento(solution)
-        findViewById<TextView>(R.id.solution_toolbar_text).text = solution.name
+        val title = findViewById<EditText>(R.id.solution_toolbar_text)
+        title.setText(solution.name)
     }
 
     fun refresh() {
         componentsPanel?.updateComponentList()
         volumePanel?.updateVolumeTextView()
         solutionCareTaker.addMemento(solution)
+        val title = findViewById<EditText>(R.id.solution_toolbar_text)
+        title.setText(solution.name)
         refreshMenu()
     }
 
@@ -135,8 +163,24 @@ class EditActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    companion object {
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    v.clearFocus()
+                    val imm =
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
+    }
 
+    companion object {
         private val TAG = "Edit Activity"
     }
 

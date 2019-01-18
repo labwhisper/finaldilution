@@ -10,6 +10,8 @@ import com.labessence.biotech.finaldilution.genericitem.Item
 interface DataGatewayOperations<T : Item> {
     fun save(item: T)
 
+    fun rename(item: T, oldName: String)
+
     fun update(item: T)
 
     fun remove(item: T)
