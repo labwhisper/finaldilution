@@ -28,4 +28,16 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="FinalDilutionCompound">
+        <item name="android:textColor">@color/text_default</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+    <style name="FinalDilutionMass">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
 </resources>

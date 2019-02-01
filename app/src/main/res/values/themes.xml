@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="FinalDilutionTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColor">@color/text_default</item>
     </style>
 </resources>
