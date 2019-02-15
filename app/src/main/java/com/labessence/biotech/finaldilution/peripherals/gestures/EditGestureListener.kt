@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 
-import com.labessence.biotech.finaldilution.peripherals.view.StartupActivity
+import com.labessence.biotech.finaldilution.init.view.StartupActivity
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
 
 /**

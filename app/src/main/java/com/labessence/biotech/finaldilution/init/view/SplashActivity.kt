@@ -1,4 +1,4 @@
-package com.labessence.biotech.finaldilution.peripherals.view
+package com.labessence.biotech.finaldilution.init.view
 
 import android.app.Activity
 import android.content.Intent

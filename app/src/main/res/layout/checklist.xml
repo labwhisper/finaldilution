@@ -25,7 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Compound" />
@@ -55,11 +54,11 @@
         android:id="@+id/checklist_unitextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         app:layout_constraintEnd_toStartOf="@+id/checklist_checkBox1"
-        app:layout_constraintLeft_toLeftOf="@+id/checklist_centerShim"
-        app:layout_constraintRight_toLeftOf="@+id/checklist_checkBox1"
-        app:layout_constraintStart_toStartOf="@+id/checklist_centerShim"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/checklist_mainTextView"
         app:layout_constraintTop_toTopOf="@+id/checklist_checkBox1"
         tools:text="60.15 ml" />
 

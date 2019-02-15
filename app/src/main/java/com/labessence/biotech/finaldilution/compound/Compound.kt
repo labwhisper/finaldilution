@@ -10,8 +10,18 @@ class Compound : Item {
     var shortName: String
     var molarMass: Double = 0.toDouble()
     private val longName: String? = null
-    private val chemicalFormula: String? = null
-    private val iupacName: String? = null
+    var chemicalFormula: String? = null
+    var iupacName: String? = null
+    val displayName: CharSequence?
+        get() {
+            var displayedName = shortName
+            iupacName?.let { iupac ->
+                if (iupac.length < displayedName.length || displayedName.isBlank()) {
+                    displayedName = iupac
+                }
+            }
+            return displayedName
+        }
 
     constructor(shortName: String) {
         this.shortName = shortName

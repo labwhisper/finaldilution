@@ -118,11 +118,9 @@ class ComponentsPanel(private val activity: EditActivity) {
             Log.d(TAG, "Component: $component")
             Log.d(TAG, "Component stock: " + component.availableConcentration)
             Log.d(TAG, "Compound: " + compound)
-            holder.compoundTextView.text = component.compound.shortName
-            if (activity.solution != null) {
-                holder.unitTextView.text =
-                        component.getAmountString(activity.solution.volume)
-            }
+            holder.compoundTextView.text = component.compound.displayName
+            holder.unitTextView.text =
+                    component.getAmountString(activity.solution.volume)
             if (component.fromStock) {
                 holder.extraTextView.text = component.availableConcentration?.toString() ?: ""
             }

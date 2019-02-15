@@ -49,6 +49,7 @@ dependencies {
     //compile 'org.apache.commons:commons-csv:1.5'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'com.opencsv:opencsv:4.5'
 }
 repositories {
     mavenCentral()

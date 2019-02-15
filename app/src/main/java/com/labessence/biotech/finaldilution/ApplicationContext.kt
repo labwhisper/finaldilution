@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.google.gson.reflect.TypeToken
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.init.loadDefaultCompounds
 import com.labessence.biotech.finaldilution.peripherals.DataGatewayOperations
 import com.labessence.biotech.finaldilution.peripherals.datastores.SharedPreferencesStore
 import com.labessence.biotech.finaldilution.solution.Solution
@@ -35,12 +36,8 @@ class ApplicationContext : Application() {
 
     fun initEmptyCompoundList(store: DataGatewayOperations<Compound>) {
         Log.d(TAG, "No compounds found. Creating initial compound list")
-        store.save(Compound("KCl", 74.55))
-        store.save(Compound("NaCl", 58.44))
-        store.save(Compound("EDTA", 372.24))
-        store.save(Compound("MgCl2", 95.21))
-        store.save(Compound("TRIS", 121.14))
-        store.save(Compound("SDS", 288.372))
+        val compounds: List<Compound> = loadDefaultCompounds(instance)
+        compounds.forEach { store.save(it) }
     }
 
     fun removeCompoundFromEverywhere(compound: Compound) {

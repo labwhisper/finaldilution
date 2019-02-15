@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/professore_full_screen"
     android:fitsSystemWindows="true"
-    tools:context=".peripherals.view.SplashActivity">
+    tools:context=".init.view.SplashActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>
