@@ -27,7 +27,7 @@ import com.labessence.biotech.finaldilution.solution.SolutionCareTaker
 import com.labessence.biotech.finaldilution.solution.view.EditActivity
 import java.util.*
 
-class CompoundActivity : Activity() {
+class EditComponentActivity : Activity() {
 
     private lateinit var solution: Solution
     internal lateinit var compound: Compound
@@ -42,7 +42,7 @@ class CompoundActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.content_compound)
+        setContentView(R.layout.component_edit)
 
         // TODO use getChildAt instead of creaing such lists
 
@@ -155,7 +155,7 @@ class CompoundActivity : Activity() {
     }
 
     private fun onCancelComponent() {
-        val intent = Intent(this@CompoundActivity, EditActivity::class.java)
+        val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
         intent.putExtra(solution)
         intent.putExtra("CARE_TAKER", solutionCareTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -203,7 +203,7 @@ class CompoundActivity : Activity() {
             //            appState.getSolution().resetComponents();
         }
 
-        val intent = Intent(this@CompoundActivity, EditActivity::class.java)
+        val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
         intent.putExtra(solution)
         intent.putExtra("CARE_TAKER", solutionCareTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -219,7 +219,7 @@ class CompoundActivity : Activity() {
             onCancelComponent()
         } else {
             solution.removeComponent(component)
-            val intent = Intent(this@CompoundActivity, EditActivity::class.java)
+            val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
             intent.putExtra(solution)
             intent.putExtra("CARE_TAKER", solutionCareTaker)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

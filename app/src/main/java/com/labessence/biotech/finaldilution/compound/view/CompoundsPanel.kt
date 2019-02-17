@@ -10,10 +10,11 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
-import com.labessence.biotech.finaldilution.component.view.CompoundActivity
+import com.labessence.biotech.finaldilution.component.view.EditComponentActivity
 import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.peripherals.view.Anim
@@ -41,7 +42,14 @@ class CompoundsPanel(private val activity: EditActivity) {
                 activity, compoundsListView, compoundTouchListener()
             )
         )
+        val newCompoundButton = activity.findViewById<Button>(R.id.new_compound_button)
+        newCompoundButton.setOnClickListener {
+            val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.compoundsList, NewCompoundFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
 
+        }
     }
 
     private fun compoundTouchListener(): CompoundListTouchListener.TouchListener {
@@ -80,7 +88,7 @@ class CompoundsPanel(private val activity: EditActivity) {
     }
 
     private fun startComponentEdition(compound: Compound) {
-        val intent = Intent(activity, CompoundActivity::class.java)
+        val intent = Intent(activity, EditComponentActivity::class.java)
         intent.putExtra(compound)
         intent.putExtra(activity.solution)
         intent.putExtra("CARE_TAKER", activity.solutionCareTaker)

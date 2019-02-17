@@ -13,7 +13,7 @@ import android.widget.EditText
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.view.ComponentsPanel
-import com.labessence.biotech.finaldilution.component.view.CompoundActivity
+import com.labessence.biotech.finaldilution.component.view.EditComponentActivity
 import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.compound.view.CompoundsPanel
 import com.labessence.biotech.finaldilution.genericitem.putExtra
@@ -37,7 +37,7 @@ class EditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         solution = intent.getSerializableExtra("SOLUTION") as Solution
         solutionCareTaker = intent.getSerializableExtra("CARE_TAKER") as SolutionCareTaker
-        setContentView(R.layout.content_edit)
+        setContentView(R.layout.solution_edit)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -156,7 +156,7 @@ class EditActivity : AppCompatActivity() {
     }
 
     fun startComponentEdition(compound: Compound) {
-        val intent = Intent(this, CompoundActivity::class.java)
+        val intent = Intent(this, EditComponentActivity::class.java)
         intent.putExtra(compound)
         intent.putExtra(solution)
         intent.putExtra("CARE_TAKER", solutionCareTaker)

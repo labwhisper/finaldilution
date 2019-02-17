@@ -25,7 +25,7 @@ class StartupActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "On create Startup Activity")
-        setContentView(R.layout.content_startup)
+        setContentView(R.layout.startup)
         val newSolutionButton = findViewById<View>(R.id.addNewSolutionButton) as Button
         newSolutionButton.setOnClickListener(OnNewSolutionButtonClickListener())
     }

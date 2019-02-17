@@ -9,12 +9,16 @@ import android.util.AttributeSet
 
 import com.labessence.biotech.finaldilution.R
 
-class AddCompoundButtonView : android.support.v7.widget.AppCompatTextView {
-    constructor(context: Context) : super(context) {}
+class AddComponentButtonView : android.support.v7.widget.AppCompatTextView {
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     override fun onDraw(canvas: Canvas) {
 
