@@ -22,37 +22,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/compoundsListTitle"
-        style="@style/FinalDilutionH1"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="@color/grey1"
-        android:gravity="center"
-        android:text="@string/compound_list"
-        android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/compoundsListHeader" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/compoundsListView"
-        android:layout_width="0dp"
+    <include
+        android:id="@+id/compound_list_layout"
+        layout="@layout/compound_list"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/grey1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/compoundsListTitle" />
+        app:layout_constraintTop_toBottomOf="@id/compoundsListHeader" />
 
-    <Button
-        android:id="@+id/new_compound_button"
-        style="@style/FinalDilutionButton"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
-        android:textSize="25sp"
-        android:text="@string/buttonNewCompound"
+    <include
+        android:id="@+id/new_compound_layout"
+        layout="@layout/compound_new"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/compoundsListHeader" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

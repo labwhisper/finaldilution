@@ -44,10 +44,14 @@ class CompoundsPanel(private val activity: EditActivity) {
         )
         val newCompoundButton = activity.findViewById<Button>(R.id.new_compound_button)
         newCompoundButton.setOnClickListener {
-            val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.compoundsList, NewCompoundFragment())
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
+            val newLayout = activity.findViewById<ViewGroup>(R.id.new_compound_layout)
+            val listLayout = activity.findViewById<ViewGroup>(R.id.compound_list_layout)
+            newLayout.visibility = View.VISIBLE
+            listLayout.visibility = View.GONE
+//            val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+//            fragmentTransaction.replace(R.id.compoundsList, NewCompoundFragment())
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commit()
 
         }
     }
