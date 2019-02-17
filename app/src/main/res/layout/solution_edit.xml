@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:gravity="center"
+                android:inputType="text"
                 tools:text="Solution name" />
 
         </android.support.v7.widget.Toolbar>
@@ -123,6 +124,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/compound_list" />
+    <include layout="@layout/compound_panel" />
 
 </android.support.design.widget.CoordinatorLayout>
