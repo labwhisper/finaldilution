@@ -91,7 +91,7 @@ class CompoundsPanel(private val activity: EditActivity) {
         }
         Log.d(
             TAG,
-            "Compound (" + compound.shortName + ") already in solution (" + activity.solution.name + ")"
+            "Compound (" + compound.trivialName + ") already in solution (" + activity.solution.name + ")"
         )
     }
 

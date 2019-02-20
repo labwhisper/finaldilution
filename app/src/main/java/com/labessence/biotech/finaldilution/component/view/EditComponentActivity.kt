@@ -73,7 +73,7 @@ class EditComponentActivity : Activity() {
         compound = intent.getSerializableExtra("COMPOUND") as Compound
         solution = intent.getSerializableExtra("SOLUTION") as Solution
         solutionCareTaker = intent.getSerializableExtra("CARE_TAKER") as SolutionCareTaker
-        title = "Add " + compound.shortName
+        title = "Add " + compound.trivialName
 
         (findViewById<View>(R.id.desiredConcButtonsBar)).viewTreeObserver.addOnGlobalLayoutListener(
             { this.renderButtonsSquare() })

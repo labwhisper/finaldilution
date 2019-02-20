@@ -17,7 +17,7 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
     private var solutionVolume = 0.0
 
     override fun toString(): String {
-        return compound.shortName + " : " + getAmountString(solutionVolume)
+        return compound.trivialName + " : " + getAmountString(solutionVolume)
     }
 
     fun getAmountString(volume: Double): String {

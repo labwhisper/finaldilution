@@ -5,7 +5,7 @@ import com.labessence.biotech.finaldilution.component.concentration.MilimolarCon
 import com.labessence.biotech.finaldilution.component.concentration.MolarConcentration
 import com.labessence.biotech.finaldilution.component.concentration.PercentageConcentration
 import com.labessence.biotech.finaldilution.compound.Compound
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 

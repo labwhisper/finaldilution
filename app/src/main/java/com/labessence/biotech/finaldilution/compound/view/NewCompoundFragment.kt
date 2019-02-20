@@ -80,10 +80,7 @@ class NewCompoundFragment : Fragment() {
         }
         val iupacName = editTextValue(R.id.editTextIupac)
         val formula = editTextValue(R.id.editTextFormula)
-        val compound = Compound(trivialName, molarMass)
-        compound.iupacName = iupacName
-        compound.chemicalFormula = formula
-        return compound
+        return Compound(trivialName, molarMass, iupacName, formula)
     }
 
     private fun validateNewCompound(compound: Compound): Boolean {
