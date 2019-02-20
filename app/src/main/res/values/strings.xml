@@ -21,4 +21,11 @@
     <string name="application_name_second_word">Dilution</string>
     <string name="professore">Professore</string>
     <string name="mass_in_brackets">"[%s]"</string>
+    <string name="title_add_new_compound">Add new compound</string>
+    <string name="trivial_name">Trivial name</string>
+    <string name="molar_mass">Molar mass</string>
+    <string name="iupac_name">IUPAC name</string>
+    <string name="chemical_formula">Chemical formula</string>
+    <string name="new_compound_back">back</string>
+    <string name="new_compound_proceed">Done</string>
 </resources>

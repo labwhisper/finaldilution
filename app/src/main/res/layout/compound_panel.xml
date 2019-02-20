@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/compoundsList"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="500dp"
     android:background="#00ffffff"
     android:elevation="40dp"
     app:behavior_hideable="false"
@@ -22,21 +22,48 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        android:id="@+id/compound_list_layout"
-        layout="@layout/compound_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/compoundsListHeader" />
+    <TextView
+        android:id="@+id/compoundsListTitle"
+        style="@style/FinalDilutionH1"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/grey1"
+        android:gravity="center"
+        android:text="@string/compound_list"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/compoundsListHeader" />
 
-    <include
-        android:id="@+id/new_compound_layout"
-        layout="@layout/compound_new"
+    <View
+        android:id="@+id/transparent_window"
         android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#80FFCC00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/compoundsListTitle" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/compoundsListView"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:background="@color/grey1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/compoundsListHeader" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transparent_window" />
+
+    <ImageButton
+        android:id="@+id/new_compound_button"
+        style="@style/FinalDilutionButton"
+        android:layout_marginEnd="@dimen/grid_margin_side"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="@string/buttonNewCompound"
+        android:src="@drawable/ic_add_black_24dp"
+        android:tint="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

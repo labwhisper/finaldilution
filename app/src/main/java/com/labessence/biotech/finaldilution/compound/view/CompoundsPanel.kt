@@ -10,7 +10,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
@@ -42,23 +42,27 @@ class CompoundsPanel(private val activity: EditActivity) {
                 activity, compoundsListView, compoundTouchListener()
             )
         )
-        val newCompoundButton = activity.findViewById<Button>(R.id.new_compound_button)
+        val newCompoundButton = activity.findViewById<ImageButton>(R.id.new_compound_button)
         newCompoundButton.setOnClickListener {
-            val newLayout = activity.findViewById<ViewGroup>(R.id.new_compound_layout)
-            val listLayout = activity.findViewById<ViewGroup>(R.id.compound_list_layout)
-            newLayout.visibility = View.VISIBLE
-            listLayout.visibility = View.GONE
-//            val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.compoundsList, NewCompoundFragment())
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commit()
-
+            val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+            val newCompoundFragment = NewCompoundFragment()
+            newCompoundFragment.setOnFragmentCloseListener {
+                newCompoundButton.visibility = View.VISIBLE
+            }
+            //TODO Set On Done, On Cancel
+            fragmentTransaction.replace(R.id.compoundsList, newCompoundFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+            newCompoundButton.visibility = View.GONE
         }
     }
 
     private fun compoundTouchListener(): CompoundListTouchListener.TouchListener {
         return object : CompoundListTouchListener.TouchListener {
             override fun onTouch(view: View, position: Int) {
+                if (position > compoundListAdapter.compoundList.size - 1) {
+                    return
+                }
                 val compound = compoundListAdapter.compoundList[position]
                 if (activity.solution.getComponentWithCompound(compound) != null) {
                     informAboutCompoundAlreadyAdded(view, compound)

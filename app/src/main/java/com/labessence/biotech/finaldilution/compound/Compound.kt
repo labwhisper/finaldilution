@@ -2,37 +2,23 @@ package com.labessence.biotech.finaldilution.compound
 
 import com.labessence.biotech.finaldilution.genericitem.Item
 
-class Compound : Item {
-    override val name: String
+class Compound(var shortName: String, var molarMass: Double) : Item {
+    override val name: String = shortName
     override val seriesName: String
         get() = "COMPOUND"
 
-    var shortName: String
-    var molarMass: Double = 0.toDouble()
-    private val longName: String? = null
     var chemicalFormula: String? = null
     var iupacName: String? = null
     val displayName: CharSequence?
         get() {
             var displayedName = shortName
             iupacName?.let { iupac ->
-                if (iupac.length < displayedName.length || displayedName.isBlank()) {
+                if (!iupac.isEmpty() && iupac.length < displayedName.length) {
                     displayedName = iupac
                 }
             }
             return displayedName
         }
-
-    constructor(shortName: String) {
-        this.shortName = shortName
-        this.name = shortName
-    }
-
-    constructor(shortName: String, molarMass: Double) {
-        this.shortName = shortName
-        this.molarMass = molarMass
-        this.name = shortName
-    }
 
     override fun toString(): String {
         return "$shortName [$molarMass]"

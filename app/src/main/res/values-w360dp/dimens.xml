@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="grid_margin_side">24dp</dimen>
+</resources>
