@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/grid_margin_side"
+    android:layout_marginEnd="@dimen/grid_margin_side">
 
 
     <TextView
@@ -12,18 +14,22 @@
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_marginEnd="5dp"
+        android:gravity="center"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/compound_list_item_mass_text_view"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Compound" />
+        tools:text="17,21-dihydroxypregna-1,4-diene-3,11,20-trione" />
 
     <TextView
         android:id="@+id/compound_list_item_mass_text_view"
         style="@style/FinalDilutionMass"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
+        android:gravity="center"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/compound_list_item_name_text_view"

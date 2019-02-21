@@ -138,6 +138,7 @@ class CompoundsPanel(private val activity: EditActivity) {
 
         override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
             //TODO WARN: rv.findChild... doesn't find the proper child
+            //(BECAUSE OF Not refreshing list)
             val compound = rv.findChildViewUnder(e.x, e.y)
             if (compound != null && gestureDetector.onTouchEvent(e)) {
                 touchListener.onTouch(compound, rv.getChildAdapterPosition(compound))

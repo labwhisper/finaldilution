@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.compound.CompoundValidator
 import com.labessence.biotech.finaldilution.util.editText
 import com.labessence.biotech.finaldilution.util.editTextValue
 
@@ -48,7 +49,7 @@ class NewCompoundFragment : Fragment() {
 
     private fun onProceed() {
         val compound = attemptToCreateCompoundFromFields()
-        if (validateNewCompound(compound)) {
+        if (CompoundValidator.validateNewCompound(compound)) {
             val imm =
                 requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(editText(R.id.editTextFormula).windowToken, 0)
@@ -81,18 +82,6 @@ class NewCompoundFragment : Fragment() {
         val iupacName = editTextValue(R.id.editTextIupac)
         val formula = editTextValue(R.id.editTextFormula)
         return Compound(trivialName, molarMass, iupacName, formula)
-    }
-
-    private fun validateNewCompound(compound: Compound): Boolean {
-        if (!validateCompoundName(compound.name)) return false
-        if (compound.molarMass <= 0) return false
-        return true
-    }
-
-    private fun validateCompoundName(name: String): Boolean {
-        if (name.isBlank()) return false
-        //if(name.contains())
-        return true
     }
 
     private var onFragmentCloseListener: (() -> Unit)? = null
