@@ -75,7 +75,7 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
             activity,
             TapGestureListener(this)
         )
-        beakerImage.setOnTouchListener { view, motionEvent ->
+        beakerImage.setOnTouchListener { _, motionEvent ->
             tapDetector.onTouchEvent(motionEvent)
             true
         }
