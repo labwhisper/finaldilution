@@ -28,7 +28,7 @@ class GenericFileStore<T : Item>
 
     private val itemListFormFile: MutableList<T>
         get() {
-            var reader: BufferedReader? = null
+            val reader: BufferedReader?
             try {
                 reader = BufferedReader(FileReader(file))
             } catch (e: FileNotFoundException) {

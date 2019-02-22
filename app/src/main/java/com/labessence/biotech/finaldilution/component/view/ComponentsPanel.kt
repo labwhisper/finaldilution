@@ -32,13 +32,13 @@ class ComponentsPanel(private val activity: EditActivity) {
     }
 
     private val componentClick: (AdapterView<*>, View, Int, Long) -> Unit =
-        onClick@{ parent, view, position, id ->
+        onClick@{ parent, _, position, _ ->
             val component = parent.adapter.getItem(position) as Component
             component.compound.let { activity.startComponentEdition(it) }
         }
 
     private val componentLongClick: (AdapterView<*>, View, Int, Long) -> Boolean =
-        { parent, view, position, id ->
+        { parent, _, position, _ ->
             val component = parent.adapter.getItem(position) as Component
             activity.solution.removeComponent(component)
             activity.refresh()

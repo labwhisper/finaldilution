@@ -20,7 +20,7 @@ fun loadDefaultCompounds(context: Context): List<Compound?> {
             val molarMass = record[4]
             Compound(
                 iupacName = iupacName,
-                molarMass = molarMass.ifEmpty { "0" }.toDouble(),
+                molarMass = molarMass.ifEmpty { null }?.toDouble(),
                 trivialName = trivialName,
                 chemicalFormula = formula
             ).takeIf { CompoundValidator.validateNewCompound(it) }

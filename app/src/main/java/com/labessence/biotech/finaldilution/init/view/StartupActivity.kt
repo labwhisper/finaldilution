@@ -77,7 +77,7 @@ class StartupActivity : Activity() {
             alertDialogBuilder.setView(solutionNamePicker)
                 .setMessage("Enter new solution name: ")
                 .setCancelable(false)
-                .setPositiveButton("OK") { dialog, which ->
+                .setPositiveButton("OK") { _, _ ->
                     if (!solutionNamePicker.text.isNotEmpty()) {
                         return@setPositiveButton
                     }
@@ -101,7 +101,7 @@ class StartupActivity : Activity() {
                 .setNegativeButton("Cancel", null)
             val alertDialog = alertDialogBuilder.create()
 
-            solutionNamePicker.setOnFocusChangeListener { v1, hasFocus ->
+            solutionNamePicker.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     alertDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
                 }

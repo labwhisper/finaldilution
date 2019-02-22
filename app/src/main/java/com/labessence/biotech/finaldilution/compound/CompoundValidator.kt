@@ -17,17 +17,20 @@ class CompoundValidator {
             return true
         }
 
-        private fun validateMolarMass(molarMass: Double) = molarMass > 0
+        private fun validateMolarMass(molarMass: Double?): Boolean {
+            if (molarMass == null) return true
+            return molarMass > 0
+        }
     }
 }
 
 //Symptoms:
-// TODO variable mass ( converted to 0.0?) ... rethink
 // TODO Invalid (variable) molar mass converted to -1 in newCompound!
+// TODO Display something else than null in Compound list (liquid, variable)
+// Liquid -> liquid
+// Solid -> variable
 // - spaces in name -> %20 (Web notation) -> N
 // - special chars  -> %23 :)
-
-// Validation should happen prior to displaying the compound
 
 // - in liquid state
 // - with empty mass
@@ -38,5 +41,3 @@ class CompoundValidator {
 
 // .. allow null mass, and for null:
 // - display info of not available molar concentrations
-// - allow percentage concentrations with null parameter
-// - disable molar buttons

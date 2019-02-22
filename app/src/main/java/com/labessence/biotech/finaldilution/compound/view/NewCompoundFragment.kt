@@ -62,7 +62,7 @@ class NewCompoundFragment : Fragment() {
 
     private fun setProceedOnLastEditText() {
         val lastEditText = editText(R.id.editTextFormula)
-        lastEditText.setOnEditorActionListener { view, actionId, event ->
+        lastEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 onProceed()
                 return@setOnEditorActionListener true
@@ -77,7 +77,7 @@ class NewCompoundFragment : Fragment() {
         val molarMass = try {
             editTextValue(R.id.editTextMolarMass).toDouble()
         } catch (e: NumberFormatException) {
-            return Compound(molarMass = -1.0, iupacName = iupacName)
+            return Compound(molarMass = null, iupacName = iupacName)
         }
         val trivialName = editTextValue(R.id.editTextTrivialName)
         val formula = editTextValue(R.id.editTextFormula)

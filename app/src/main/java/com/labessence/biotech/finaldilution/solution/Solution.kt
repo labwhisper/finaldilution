@@ -2,6 +2,7 @@ package com.labessence.biotech.finaldilution.solution
 
 import com.labessence.biotech.finaldilution.component.Component
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.compound.NoMolarMassException
 import com.labessence.biotech.finaldilution.genericitem.Item
 import java.util.*
 
@@ -22,7 +23,12 @@ data class Solution(
             var allLiquidComponentsVolume = 0.0
             for (component in components) {
                 if (component.fromStock) {
-                    allLiquidComponentsVolume += component.getQuantity(volume)
+                    allLiquidComponentsVolume +=
+                        try {
+                            component.getQuantity(volume)
+                        } catch (e: NoMolarMassException) {
+                            0.0
+                        }
                 }
             }
             return allLiquidComponentsVolume

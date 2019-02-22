@@ -10,16 +10,14 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.ToggleButton
+import android.widget.*
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.Component
 import com.labessence.biotech.finaldilution.component.concentration.Concentration
 import com.labessence.biotech.finaldilution.component.concentration.ConcentrationFactory
 import com.labessence.biotech.finaldilution.component.concentration.ConcentrationType
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.compound.NoMolarMassException
 import com.labessence.biotech.finaldilution.genericitem.putExtra
 import com.labessence.biotech.finaldilution.peripherals.view.Anim
 import com.labessence.biotech.finaldilution.solution.Solution
@@ -31,8 +29,8 @@ class EditComponentActivity : Activity() {
 
     private lateinit var solution: Solution
     internal lateinit var compound: Compound
-    internal var desiredConcType: ConcentrationType = ConcentrationType.MOLAR
-    internal var stockConcType: ConcentrationType? = null
+    private var desiredConcType: ConcentrationType = ConcentrationType.MOLAR
+    private var stockConcType: ConcentrationType? = null
     private lateinit var desiredViewsList: MutableList<View>
     private lateinit var stockViewsList: MutableList<View>
     private lateinit var desiredButtonList: MutableList<RadioButton>
@@ -79,7 +77,7 @@ class EditComponentActivity : Activity() {
             { this.renderButtonsSquare() })
         setKeyboardOnInputs()
         bindListeners()
-        setConcentrationButtonsState(false)
+        setConcentrationButtonsState(false, compound.molarMass)
         fillComponentFields()
         toggleSolutionFromStock()
     }
@@ -88,7 +86,7 @@ class EditComponentActivity : Activity() {
     private fun bindListeners() {
 
         for ((i, concentrationButton) in desiredButtonList.withIndex()) {
-            concentrationButton.setOnClickListener { v ->
+            concentrationButton.setOnClickListener {
                 desiredConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
                     (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = hint()
                 }
@@ -96,7 +94,7 @@ class EditComponentActivity : Activity() {
         }
 
         for ((i, concentrationButton) in stockButtonList.withIndex()) {
-            concentrationButton.setOnClickListener { v ->
+            concentrationButton.setOnClickListener {
                 stockConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
                     (findViewById<View>(R.id.stockConcEditText) as EditText).hint = hint()
                 }
@@ -128,13 +126,15 @@ class EditComponentActivity : Activity() {
                 }
 
             }
-            setConcentrationButtonsState(component.fromStock)
+            setConcentrationButtonsState(component.fromStock, component.compound.molarMass)
         }
     }
 
-    private fun setConcentrationButtonsState(fromStock: Boolean) {
+    private fun setConcentrationButtonsState(fromStock: Boolean, molarMass: Double?) {
         (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked = fromStock
         val desiredRadioGroup = findViewById<View>(R.id.desiredConcButtonsBar) as RadioGroup
+        desiredConcType =
+            ConcentrationType.MOLAR.takeIf { molarMass != null } ?: ConcentrationType.PERCENTAGE
         when (desiredConcType) {
             ConcentrationType.PERCENTAGE -> desiredRadioGroup.check(R.id.desiredPercentageConcButton)
             ConcentrationType.MOLAR -> desiredRadioGroup.check(R.id.desiredMolarConcButton)
@@ -152,6 +152,11 @@ class EditComponentActivity : Activity() {
             }
         }
 
+        val molarEnabled = molarMass != null
+        findViewById<Button>(R.id.desiredMolarConcButton).isEnabled = molarEnabled
+        findViewById<Button>(R.id.desiredMilimolarConcButton).isEnabled = molarEnabled
+        findViewById<Button>(R.id.stockMolarConcButton).isEnabled = molarEnabled
+        findViewById<Button>(R.id.stockMilimolarConcButton).isEnabled = molarEnabled
     }
 
     private fun onCancelComponent() {
@@ -193,7 +198,11 @@ class EditComponentActivity : Activity() {
 
         var currentComponentVolume = 0.0
         if (fromStock) {
-            currentComponentVolume = component.getQuantity(solution.volume)
+            currentComponentVolume = try {
+                component.getQuantity(solution.volume)
+            } catch (e: NoMolarMassException) {
+                0.0
+            }
         }
         val allComponentsVolume = solution.allLiquidComponentsVolume
         if (allComponentsVolume + currentComponentVolume > solution.volume) {

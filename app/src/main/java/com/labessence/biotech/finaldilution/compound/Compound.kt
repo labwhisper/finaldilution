@@ -4,7 +4,7 @@ import com.labessence.biotech.finaldilution.genericitem.Item
 
 data class Compound(
     var iupacName: String,
-    var molarMass: Double,
+    var molarMass: Double?,
     var trivialName: String? = null,
     var chemicalFormula: String? = null
 ) : Item {

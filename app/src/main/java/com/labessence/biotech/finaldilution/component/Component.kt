@@ -2,6 +2,7 @@ package com.labessence.biotech.finaldilution.component
 
 import com.labessence.biotech.finaldilution.component.concentration.Concentration
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.compound.NoMolarMassException
 import java.io.Serializable
 import java.util.*
 
@@ -22,7 +23,11 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
 
     fun getAmountString(volume: Double): String {
 
-        val amount = getQuantity(volume)
+        val amount = try {
+            getQuantity(volume)
+        } catch (e: NoMolarMassException) {
+            return "Error"
+        }
         val niceOutput = StringBuilder(200)
         if (amount > 1) {
             niceOutput.append(String.format(Locale.ENGLISH, "%1$,.3f", amount))
@@ -42,12 +47,11 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
 
     fun getQuantity(volume: Double): Double {
         val M = compound.molarMass
-        return if (fromStock) {
-            availableConcentration!!.calcVolumeForDesiredMass(
+        return when {
+            fromStock -> availableConcentration!!.calcVolumeForDesiredMass(
                 desiredConcentration.calcDesiredMass(volume, M), M
             )
-        } else {
-            desiredConcentration.calcDesiredMass(volume, M)
+            else -> desiredConcentration.calcDesiredMass(volume, M)
         }
     }
 
