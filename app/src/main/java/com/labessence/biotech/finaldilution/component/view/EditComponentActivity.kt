@@ -155,8 +155,10 @@ class EditComponentActivity : Activity() {
         val molarEnabled = molarMass != null
         findViewById<Button>(R.id.desiredMolarConcButton).isEnabled = molarEnabled
         findViewById<Button>(R.id.desiredMilimolarConcButton).isEnabled = molarEnabled
+        findViewById<Button>(R.id.desiredMgMlConcButton).isEnabled = molarEnabled
         findViewById<Button>(R.id.stockMolarConcButton).isEnabled = molarEnabled
         findViewById<Button>(R.id.stockMilimolarConcButton).isEnabled = molarEnabled
+        findViewById<Button>(R.id.stockMgMlConcButton).isEnabled = molarEnabled
     }
 
     private fun onCancelComponent() {
