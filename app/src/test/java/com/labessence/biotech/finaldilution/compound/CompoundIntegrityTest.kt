@@ -11,14 +11,14 @@ class CompoundIntegrityTest {
 
     @Test
     fun `Trivial name is chosen to display`() {
-        val compound = Compound(trivialName1, 30.0, iupacName1, chemFormula1)
+        val compound = Compound(iupacName1, 30.0, trivialName1, chemFormula1)
         val displayedName = compound.displayName
         assertEquals(trivialName1, displayedName)
     }
 
     @Test
     fun `Iupac name is displayed only on empty trivial name`() {
-        val compound = Compound("", 30.0, iupacName1, chemFormula1)
+        val compound = Compound(iupacName1, 30.0, "", chemFormula1)
         val displayedName = compound.displayName
         assertEquals(iupacName1, displayedName)
     }

@@ -73,15 +73,15 @@ class NewCompoundFragment : Fragment() {
 
     private fun attemptToCreateCompoundFromFields(): Compound {
 
-        val trivialName = editTextValue(R.id.editTextTrivialName)
+        val iupacName = editTextValue(R.id.editTextIupac)
         val molarMass = try {
             editTextValue(R.id.editTextMolarMass).toDouble()
         } catch (e: NumberFormatException) {
-            return Compound(trivialName, -1.0)
+            return Compound(molarMass = -1.0, iupacName = iupacName)
         }
-        val iupacName = editTextValue(R.id.editTextIupac)
+        val trivialName = editTextValue(R.id.editTextTrivialName)
         val formula = editTextValue(R.id.editTextFormula)
-        return Compound(trivialName, molarMass, iupacName, formula)
+        return Compound(iupacName, molarMass, trivialName, formula)
     }
 
     private var onFragmentCloseListener: (() -> Unit)? = null

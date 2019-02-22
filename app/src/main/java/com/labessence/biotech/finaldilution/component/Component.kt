@@ -26,17 +26,15 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
         val niceOutput = StringBuilder(200)
         if (amount > 1) {
             niceOutput.append(String.format(Locale.ENGLISH, "%1$,.3f", amount))
-            if (fromStock) {
-                niceOutput.append(" ml")
-            } else {
-                niceOutput.append(" g")
+            when {
+                fromStock -> niceOutput.append(" ml")
+                else -> niceOutput.append(" g")
             }
         } else {
             niceOutput.append(String.format(Locale.ENGLISH, "%1$,.1f", amount * 1000))
-            if (fromStock) {
-                niceOutput.append(" ul")
-            } else {
-                niceOutput.append(" mg")
+            when {
+                fromStock -> niceOutput.append(" ul")
+                else -> niceOutput.append(" mg")
             }
         }
         return niceOutput.toString()

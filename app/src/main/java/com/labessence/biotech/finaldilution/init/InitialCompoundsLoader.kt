@@ -2,10 +2,11 @@ package com.labessence.biotech.finaldilution.init
 
 import android.content.Context
 import com.labessence.biotech.finaldilution.compound.Compound
+import com.labessence.biotech.finaldilution.compound.CompoundValidator
 import com.opencsv.CSVReader
 import java.io.InputStreamReader
 
-fun loadDefaultCompounds(context: Context): List<Compound> {
+fun loadDefaultCompounds(context: Context): List<Compound?> {
     val csvReader = CSVReader(
         InputStreamReader(
             context.assets.open("default_compounds.csv")
@@ -18,20 +19,12 @@ fun loadDefaultCompounds(context: Context): List<Compound> {
             val formula = record[3]
             val molarMass = record[4]
             Compound(
-                trivialName = trivialName,
-                molarMass = molarMass.ifEmpty { "0" }.toDouble(),
                 iupacName = iupacName,
+                molarMass = molarMass.ifEmpty { "0" }.toDouble(),
+                trivialName = trivialName,
                 chemicalFormula = formula
-            )
+            ).takeIf { CompoundValidator.validateNewCompound(it) }
         }
     }
 }
 
-//TODO Validator - move from NewCompoundF to
-
-//Symptoms:
-// - variable mass ( converted to 0.0?) ... rethink
-// - spaces in name -> %20 (Web notation)
-// - special chars  -> %23 :)
-
-// Validation should happen prior to displaying the compound

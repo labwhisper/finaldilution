@@ -36,8 +36,8 @@ class ApplicationContext : Application() {
 
     fun initEmptyCompoundList(store: DataGatewayOperations<Compound>) {
         Log.d(TAG, "No compounds found. Creating initial compound list")
-        val compounds: List<Compound> = loadDefaultCompounds(instance)
-        compounds.forEach { store.save(it) }
+        val compounds = loadDefaultCompounds(instance)
+        compounds.forEach { it?.let { compound -> store.save(compound) } }
     }
 
     fun removeCompoundFromEverywhere(compound: Compound) {
