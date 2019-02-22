@@ -24,20 +24,4 @@ class CompoundValidator {
     }
 }
 
-//Symptoms:
-// TODO Invalid (variable) molar mass converted to -1 in newCompound!
-// TODO Display something else than null in Compound list (liquid, variable)
-// Liquid -> liquid
-// Solid -> variable
-// - spaces in name -> %20 (Web notation) -> N
-// - special chars  -> %23 :)
-
-// - in liquid state
-// - with empty mass
-// - with var/variable mass
-// - with 0 mass
-// - with negative mass
-
-
-// .. allow null mass, and for null:
-// - display info of not available molar concentrations
+// TODO display info of not available molar concentrations

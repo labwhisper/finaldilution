@@ -44,7 +44,7 @@ data class Solution(
     fun calculateQuantities(): String {
         val niceOutput = StringBuilder(800)
         for (component in components) {
-            niceOutput.append(component.getAmountString(volume))
+            niceOutput.append(component.getAmountStringForVolume(volume))
             niceOutput.append(System.getProperty("line.separator"))
         }
         return niceOutput.toString()

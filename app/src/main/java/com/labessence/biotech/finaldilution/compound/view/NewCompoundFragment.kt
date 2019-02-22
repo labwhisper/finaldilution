@@ -77,11 +77,11 @@ class NewCompoundFragment : Fragment() {
         val molarMass = try {
             editTextValue(R.id.editTextMolarMass).toDouble()
         } catch (e: NumberFormatException) {
-            return Compound(molarMass = null, iupacName = iupacName)
+            return Compound(iupacName = iupacName, liquid = false, molarMass = null)
         }
         val trivialName = editTextValue(R.id.editTextTrivialName)
         val formula = editTextValue(R.id.editTextFormula)
-        return Compound(iupacName, molarMass, trivialName, formula)
+        return Compound(iupacName, false, molarMass, trivialName, formula)
     }
 
     private var onFragmentCloseListener: (() -> Unit)? = null

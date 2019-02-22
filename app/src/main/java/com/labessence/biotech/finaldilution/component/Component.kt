@@ -4,7 +4,7 @@ import com.labessence.biotech.finaldilution.component.concentration.Concentratio
 import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.compound.NoMolarMassException
 import java.io.Serializable
-import java.util.*
+import java.text.DecimalFormat
 
 class Component(var compound: Compound, desired: Concentration, stock: Concentration? = null) :
     Serializable {
@@ -18,26 +18,31 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
     private var solutionVolume = 0.0
 
     override fun toString(): String {
-        return compound.trivialName + " : " + getAmountString(solutionVolume)
+        return compound.trivialName + " : " + getAmountStringForVolume(solutionVolume)
     }
 
-    fun getAmountString(volume: Double): String {
-
+    fun getAmountStringForVolume(volume: Double): String {
         val amount = try {
             getQuantity(volume)
         } catch (e: NoMolarMassException) {
             return "Error"
         }
+        return getAmountString(amount)
+    }
+
+    fun getAmountString(amount: Double): String {
         val niceOutput = StringBuilder(200)
         if (amount > 1) {
-            niceOutput.append(String.format(Locale.ENGLISH, "%1$,.3f", amount))
+            niceOutput.append(DecimalFormat("0.###").format(amount))
             when {
+                compound.liquid -> niceOutput.append(" ml")
                 fromStock -> niceOutput.append(" ml")
                 else -> niceOutput.append(" g")
             }
         } else {
-            niceOutput.append(String.format(Locale.ENGLISH, "%1$,.1f", amount * 1000))
+            niceOutput.append(DecimalFormat("0.#").format(amount * 1000))
             when {
+                compound.liquid -> niceOutput.append(" ul")
                 fromStock -> niceOutput.append(" ul")
                 else -> niceOutput.append(" mg")
             }

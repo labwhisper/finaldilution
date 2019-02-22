@@ -120,7 +120,7 @@ class ComponentsPanel(private val activity: EditActivity) {
             Log.d(TAG, "Compound: " + compound)
             holder.compoundTextView.text = component.compound.displayName
             holder.unitTextView.text =
-                    component.getAmountString(activity.solution.volume)
+                component.getAmountStringForVolume(activity.solution.volume)
             if (component.fromStock) {
                 holder.extraTextView.text = component.availableConcentration?.toString() ?: ""
             }

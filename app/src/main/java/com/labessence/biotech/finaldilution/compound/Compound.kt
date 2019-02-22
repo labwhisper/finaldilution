@@ -3,10 +3,11 @@ package com.labessence.biotech.finaldilution.compound
 import com.labessence.biotech.finaldilution.genericitem.Item
 
 data class Compound(
-    var iupacName: String,
-    var molarMass: Double?,
-    var trivialName: String? = null,
-    var chemicalFormula: String? = null
+    val iupacName: String,
+    val liquid: Boolean,
+    val molarMass: Double? = null,
+    val trivialName: String? = null,
+    val chemicalFormula: String? = null
 ) : Item {
     override val name: String = iupacName
     override val seriesName: String
@@ -19,8 +20,15 @@ data class Compound(
                 ?: chemicalFormula?.takeUnless { it.isBlank() } ?: "?"
         }
 
+    val displayMass: CharSequence
+        get() {
+            return molarMass?.let {
+                "[${molarMass}]"
+            } ?: "[liquid]".takeIf { liquid } ?: "[variable]"
+        }
+
     override fun toString(): String {
-        return "$trivialName [$molarMass]"
+        return "$displayName [$displayMass]"
     }
 
 }

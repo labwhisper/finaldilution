@@ -35,10 +35,8 @@ class CompoundListAdapter(compounds: List<Compound>) :
     override fun onBindViewHolder(holder: CompoundViewHolder, position: Int) {
         val compound = compoundList.get(position)
         holder.nameView?.text = compound.displayName
-        holder.massView?.text = holder.massView?.context?.resources?.getString(
-            R.string.mass_in_brackets,
-            compound.molarMass.toString()
-        )
+        holder.massView?.text = compound.displayMass
     }
+
 
 }

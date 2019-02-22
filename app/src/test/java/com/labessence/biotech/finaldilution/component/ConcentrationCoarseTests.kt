@@ -12,7 +12,11 @@ import org.junit.Test
 class ConcentrationCoarseTests {
 
     private var volume: Double = 0.toDouble()
-    private var compound = Compound(molarMass = 40.0, iupacName = "Sodium hydroxide")
+    private var compound = Compound(
+        iupacName = "Sodium hydroxide",
+        liquid = false,
+        molarMass = 40.0
+    )
 
     @Before
     @Throws(Exception::class)
