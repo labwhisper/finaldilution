@@ -8,10 +8,10 @@ import android.widget.TextView
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.compound.Compound
 
-class CompoundListAdapter(compounds: List<Compound>) :
+class CompoundListAdapter :
     RecyclerView.Adapter<CompoundListAdapter.CompoundViewHolder>() {
 
-    val compoundList: List<Compound> = compounds
+    var compoundList: MutableList<Compound> = mutableListOf()
 
     class CompoundViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var nameView: TextView? = null

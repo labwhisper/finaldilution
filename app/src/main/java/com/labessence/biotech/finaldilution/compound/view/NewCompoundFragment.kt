@@ -15,22 +15,37 @@ import com.labessence.biotech.finaldilution.compound.Compound
 import com.labessence.biotech.finaldilution.compound.CompoundValidator
 import com.labessence.biotech.finaldilution.util.editText
 import com.labessence.biotech.finaldilution.util.editTextValue
+import com.labessence.biotech.finaldilution.util.textView
 
 class NewCompoundFragment : Fragment() {
+
+    var initialCompound: Compound? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        arguments?.getSerializable("COMPOUND").let { initialCompound = it as Compound? }
         return inflater.inflate(R.layout.compound_new, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initialCompound?.let {
+            textView(R.id.new_compound_title).text = "Edit ${it.iupacName}"
+            populateCompoundIntoFields(it)
+        }
         initCancelButton()
         initDoneButton()
         setProceedOnLastEditText()
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun populateCompoundIntoFields(compound: Compound) {
+        editText(R.id.editTextIupac).setText(compound.iupacName)
+        compound.molarMass?.let { editText(R.id.editTextMolarMass).setText(it.toString()) }
+        compound.trivialName?.let { editText(R.id.editTextTrivialName).setText(it) }
+        compound.chemicalFormula?.let { editText(R.id.editTextFormula).setText(it) }
     }
 
     private fun initCancelButton() {
@@ -47,19 +62,6 @@ class NewCompoundFragment : Fragment() {
         }
     }
 
-    private fun onProceed() {
-        val compound = attemptToCreateCompoundFromFields()
-        if (CompoundValidator.validateNewCompound(compound)) {
-            val imm =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(editText(R.id.editTextFormula).windowToken, 0)
-            val appState: ApplicationContext =
-                requireActivity().applicationContext as ApplicationContext
-            appState.compoundGateway.save(compound)
-        }
-        fragmentManager?.popBackStack()
-    }
-
     private fun setProceedOnLastEditText() {
         val lastEditText = editText(R.id.editTextFormula)
         lastEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -71,16 +73,34 @@ class NewCompoundFragment : Fragment() {
         }
     }
 
+    private fun onProceed() {
+        val compound = attemptToCreateCompoundFromFields()
+        if (!CompoundValidator.validateNewCompound(compound)) {
+            fragmentManager?.popBackStack()
+            return
+        }
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText(R.id.editTextFormula).windowToken, 0)
+        val appState: ApplicationContext =
+            requireActivity().applicationContext as ApplicationContext
+        //TODO update should ask for update / save new
+        //TODO safeSave -> on error the question replace should be asked
+        initialCompound?.let { appState.updateCompound(compound) }
+            ?: appState.safeSaveCompound(compound)
+        fragmentManager?.popBackStack()
+    }
+
     private fun attemptToCreateCompoundFromFields(): Compound {
 
         val iupacName = editTextValue(R.id.editTextIupac)
-        val molarMass = try {
-            editTextValue(R.id.editTextMolarMass).toDouble()
-        } catch (e: NumberFormatException) {
-            return Compound(iupacName = iupacName, liquid = false, molarMass = null)
-        }
         val trivialName = editTextValue(R.id.editTextTrivialName)
         val formula = editTextValue(R.id.editTextFormula)
+        val molarMass = try {
+            editTextValue(R.id.editTextMolarMass).ifBlank { null }?.toDouble()
+        } catch (e: NumberFormatException) {
+            null
+        }
         return Compound(iupacName, false, molarMass, trivialName, formula)
     }
 

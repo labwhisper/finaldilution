@@ -2,6 +2,7 @@ package com.labessence.biotech.finaldilution.compound.view
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -26,12 +27,12 @@ import com.labessence.biotech.finaldilution.solution.view.EditActivity
  */
 
 class CompoundsPanel(private val activity: EditActivity) {
-    private val appState: ApplicationContext = activity.applicationContext as ApplicationContext
 
-    private val compoundListAdapter: CompoundListAdapter
-        get() = CompoundListAdapter(appState.compoundGateway.loadAll())
+    private val compoundListAdapter = CompoundListAdapter()
 
     fun displayCompoundList() {
+        val appState: ApplicationContext = activity.applicationContext as ApplicationContext
+        compoundListAdapter.compoundList = appState.loadAllCompoundsSorted().toMutableList()
         val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
         val layoutManager = LinearLayoutManager(activity)
         compoundsListView.layoutManager = layoutManager
@@ -42,18 +43,8 @@ class CompoundsPanel(private val activity: EditActivity) {
                 activity, compoundsListView, compoundTouchListener()
             )
         )
-        val newCompoundButton = activity.findViewById<ImageButton>(R.id.new_compound_button)
-        newCompoundButton.setOnClickListener {
-            val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
-            val newCompoundFragment = NewCompoundFragment()
-            newCompoundFragment.setOnFragmentCloseListener {
-                newCompoundButton.visibility = View.VISIBLE
-            }
-            //TODO Set On Done, On Cancel
-            fragmentTransaction.replace(R.id.compoundsList, newCompoundFragment)
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
-            newCompoundButton.visibility = View.GONE
+        activity.findViewById<ImageButton>(R.id.new_compound_button).setOnClickListener {
+            startCompoundEdition()
         }
     }
 
@@ -73,12 +64,38 @@ class CompoundsPanel(private val activity: EditActivity) {
 
             override fun onLongTouch(view: View, position: Int) {
                 val compound = compoundListAdapter.compoundList[position]
-                appState.saveCurrentWorkOnSolution(activity.solution)
-                appState.removeCompoundFromEverywhere(compound)
-                activity.solution = appState.reloadSolution(activity.solution)!!
+                startCompoundEdition(compound)
             }
 
         }
+    }
+
+    private fun startCompoundEdition(compound: Compound? = null) {
+        val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+        val newCompoundFragment = NewCompoundFragment()
+        compound?.let {
+            val bundle = Bundle()
+            bundle.putSerializable("COMPOUND", compound)
+            newCompoundFragment.arguments = bundle
+        }
+        newCompoundFragment.setOnFragmentCloseListener {
+            activity.findViewById<ImageButton>(R.id.new_compound_button).visibility = View.VISIBLE
+            val appState: ApplicationContext = activity.applicationContext as ApplicationContext
+            compoundListAdapter.compoundList = appState.loadAllCompoundsSorted().toMutableList()
+            compoundListAdapter.notifyDataSetChanged()
+        }
+        fragmentTransaction.replace(R.id.compoundsList, newCompoundFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+        activity.findViewById<ImageButton>(R.id.new_compound_button).visibility = View.GONE
+    }
+
+    private fun deleteCompound(position: Int) {
+        val compound = compoundListAdapter.compoundList[position]
+        val appState: ApplicationContext = activity.applicationContext as ApplicationContext
+        appState.saveCurrentWorkOnSolution(activity.solution)
+        appState.removeCompoundFromEverywhere(compound)
+        activity.solution = appState.reloadSolution(activity.solution)!!
     }
 
     private fun informAboutCompoundAlreadyAdded(view: View, compound: Compound) {
@@ -118,27 +135,25 @@ class CompoundsPanel(private val activity: EditActivity) {
 
         init {
             gestureDetector =
-                    GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
-                        override fun onSingleTapUp(e: MotionEvent?): Boolean {
-                            return true
-                        }
+                GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+                        return true
+                    }
 
-                        override fun onLongPress(e: MotionEvent?) {
-                            if (e == null) return
-                            val compound = recyclerView.findChildViewUnder(e.x, e.y) ?: return
-                            touchListener.onLongTouch(
-                                compound,
-                                recyclerView.getChildAdapterPosition(compound)
-                            )
-                        }
-                    })
+                    override fun onLongPress(e: MotionEvent?) {
+                        if (e == null) return
+                        val compound = recyclerView.findChildViewUnder(e.x, e.y) ?: return
+                        touchListener.onLongTouch(
+                            compound,
+                            recyclerView.getChildAdapterPosition(compound)
+                        )
+                    }
+                })
         }
 
         override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) = Unit
 
         override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-            //TODO WARN: rv.findChild... doesn't find the proper child
-            //(BECAUSE OF Not refreshing list)
             val compound = rv.findChildViewUnder(e.x, e.y)
             if (compound != null && gestureDetector.onTouchEvent(e)) {
                 touchListener.onTouch(compound, rv.getChildAdapterPosition(compound))

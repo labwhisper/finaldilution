@@ -40,6 +40,22 @@ class ApplicationContext : Application() {
         compounds.forEach { it?.let { compound -> store.save(compound) } }
     }
 
+    fun loadAllCompoundsSorted(): List<Compound> {
+        return compoundGateway.loadAll().sortedBy { it.displayName.toLowerCase() }
+//            .sortedWith(
+//            kotlin.Comparator { a, b -> a.n }
+//        )
+    }
+
+    fun safeSaveCompound(compound: Compound) {
+        //if name exist -> sameNameException ( to be handled by function user )
+        compoundGateway.save(compound)
+    }
+
+    fun updateCompound(compound: Compound) {
+        return compoundGateway.update(compound)
+    }
+
     fun removeCompoundFromEverywhere(compound: Compound) {
         for (solution in solutionGateway.loadAll()) {
             val component = solution.getComponentWithCompound(compound)

@@ -13,14 +13,14 @@ data class Compound(
     override val seriesName: String
         get() = "COMPOUND"
 
-    val displayName: CharSequence?
+    val displayName: String
         get() {
             return trivialName?.takeUnless { it.isBlank() }
                 ?: iupacName.takeUnless { it.isBlank() }
                 ?: chemicalFormula?.takeUnless { it.isBlank() } ?: "?"
         }
 
-    val displayMass: CharSequence
+    val displayMass: String
         get() {
             return molarMass?.let {
                 "[${molarMass}]"
