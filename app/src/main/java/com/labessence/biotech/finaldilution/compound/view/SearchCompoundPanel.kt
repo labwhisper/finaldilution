@@ -17,7 +17,7 @@ class SearchCompoundPanel(private val activity: Activity) {
 
     fun initSearchFunctionality(compoundListAdapter: CompoundListAdapter) {
         val searchEditText = activity.editText(R.id.search_compound_button)
-        searchEditText.setOnFocusChangeListener { view, hasFocus ->
+        searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 enterSearch()
             }

@@ -13,9 +13,9 @@
         style="@style/FinalDilutionH1"
         android:id="@+id/new_component_title"
         android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        tools:text="COMPONENT NAME" />
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        tools:text="very long COMPONENT NAME" />
 
     <TextView
         android:id="@+id/desiredConcTextView"

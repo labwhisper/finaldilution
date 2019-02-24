@@ -71,7 +71,7 @@ class EditComponentActivity : Activity() {
         compound = intent.getSerializableExtra("COMPOUND") as Compound
         solution = intent.getSerializableExtra("SOLUTION") as Solution
         solutionCareTaker = intent.getSerializableExtra("CARE_TAKER") as SolutionCareTaker
-        title = "Add " + compound.displayName
+        title = compound.displayName
         findViewById<TextView>(R.id.new_component_title).text = title
 
         (findViewById<View>(R.id.desiredConcButtonsBar)).viewTreeObserver.addOnGlobalLayoutListener(

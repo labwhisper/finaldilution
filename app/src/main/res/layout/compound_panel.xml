@@ -69,7 +69,7 @@
     <EditText
         android:id="@+id/search_compound_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/button_size"
         android:layout_marginEnd="@dimen/grid_margin_side"
         android:layout_marginBottom="24dp"
         android:background="@drawable/search_button"
@@ -86,8 +86,8 @@
 
     <ImageButton
         android:id="@+id/exit_search_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="@dimen/button_size"
         android:visibility="invisible"
         android:src="@drawable/ic_clear_white_24dp"
         android:background="@color/transparent"
