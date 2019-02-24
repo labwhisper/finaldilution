@@ -8,4 +8,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="bottom_sheet_collapsed_height">54dp</dimen>
     <dimen name="grid_margin_side">16dp</dimen>
+    <dimen name="button_size">50dp</dimen>
 </resources>

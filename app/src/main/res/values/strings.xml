@@ -12,6 +12,7 @@
     <string name="FromEditToPrepButtonText">DONE</string>
     <string name="fromPrepToEditButtonText">BACK</string>
     <string name="buttonNewCompound">+</string>
+    <string name="button_search_description">Search</string>
     <string name="mililiters">ml</string>
     <string name="solutionListPrepFormat">%s ml  %d components</string>
     <string name="compound_list">Compound List</string>
@@ -28,4 +29,5 @@
     <string name="chemical_formula">Chemical formula</string>
     <string name="new_compound_back">back</string>
     <string name="new_compound_proceed">Done</string>
+    <string name="exit_search_description">Exit search</string>
 </resources>

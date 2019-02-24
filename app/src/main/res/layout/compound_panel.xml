@@ -57,13 +57,42 @@
     <ImageButton
         android:id="@+id/new_compound_button"
         style="@style/FinalDilutionButton"
-        android:layout_marginEnd="@dimen/grid_margin_side"
+        android:layout_marginStart="@dimen/grid_margin_side"
         android:layout_marginBottom="24dp"
         android:contentDescription="@string/buttonNewCompound"
         android:src="@drawable/ic_add_black_24dp"
         android:textSize="25sp"
         android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/search_compound_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/grid_margin_side"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/search_button"
+        android:contentDescription="@string/button_search_description"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textCursorDrawable="@null"
+        android:textSize="25sp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/exit_search_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="invisible"
+        android:src="@drawable/ic_clear_white_24dp"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/search_compound_button"
+        app:layout_constraintEnd_toEndOf="@+id/search_compound_button"
+        android:contentDescription="@string/exit_search_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

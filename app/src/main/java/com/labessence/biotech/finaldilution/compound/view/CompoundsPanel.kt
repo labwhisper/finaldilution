@@ -46,7 +46,9 @@ class CompoundsPanel(private val activity: EditActivity) {
         activity.findViewById<ImageButton>(R.id.new_compound_button).setOnClickListener {
             startCompoundEdition()
         }
+        SearchCompoundPanel(activity).initSearchFunctionality(compoundListAdapter)
     }
+
 
     private fun compoundTouchListener(): CompoundListTouchListener.TouchListener {
         return object : CompoundListTouchListener.TouchListener {
