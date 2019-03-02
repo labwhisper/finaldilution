@@ -27,6 +27,7 @@ import com.labessence.biotech.finaldilution.solution.UndoOnEmptyListException
 class EditActivity : AppCompatActivity() {
     private var volumePanel: VolumePanel? = null
     private var componentsPanel: ComponentsPanel? = null
+    private var compoundsPanel: CompoundsPanel? = null
     private var screenGestureDetector: GestureDetector? = null
     lateinit var solution: Solution
     lateinit var solutionCareTaker: SolutionCareTaker
@@ -52,6 +53,14 @@ class EditActivity : AppCompatActivity() {
 
         displayAddCompoundFragment()
         screenGestureDetector = GestureDetector(this, EditGestureListener(this))
+    }
+
+    override fun onBackPressed() {
+        if (compoundsPanel?.isExpanded() == true) {
+            compoundsPanel?.collapse()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun enableSolutionRenaming() {
@@ -151,8 +160,8 @@ class EditActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun displayAddCompoundFragment() {
-        val compoundsPanel = CompoundsPanel(this)
-        compoundsPanel.displayCompoundList()
+        compoundsPanel = CompoundsPanel(this)
+        compoundsPanel?.displayCompoundList()
     }
 
     fun startComponentEdition(compound: Compound) {

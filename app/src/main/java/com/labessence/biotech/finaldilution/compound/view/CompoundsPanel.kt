@@ -2,7 +2,9 @@ package com.labessence.biotech.finaldilution.compound.view
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.labessence.biotech.finaldilution.ApplicationContext
 import com.labessence.biotech.finaldilution.R
 import com.labessence.biotech.finaldilution.component.view.EditComponentActivity
@@ -47,6 +50,30 @@ class CompoundsPanel(private val activity: EditActivity) {
             startCompoundEdition()
         }
         SearchCompoundPanel(activity).initSearchFunctionality(compoundListAdapter)
+    }
+
+    fun isExpanded(): Boolean {
+        val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compoundsList)
+        val screenSize = Point()
+        activity.windowManager.defaultDisplay.getSize(screenSize)
+        val locationOnScreen = IntArray(2)
+        compoundsListView.getLocationOnScreen(locationOnScreen)
+        val currentHeight = screenSize.y - locationOnScreen[1] - 1
+        val expandedHeight =
+            activity.resources.getDimension(R.dimen.bottom_sheet_expanded_height).toInt()
+        return currentHeight == expandedHeight
+    }
+
+    fun collapse() {
+        val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compoundsList)
+        val collapsedHeight =
+            activity.resources.getDimension(R.dimen.bottom_sheet_collapsed_height).toInt()
+        val expandedHeight =
+            activity.resources.getDimension(R.dimen.bottom_sheet_expanded_height).toInt()
+        ViewCompat.offsetTopAndBottom(
+            compoundsListView,
+            expandedHeight - collapsedHeight
+        )
     }
 
 
