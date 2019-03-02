@@ -1,6 +1,7 @@
 package com.labessence.biotech.finaldilution.compound
 
 import com.labessence.biotech.finaldilution.genericitem.Item
+import java.text.DecimalFormat
 
 data class Compound(
     val iupacName: String,
@@ -23,7 +24,7 @@ data class Compound(
     val displayMass: String
         get() {
             return molarMass?.let {
-                "[${molarMass}]"
+                "[${DecimalFormat("0.##").format(molarMass)}]"
             } ?: "[liquid]".takeIf { liquid } ?: "[variable]"
         }
 
