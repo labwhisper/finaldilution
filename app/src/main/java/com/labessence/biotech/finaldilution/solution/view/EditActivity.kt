@@ -56,10 +56,10 @@ class EditActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (compoundsPanel?.isExpanded() == true) {
-            compoundsPanel?.collapse()
-        } else {
-            super.onBackPressed()
+        when {
+            compoundsPanel?.isSearchOpen() == true -> compoundsPanel?.exitSearch()
+            compoundsPanel?.isExpanded() == true -> compoundsPanel?.collapse()
+            else -> super.onBackPressed()
         }
     }
 

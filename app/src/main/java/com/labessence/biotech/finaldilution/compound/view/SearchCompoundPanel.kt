@@ -15,6 +15,8 @@ import com.labessence.biotech.finaldilution.util.imageButton
 
 class SearchCompoundPanel(private val activity: Activity) {
 
+    var searchOpen: Boolean = false
+
     fun initSearchFunctionality(compoundListAdapter: CompoundListAdapter) {
         val searchEditText = activity.editText(R.id.search_compound_button)
         searchEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -50,9 +52,10 @@ class SearchCompoundPanel(private val activity: Activity) {
         val imm =
             activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(searchEditText, 0)
+        searchOpen = true
     }
 
-    private fun exitSearch() {
+    fun exitSearch() {
         val searchEditText = activity.editText(R.id.search_compound_button)
         val exitSearchButton = activity.imageButton(R.id.exit_search_button)
         searchEditText.setText("")
@@ -64,6 +67,7 @@ class SearchCompoundPanel(private val activity: Activity) {
             activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         exitSearchButton.visibility = View.INVISIBLE
+        searchOpen = false
     }
 
     private fun filterCompoundList(compoundListAdapter: CompoundListAdapter, text: CharSequence?) {

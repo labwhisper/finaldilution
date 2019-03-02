@@ -32,6 +32,7 @@ import com.labessence.biotech.finaldilution.solution.view.EditActivity
 class CompoundsPanel(private val activity: EditActivity) {
 
     private val compoundListAdapter = CompoundListAdapter()
+    private val searchCompoundPanel = SearchCompoundPanel(activity)
 
     fun displayCompoundList() {
         val appState: ApplicationContext = activity.applicationContext as ApplicationContext
@@ -49,7 +50,7 @@ class CompoundsPanel(private val activity: EditActivity) {
         activity.findViewById<ImageButton>(R.id.new_compound_button).setOnClickListener {
             startCompoundEdition()
         }
-        SearchCompoundPanel(activity).initSearchFunctionality(compoundListAdapter)
+        searchCompoundPanel.initSearchFunctionality(compoundListAdapter)
     }
 
     fun isExpanded(): Boolean {
@@ -76,6 +77,9 @@ class CompoundsPanel(private val activity: EditActivity) {
         )
     }
 
+    fun isSearchOpen() = searchCompoundPanel.searchOpen
+
+    fun exitSearch() = searchCompoundPanel.exitSearch()
 
     private fun compoundTouchListener(): CompoundListTouchListener.TouchListener {
         return object : CompoundListTouchListener.TouchListener {
