@@ -8,7 +8,7 @@
     android:focusable="true"
     android:orientation="vertical">
 
-    <com.labessence.biotech.finaldilution.compound.view.AddComponentButtonView
+    <com.labwhisper.biotech.finaldilution.compound.view.AddComponentButtonView
         android:id="@+id/compoundsListHeader"
         style="@style/FinalDilutionH1"
         android:layout_width="match_parent"

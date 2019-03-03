@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.labessence.biotech.finaldilution">
+    package="com.labwhisper.biotech.finaldilution">
 
     <application
-        android:name="com.labessence.biotech.finaldilution.ApplicationContext"
+        android:name="com.labwhisper.biotech.finaldilution.ApplicationContext"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/FinalDilutionTheme">
         <activity
-            android:name=".init.view.SplashActivity"
+            android:name="com.labwhisper.biotech.finaldilution.init.view.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,13 +17,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".init.view.StartupActivity"
+            android:name="com.labwhisper.biotech.finaldilution.init.view.StartupActivity"
             android:label="@string/title_activity_startup" />
         <activity
-            android:name=".solution.view.EditActivity"
+            android:name="com.labwhisper.biotech.finaldilution.solution.view.EditActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".component.view.EditComponentActivity"
+            android:name="com.labwhisper.biotech.finaldilution.component.view.EditComponentActivity"
             android:noHistory="true"
             android:label="@string/title_activity_compound" />
     </application>
