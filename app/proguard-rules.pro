@@ -15,3 +15,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn com.opencsv.**
+-dontwarn org.apache.commons.beanutils.**
+-dontwarn org.apache.commons.collections.**
+-keep class com.labwhisper.biotech.finaldilution.component.concentration.Concentration { *; }
+-keep class com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType { *; }
+-dontoptimize

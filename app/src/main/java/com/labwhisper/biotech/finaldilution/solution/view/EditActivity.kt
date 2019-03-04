@@ -22,6 +22,7 @@ import com.labwhisper.biotech.finaldilution.solution.RedoOnLastChangeException
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
 import com.labwhisper.biotech.finaldilution.solution.UndoOnEmptyListException
+import com.labwhisper.biotech.finaldilution.util.editText
 
 
 class EditActivity : AppCompatActivity() {
@@ -174,16 +175,16 @@ class EditActivity : AppCompatActivity() {
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            val v = currentFocus
-            if (v is EditText) {
-                val outRect = Rect()
-                v.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                    v.clearFocus()
-                    val imm =
-                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.windowToken, 0)
-                }
+            val v = currentFocus as? EditText ?: return super.dispatchTouchEvent(event)
+            //Work around - to not exit search edit text before choosing item
+            if (v == editText(R.id.search_compound_button)) return super.dispatchTouchEvent(event)
+            val outRect = Rect()
+            v.getGlobalVisibleRect(outRect)
+            if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                v.clearFocus()
+                val imm =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
             }
         }
         return super.dispatchTouchEvent(event)
