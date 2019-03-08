@@ -4,9 +4,8 @@ import android.content.Intent
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
-
-import com.labwhisper.biotech.finaldilution.init.view.StartupActivity
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
+import com.labwhisper.biotech.finaldilution.solution.view.StartupActivity
 
 /**
  * Project: FinalDilution

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.labwhisper.biotech.finaldilution.R
+import com.labwhisper.biotech.finaldilution.solution.view.StartupActivity
 
 /**
  * Created by dawid.chmielewski on 12/26/2016.

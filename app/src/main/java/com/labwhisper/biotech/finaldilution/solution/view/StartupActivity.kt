@@ -1,4 +1,4 @@
-package com.labwhisper.biotech.finaldilution.init.view
+package com.labwhisper.biotech.finaldilution.solution.view
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -14,7 +14,6 @@ import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.genericitem.putExtra
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
-import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import java.text.DecimalFormat
 
 class StartupActivity : Activity() {

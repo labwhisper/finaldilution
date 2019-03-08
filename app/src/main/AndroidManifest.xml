@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.labwhisper.biotech.finaldilution.init.view.StartupActivity"
+            android:name="com.labwhisper.biotech.finaldilution.solution.view.StartupActivity"
             android:label="@string/title_activity_startup" />
         <activity
             android:name="com.labwhisper.biotech.finaldilution.solution.view.EditActivity"
