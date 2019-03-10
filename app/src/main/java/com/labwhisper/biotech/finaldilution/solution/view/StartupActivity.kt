@@ -18,8 +18,6 @@ import java.text.DecimalFormat
 
 class StartupActivity : Activity() {
 
-    private var solution: Solution? = null
-
     internal var volFormat = DecimalFormat("0.##")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +37,6 @@ class StartupActivity : Activity() {
         //TODO Extract setting current solution from file elswhere
         val appState = applicationContext as ApplicationContext
         val solutionList = appState.solutionGateway.loadAll()
-        if (!solutionList.isEmpty()) {
-            //TODO Save and set last solution
-            solution = solutionList[0]
-        }
         val solutionListView = findViewById<View>(R.id.solutionListView) as ListView
         val solutionListAdapter = object : ArrayAdapter<Solution>(
             this, R.layout.solution_list_item, R.id.solution_list_text1, solutionList
@@ -62,8 +56,12 @@ class StartupActivity : Activity() {
             }
         }
         solutionListView.adapter = solutionListAdapter
-        solutionListView.onItemClickListener = SolutionChooseListener()
-        solutionListView.onItemLongClickListener = SolutionLongClickListener()
+        solutionListView.setOnItemClickListener { parent, _, position, _ ->
+            enterSolution(parent.adapter.getItem(position) as Solution)
+        }
+        solutionListView.setOnItemLongClickListener { parent, _, position, _ ->
+            deleteSolution(parent.adapter.getItem(position) as Solution); true
+        }
     }
 
     private inner class OnNewSolutionButtonClickListener : View.OnClickListener {
@@ -80,7 +78,6 @@ class StartupActivity : Activity() {
                     if (!solutionNamePicker.text.isNotEmpty()) {
                         return@setPositiveButton
                     }
-                    //TODO Extract those 3 lines into app entities or no?
                     val newName = solutionNamePicker.text.toString()
                     if (appState.solutionGateway.load(newName) != null) {
                         return@setPositiveButton
@@ -88,14 +85,7 @@ class StartupActivity : Activity() {
                     val solution = Solution(newName)
                     appState.solutionGateway.save(solution)
                     refreshSolutionList()
-                    this@StartupActivity.solution =
-                            appState.solutionGateway.load(newName)
-                    this@StartupActivity.solution?.let {
-                        val intent = Intent(this@StartupActivity, EditActivity::class.java)
-                        intent.putExtra(it)
-                        intent.putExtra("CARE_TAKER", SolutionCareTaker())
-                        startActivity(intent)
-                    }
+                    enterSolution(appState.solutionGateway.load(newName))
                 }
                 .setNegativeButton("Cancel", null)
             val alertDialog = alertDialogBuilder.create()
@@ -109,34 +99,18 @@ class StartupActivity : Activity() {
         }
     }
 
-    private inner class SolutionChooseListener : AdapterView.OnItemClickListener {
-
-        override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-            solution = parent.adapter.getItem(position) as Solution
-            solution?.let {
-                val intent = Intent(this@StartupActivity, EditActivity::class.java)
-                intent.putExtra(it)
-                intent.putExtra("CARE_TAKER", SolutionCareTaker())
-                startActivity(intent)
-            }
+    private fun enterSolution(solution: Solution?) {
+        solution?.let {
+            val intent = Intent(this@StartupActivity, EditActivity::class.java)
+            intent.putExtra(it)
+            intent.putExtra("CARE_TAKER", SolutionCareTaker())
+            startActivity(intent)
         }
     }
 
-    internal inner class SolutionLongClickListener : AdapterView.OnItemLongClickListener {
-
-        override fun onItemLongClick(
-            parent: AdapterView<*>,
-            view: View,
-            position: Int,
-            id: Long
-        ): Boolean {
-            val appState = applicationContext as ApplicationContext
-            //TODO Extract deleting solution into view logic layer. // app entity
-            val solution = parent.adapter.getItem(position) as Solution
-            appState.solutionGateway.remove(solution)
-            refreshSolutionList()
-            return true
-        }
+    private fun deleteSolution(solution: Solution) {
+        (applicationContext as ApplicationContext).solutionGateway.remove(solution)
+        refreshSolutionList()
     }
 
     companion object {
