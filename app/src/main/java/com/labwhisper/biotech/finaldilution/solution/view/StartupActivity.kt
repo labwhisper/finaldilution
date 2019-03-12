@@ -28,7 +28,9 @@ class StartupActivity : AppCompatActivity() {
         Log.d(TAG, "On create Startup Activity")
         setContentView(R.layout.startup)
         val newSolutionButton = button(R.id.addNewSolutionButton)
-        newSolutionButton.setOnClickListener { SolutionNameDialog(this, appModel).create().show() }
+        newSolutionButton.setOnClickListener {
+            SolutionNameDialog(this, appModel).forCreate().show()
+        }
         appModel.solutionList.observe(this,
             Observer { solutions -> solutions?.let { refreshSolutionList(solutions) } })
     }
@@ -61,7 +63,8 @@ class StartupActivity : AppCompatActivity() {
             enterSolution(parent.adapter.getItem(position) as Solution)
         }
         solutionListView.setOnItemLongClickListener { parent, _, position, _ ->
-            deleteSolution(parent.adapter.getItem(position) as Solution); true
+            val solution = parent.adapter.getItem(position) as Solution
+            SolutionNameDialog(this, appModel).forRename(solution).show(); true
         }
     }
 

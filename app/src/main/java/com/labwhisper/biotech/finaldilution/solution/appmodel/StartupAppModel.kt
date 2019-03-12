@@ -36,4 +36,6 @@ class StartupAppModel(val solutionGateway: DataGatewayOperations<Solution>) {
     }
 
     fun loadSolution(newName: String): Solution? = solutionGateway.load(newName)
+    fun renameSolution(solution: Solution, oldName: String) =
+        solutionGateway.rename(solution, oldName)
 }

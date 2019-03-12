@@ -12,18 +12,32 @@ import com.labwhisper.biotech.finaldilution.solution.appmodel.StartupAppModel
 
 class SolutionNameDialog(val context: Context, val appModel: StartupAppModel) {
 
-    fun create(): AlertDialog {
+    fun forCreate(): AlertDialog {
+        return create("Enter new solution name: ", onAccept = ::onAcceptNew)
+    }
+
+    fun forRename(solution: Solution): AlertDialog {
+        val oldName = solution.name
+        return create("Rename $oldName solution:", oldName) { newName ->
+            onAcceptRename(solution.apply { name = newName }, oldName)
+        }
+    }
+
+    fun create(
+        dialogTitle: String,
+        startText: String = "",
+        onAccept: (String) -> Unit
+    )
+            : AlertDialog {
         val solutionNamePicker = EditText(context)
-
-        val dialogText = "Enter new solution name: "
-
+        solutionNamePicker.setText(startText)
         val alertDialogBuilder = AlertDialog.Builder(context)
         alertDialogBuilder
             .setView(solutionNamePicker)
-            .setMessage(dialogText)
+            .setMessage(dialogTitle)
             .setCancelable(false)
-            .setPositiveButton("OK") { _, _ -> onAcceptNew(solutionNamePicker.text.toString()) }
             .setNegativeButton("Cancel", null)
+            .setPositiveButton("OK") { _, _ -> onAccept.invoke(solutionNamePicker.text.toString()) }
         val alertDialog = alertDialogBuilder.create()
 
         solutionNamePicker.setOnFocusChangeListener { _, hasFocus ->
@@ -36,8 +50,11 @@ class SolutionNameDialog(val context: Context, val appModel: StartupAppModel) {
 
     private fun onAcceptNew(newName: String) {
         appModel.addNewSolution(newName)
-        // TODO observer should refreshSolutionList()
         appModel.loadSolution(newName)?.let { enterSolution(it) }
+    }
+
+    private fun onAcceptRename(solution: Solution, oldName: String) {
+        appModel.renameSolution(solution, oldName)
     }
 
     private fun enterSolution(solution: Solution) {
