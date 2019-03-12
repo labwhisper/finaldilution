@@ -14,7 +14,6 @@
     <string name="buttonNewCompound">+</string>
     <string name="button_search_description">Search</string>
     <string name="mililiters">ml</string>
-    <string name="solutionListPrepFormat">%s ml  %d components</string>
     <string name="compound_list">Compound List</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="application_name">Final Dilution</string>

@@ -1,57 +1,58 @@
 package com.labwhisper.biotech.finaldilution.solution.view
 
-import android.app.Activity
-import android.app.AlertDialog
+import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.*
+import android.widget.ArrayAdapter
 import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
-import com.labwhisper.biotech.finaldilution.genericitem.putExtra
+import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
-import java.text.DecimalFormat
+import com.labwhisper.biotech.finaldilution.solution.appmodel.StartupAppModel
+import com.labwhisper.biotech.finaldilution.util.button
+import com.labwhisper.biotech.finaldilution.util.listView
+import com.labwhisper.biotech.finaldilution.util.textView
 
-class StartupActivity : Activity() {
+class StartupActivity : AppCompatActivity() {
 
-    internal var volFormat = DecimalFormat("0.##")
+    private lateinit var appModel: StartupAppModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        appModel = StartupAppModel((applicationContext as ApplicationContext).solutionGateway)
         super.onCreate(savedInstanceState)
         Log.d(TAG, "On create Startup Activity")
         setContentView(R.layout.startup)
-        val newSolutionButton = findViewById<View>(R.id.addNewSolutionButton) as Button
-        newSolutionButton.setOnClickListener(OnNewSolutionButtonClickListener())
+        val newSolutionButton = button(R.id.addNewSolutionButton)
+        newSolutionButton.setOnClickListener { SolutionNameDialog(this, appModel).create().show() }
+        appModel.solutionList.observe(this,
+            Observer { solutions -> solutions?.let { refreshSolutionList(solutions) } })
     }
 
     override fun onResume() {
         super.onResume()
-        refreshSolutionList()
+        //TODO Remove after adding observer pattern to business model
+        appModel.refresh()
     }
 
-    private fun refreshSolutionList() {
+    private fun refreshSolutionList(solutionList: List<Solution>) {
 
-        //TODO Extract setting current solution from file elswhere
-        val appState = applicationContext as ApplicationContext
-        val solutionList = appState.solutionGateway.loadAll()
-        val solutionListView = findViewById<View>(R.id.solutionListView) as ListView
+        val solutionListView = listView(R.id.solutionListView)
         val solutionListAdapter = object : ArrayAdapter<Solution>(
-            this, R.layout.solution_list_item, R.id.solution_list_text1, solutionList
+            this,
+            R.layout.solution_list_item,
+            R.id.solution_list_text1,
+            solutionList
         ) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
-                val text1 = view.findViewById<View>(R.id.solution_list_text1) as TextView
-                val text2 = view.findViewById<View>(R.id.solution_list_text2) as TextView
                 val solution = solutionList[position]
-                text1.text = solution.name
-                text2.text = String.format(
-                    getString(R.string.solutionListPrepFormat),
-                    volFormat.format(solution.volume),
-                    solution.components.size
-                )
+                view.textView(R.id.solution_list_text1)?.text = solution.name
+                view.textView(R.id.solution_list_text2)?.text = solution.displayString()
                 return view
             }
         }
@@ -64,53 +65,15 @@ class StartupActivity : Activity() {
         }
     }
 
-    private inner class OnNewSolutionButtonClickListener : View.OnClickListener {
-
-        override fun onClick(v: View) {
-            val solutionNamePicker = EditText(this@StartupActivity)
-            val appState = applicationContext as ApplicationContext
-
-            val alertDialogBuilder = AlertDialog.Builder(this@StartupActivity)
-            alertDialogBuilder.setView(solutionNamePicker)
-                .setMessage("Enter new solution name: ")
-                .setCancelable(false)
-                .setPositiveButton("OK") { _, _ ->
-                    if (!solutionNamePicker.text.isNotEmpty()) {
-                        return@setPositiveButton
-                    }
-                    val newName = solutionNamePicker.text.toString()
-                    if (appState.solutionGateway.load(newName) != null) {
-                        return@setPositiveButton
-                    }
-                    val solution = Solution(newName)
-                    appState.solutionGateway.save(solution)
-                    refreshSolutionList()
-                    enterSolution(appState.solutionGateway.load(newName))
-                }
-                .setNegativeButton("Cancel", null)
-            val alertDialog = alertDialogBuilder.create()
-
-            solutionNamePicker.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    alertDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-                }
-            }
-            alertDialog.show()
-        }
-    }
-
-    private fun enterSolution(solution: Solution?) {
-        solution?.let {
-            val intent = Intent(this@StartupActivity, EditActivity::class.java)
-            intent.putExtra(it)
-            intent.putExtra("CARE_TAKER", SolutionCareTaker())
-            startActivity(intent)
-        }
+    private fun enterSolution(solution: Solution) {
+        val intent = Intent(this@StartupActivity, EditActivity::class.java)
+        intent.putExtraAnItem(solution)
+        intent.putExtra("CARE_TAKER", SolutionCareTaker())
+        startActivity(intent)
     }
 
     private fun deleteSolution(solution: Solution) {
-        (applicationContext as ApplicationContext).solutionGateway.remove(solution)
-        refreshSolutionList()
+        appModel.deleteSolution(solution)
     }
 
     companion object {

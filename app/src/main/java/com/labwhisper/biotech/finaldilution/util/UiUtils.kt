@@ -2,10 +2,18 @@ package com.labwhisper.biotech.finaldilution.util
 
 import android.app.Activity
 import android.support.v4.app.Fragment
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.view.View
+import android.widget.*
+
+fun View.textView(textViewId: Int): TextView? {
+    val findViewById = findViewById<TextView>(textViewId)
+    return findViewById
+}
+
+fun Activity.textView(textViewId: Int): TextView? {
+    val findViewById = findViewById<TextView>(textViewId)
+    return findViewById
+}
 
 fun Activity.editText(editTextId: Int): EditText {
     return findViewById(editTextId)
@@ -16,6 +24,10 @@ fun Activity.button(id: Int): Button {
 }
 
 fun Activity.imageButton(id: Int): ImageButton {
+    return findViewById(id)
+}
+
+fun Activity.listView(id: Int): ListView {
     return findViewById(id)
 }
 

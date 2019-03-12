@@ -20,7 +20,7 @@ import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.view.EditComponentActivity
 import com.labwhisper.biotech.finaldilution.compound.Compound
-import com.labwhisper.biotech.finaldilution.genericitem.putExtra
+import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 
@@ -147,8 +147,8 @@ class CompoundsPanel(private val activity: EditActivity) {
 
     private fun startComponentEdition(compound: Compound) {
         val intent = Intent(activity, EditComponentActivity::class.java)
-        intent.putExtra(compound)
-        intent.putExtra(activity.solution)
+        intent.putExtraAnItem(compound)
+        intent.putExtraAnItem(activity.solution)
         intent.putExtra("CARE_TAKER", activity.solutionCareTaker)
         activity.startActivity(intent)
     }

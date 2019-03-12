@@ -4,6 +4,7 @@ import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.NoMolarMassException
 import com.labwhisper.biotech.finaldilution.genericitem.Item
+import java.text.DecimalFormat
 import java.util.*
 
 data class Solution(
@@ -50,6 +51,16 @@ data class Solution(
         return niceOutput.toString()
     }
 
+
+    fun displayString(): String {
+        val volFormat = DecimalFormat("0.##")
+        val format = String.format(
+            "%s ml  %d components",
+            volFormat.format(volume),
+            components.size
+        )
+        return format
+    }
 
     fun removeComponent(component: Component) {
         components.remove(component)

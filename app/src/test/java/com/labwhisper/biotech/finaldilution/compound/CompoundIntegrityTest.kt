@@ -34,7 +34,7 @@ class CompoundIntegrityTest {
     fun `Molar mass is displayed for not null solid`() {
         val compound = Compound(iupacName1, false, 30.0, "", chemFormula1)
         val displayedMass = compound.displayMass
-        assertEquals("[30.0]", displayedMass)
+        assertEquals("[30]", displayedMass)
     }
 
     @Test

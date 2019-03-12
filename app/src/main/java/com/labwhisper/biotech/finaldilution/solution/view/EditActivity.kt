@@ -16,7 +16,7 @@ import com.labwhisper.biotech.finaldilution.component.view.ComponentsPanel
 import com.labwhisper.biotech.finaldilution.component.view.EditComponentActivity
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
-import com.labwhisper.biotech.finaldilution.genericitem.putExtra
+import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.gestures.EditGestureListener
 import com.labwhisper.biotech.finaldilution.solution.RedoOnLastChangeException
 import com.labwhisper.biotech.finaldilution.solution.Solution
@@ -167,8 +167,8 @@ class EditActivity : AppCompatActivity() {
 
     fun startComponentEdition(compound: Compound) {
         val intent = Intent(this, EditComponentActivity::class.java)
-        intent.putExtra(compound)
-        intent.putExtra(solution)
+        intent.putExtraAnItem(compound)
+        intent.putExtraAnItem(solution)
         intent.putExtra("CARE_TAKER", solutionCareTaker)
         startActivity(intent)
     }

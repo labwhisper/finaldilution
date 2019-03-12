@@ -18,7 +18,7 @@ import com.labwhisper.biotech.finaldilution.component.concentration.Concentratio
 import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.NoMolarMassException
-import com.labwhisper.biotech.finaldilution.genericitem.putExtra
+import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
@@ -164,7 +164,7 @@ class EditComponentActivity : Activity() {
 
     private fun onCancelComponent() {
         val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
-        intent.putExtra(solution)
+        intent.putExtraAnItem(solution)
         intent.putExtra("CARE_TAKER", solutionCareTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
@@ -216,7 +216,7 @@ class EditComponentActivity : Activity() {
         }
 
         val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
-        intent.putExtra(solution)
+        intent.putExtraAnItem(solution)
         intent.putExtra("CARE_TAKER", solutionCareTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
@@ -232,7 +232,7 @@ class EditComponentActivity : Activity() {
         } else {
             solution.removeComponent(component)
             val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
-            intent.putExtra(solution)
+            intent.putExtraAnItem(solution)
             intent.putExtra("CARE_TAKER", solutionCareTaker)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
