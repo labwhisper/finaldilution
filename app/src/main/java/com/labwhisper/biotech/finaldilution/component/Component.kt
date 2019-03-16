@@ -9,9 +9,7 @@ import java.text.DecimalFormat
 class Component(var compound: Compound, desired: Concentration, stock: Concentration? = null) :
     Serializable {
 
-    var fromStock
-        get() = availableConcentration != null
-        private set(value) {}
+    val fromStock get() = availableConcentration != null
 
     var desiredConcentration: Concentration = desired
     var availableConcentration: Concentration? = stock

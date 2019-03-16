@@ -56,113 +56,95 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transparent_window">
 
-        <TextView
-            android:id="@+id/textViewTrivialName"
-            style="@style/FinalDilutionCompound"
+        <RadioGroup
+            android:id="@+id/radio_group_state_of_matter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/grid_margin_side"
-            android:layout_marginEnd="8dp"
-            android:text="@string/trivial_name"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextTrivialName"
-            app:layout_constraintEnd_toStartOf="@+id/editTextTrivialName"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editTextTrivialName" />
-
-        <TextView
-            android:id="@+id/textViewMolarMass"
-            style="@style/FinalDilutionCompound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/grid_margin_side"
-            android:layout_marginEnd="8dp"
-            android:text="@string/molar_mass"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextMolarMass"
-            app:layout_constraintEnd_toStartOf="@+id/editTextMolarMass"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editTextMolarMass" />
-
-        <TextView
-            android:id="@+id/textViewIupac"
-            style="@style/FinalDilutionCompound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/grid_margin_side"
-            android:layout_marginEnd="8dp"
-            android:maxLines="2"
-            android:text="@string/iupac_name"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextIupac"
-            app:layout_constraintEnd_toStartOf="@+id/editTextIupac"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editTextIupac" />
-
-        <TextView
-            android:id="@+id/textViewFormula"
-            style="@style/FinalDilutionCompound"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/grid_margin_side"
-            android:layout_marginEnd="8dp"
-            android:text="@string/chemical_formula"
-            app:layout_constraintBottom_toBottomOf="@+id/editTextFormula"
-            app:layout_constraintEnd_toStartOf="@+id/editTextFormula"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editTextFormula" />
-
-        <EditText
-            android:id="@+id/editTextTrivialName"
-            style="@style/FinalDilutionCompound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/grid_margin_side"
-            android:ems="8"
-            android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/editTextFormula"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/editTextMolarMass"
-            style="@style/FinalDilutionCompound"
-            android:layout_width="wrap_content"
+            <RadioButton
+                android:id="@+id/radioButtonSolid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/state_of_matter_solid" />
+
+            <RadioButton
+                android:id="@+id/radioButtonLiquid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/state_of_matter_liquid" />
+
+        </RadioGroup>
+
+        <include
+            android:id="@+id/form_name"
+            layout="@layout/form_input_field"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/grid_margin_side"
             android:layout_marginEnd="@dimen/grid_margin_side"
-            android:ems="8"
-            android:inputType="numberDecimal"
-            android:digits="0123456789."
+            app:layout_constraintBottom_toTopOf="@+id/form_molar_mass"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextIupac" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radio_group_state_of_matter" />
 
-        <EditText
-            android:id="@+id/editTextIupac"
-            style="@style/FinalDilutionCompound"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/form_molar_mass"
+            layout="@layout/form_input_field"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/grid_margin_side"
             android:layout_marginEnd="@dimen/grid_margin_side"
-            android:ems="8"
-            android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/editTextMolarMass"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/form_expand_advanced"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/form_name" />
 
-        <EditText
-            android:id="@+id/editTextFormula"
-            style="@style/FinalDilutionCompound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/form_expand_advanced"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
             android:layout_marginEnd="@dimen/grid_margin_side"
-            android:layout_marginBottom="32dp"
-            android:ems="8"
-            android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/button_new_compound_done"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:adjustViewBounds="true"
+            android:background="@color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_expand_more_black_24dp"
+            android:tint="@color/cyan"
+            app:layout_constraintBottom_toTopOf="@+id/form_trivial_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/form_molar_mass" />
+
+        <include
+            android:id="@+id/form_trivial_name"
+            layout="@layout/form_input_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/grid_margin_side"
+            android:layout_marginEnd="@dimen/grid_margin_side"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/form_formula"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/form_expand_advanced" />
+
+        <include
+            android:id="@+id/form_formula"
+            layout="@layout/form_input_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/grid_margin_side"
+            android:layout_marginEnd="@dimen/grid_margin_side"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/button_new_compound_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/form_trivial_name" />
 
         <ImageButton
             android:id="@+id/button_new_compound_done"
