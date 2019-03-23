@@ -20,7 +20,6 @@
         app:layout_constraintStart_toStartOf="@+id/editText"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <EditText
         android:id="@+id/editText"
         style="@style/FinalDilutionFormEntry"

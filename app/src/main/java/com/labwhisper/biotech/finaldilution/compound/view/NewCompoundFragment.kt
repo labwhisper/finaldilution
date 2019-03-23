@@ -20,14 +20,14 @@ import com.labwhisper.biotech.finaldilution.util.*
 
 class NewCompoundFragment : Fragment() {
 
-    var initialCompound: Compound? = null
+    val appModel = NewCompoundAppModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        arguments?.getSerializable("COMPOUND").let { initialCompound = it as Compound? }
+        arguments?.getSerializable("COMPOUND").let { appModel.initialCompound = it as Compound? }
         return inflater.inflate(R.layout.compound_new, container, false)
     }
 
@@ -39,7 +39,7 @@ class NewCompoundFragment : Fragment() {
         editText(R.id.form_molar_mass, R.id.editText).keyListener =
             DigitsKeyListener.getInstance("0123456789.")
         textView(R.id.form_formula, R.id.textView).text = getString(R.string.chemical_formula)
-        initialCompound?.let {
+        appModel.initialCompound?.let {
             textView(R.id.new_compound_title).text = "Edit ${it.iupacName}"
             populateCompoundIntoFields(it)
         }
@@ -73,26 +73,31 @@ class NewCompoundFragment : Fragment() {
     }
 
     private fun initAdvancedButton() {
-        val button = imageButton(R.id.form_expand_advanced)
-        button.setOnClickListener {
-            val toBeCollapsed = constraintLayout(R.id.form_trivial_name).visibility == View.VISIBLE
-            constraintLayout(R.id.form_trivial_name).visibility =
-                if (toBeCollapsed) View.INVISIBLE else View.VISIBLE
-            constraintLayout(R.id.form_formula).visibility =
-                if (toBeCollapsed) View.INVISIBLE else View.VISIBLE
-            button.setImageDrawable(
-                if (toBeCollapsed)
-                    ContextCompat.getDrawable(
-                        requireActivity(),
-                        R.drawable.ic_expand_more_black_24dp
-                    )
-                else
-                    ContextCompat.getDrawable(
-                        requireActivity(),
-                        R.drawable.ic_expand_less_black_24dp
-                    )
-            )
+        loadFromAppModel()
+        imageButton(R.id.form_expand_advanced).setOnClickListener {
+            appModel.advancedOptions = !appModel.advancedOptions
+            loadFromAppModel()
         }
+    }
+
+    fun loadFromAppModel() {
+        constraintLayout(R.id.form_trivial_name).visibility =
+            if (appModel.advancedOptions) View.VISIBLE else View.INVISIBLE
+        constraintLayout(R.id.form_formula).visibility =
+            if (appModel.advancedOptions) View.VISIBLE else View.INVISIBLE
+        imageButton(R.id.form_expand_advanced).setImageDrawable(
+            if (appModel.advancedOptions)
+                ContextCompat.getDrawable(
+                    requireActivity(),
+                    R.drawable.ic_expand_less_black_24dp
+                )
+            else
+                ContextCompat.getDrawable(
+                    requireActivity(),
+                    R.drawable.ic_expand_more_black_24dp
+                )
+        )
+
     }
 
     private fun initCancelButton() {
@@ -137,7 +142,7 @@ class NewCompoundFragment : Fragment() {
             requireActivity().applicationContext as ApplicationContext
         //TODO update should ask for update / save new
         //TODO safeSave -> on error the question replace should be asked
-        initialCompound?.let { appState.updateCompound(compound) }
+        appModel.initialCompound?.let { appState.updateCompound(compound) }
             ?: appState.safeSaveCompound(compound)
         fragmentManager?.popBackStack()
     }

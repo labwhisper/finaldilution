@@ -2,6 +2,7 @@ package com.labwhisper.biotech.finaldilution
 
 import android.app.Application
 import android.content.Context
+import android.support.multidex.MultiDex
 import android.util.Log
 import com.google.gson.reflect.TypeToken
 import com.labwhisper.biotech.finaldilution.compound.Compound
@@ -11,6 +12,11 @@ import com.labwhisper.biotech.finaldilution.peripherals.datastores.SharedPrefere
 import com.labwhisper.biotech.finaldilution.solution.Solution
 
 class ApplicationContext : Application() {
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
     val solutionGateway: DataGatewayOperations<Solution> by lazy {
         SharedPreferencesStore(
@@ -42,9 +48,6 @@ class ApplicationContext : Application() {
 
     fun loadAllCompoundsSorted(): List<Compound> {
         return compoundGateway.loadAll().sortedBy { it.displayName.toLowerCase() }
-//            .sortedWith(
-//            kotlin.Comparator { a, b -> a.n }
-//        )
     }
 
     fun safeSaveCompound(compound: Compound) {

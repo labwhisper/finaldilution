@@ -53,8 +53,8 @@ class StartupActivity : AppCompatActivity() {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val solution = solutionList[position]
-                view.textView(R.id.solution_list_text1)?.text = solution.name
-                view.textView(R.id.solution_list_text2)?.text = solution.displayString()
+                view.textView(R.id.solution_list_text1).text = solution.name
+                view.textView(R.id.solution_list_text2).text = solution.displayString()
                 return view
             }
         }

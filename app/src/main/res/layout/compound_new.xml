@@ -61,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/grid_margin_side"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/grid_margin_side"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +70,7 @@
 
             <RadioButton
                 android:id="@+id/radioButtonSolid"
+                style="@style/FinalDilutionRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
@@ -76,6 +78,7 @@
 
             <RadioButton
                 android:id="@+id/radioButtonLiquid"
+                style="@style/FinalDilutionRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/state_of_matter_liquid" />
@@ -89,6 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/grid_margin_side"
             android:layout_marginEnd="@dimen/grid_margin_side"
+            android:layout_marginBottom="@dimen/small_vertical_margin"
             app:layout_constraintBottom_toTopOf="@+id/form_molar_mass"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -116,7 +120,6 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_expand_more_black_24dp"
             android:tint="@color/cyan"
-            app:layout_constraintBottom_toTopOf="@+id/form_trivial_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/form_molar_mass" />
 
@@ -127,11 +130,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/grid_margin_side"
             android:layout_marginEnd="@dimen/grid_margin_side"
-            android:visibility="invisible"
+            android:layout_marginBottom="@dimen/small_vertical_margin"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/form_formula"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/form_expand_advanced" />
+            app:layout_constraintTop_toBottomOf="@+id/form_molar_mass"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <include
             android:id="@+id/form_formula"
@@ -140,7 +146,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/grid_margin_side"
             android:layout_marginEnd="@dimen/grid_margin_side"
-            android:visibility="invisible"
+            android:layout_marginBottom="@dimen/medium_vertical_margin"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/button_new_compound_cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,23 +157,24 @@
             android:id="@+id/button_new_compound_done"
             style="@style/FinalDilutionButton"
             android:layout_marginEnd="@dimen/grid_margin_side"
-            android:layout_marginBottom="24dp"
             android:contentDescription="@string/new_compound_proceed"
             android:src="@drawable/ic_check_black_24dp"
             android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/button_new_compound_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_new_compound_cancel" />
 
         <ImageButton
             android:id="@+id/button_new_compound_cancel"
             style="@style/FinalDilutionButton"
             android:layout_marginStart="@dimen/grid_margin_side"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
             android:contentDescription="@string/new_compound_back"
             android:src="@drawable/ic_arrow_back_black_24dp"
             android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/button_new_compound_done"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/button_new_compound_done" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
