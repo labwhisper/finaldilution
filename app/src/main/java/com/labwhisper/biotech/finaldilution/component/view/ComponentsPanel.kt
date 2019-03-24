@@ -2,7 +2,9 @@ package com.labwhisper.biotech.finaldilution.component.view
 
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.widget.TextViewCompat
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,13 +93,11 @@ class ComponentsPanel(private val activity: EditActivity) {
 
                 val vh = ViewHolder()
                 vh.compoundTextView =
-                        convertedView.findViewById<View>(R.id.checklist_mainTextView) as TextView
-                vh.percentageTextView =
-                        convertedView.findViewById<View>(R.id.checklist_percentageTextView) as TextView
+                    convertedView.findViewById<View>(R.id.checklist_component) as TextView
                 vh.unitTextView =
-                        convertedView.findViewById<View>(R.id.checklist_unitextView) as TextView
+                    convertedView.findViewById<View>(R.id.checklist_amount) as TextView
                 vh.extraTextView =
-                        convertedView.findViewById<View>(R.id.checklist_extraTextView) as TextView
+                    convertedView.findViewById<View>(R.id.checklist_extraTextView) as TextView
                 vh.checkBox = convertedView.findViewById<View>(R.id.checklist_checkBox1) as CheckBox
                 convertedView.tag = vh
                 vh
@@ -119,10 +119,16 @@ class ComponentsPanel(private val activity: EditActivity) {
             Log.d(TAG, "Component stock: " + component.availableConcentration)
             Log.d(TAG, "Compound: " + compound)
             holder.compoundTextView.text = component.compound.displayName
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+                holder.compoundTextView, 1, 20, 1, TypedValue.COMPLEX_UNIT_DIP
+            )
             holder.unitTextView.text =
                 component.getAmountStringForVolume(activity.solution.volume)
             if (component.fromStock) {
+                holder.extraTextView.visibility = View.VISIBLE
                 holder.extraTextView.text = component.availableConcentration?.toString() ?: ""
+            } else {
+                holder.extraTextView.visibility = View.GONE
             }
             holder.checkBox.isChecked = false
             holder.checkBox.tag = compound
@@ -133,7 +139,6 @@ class ComponentsPanel(private val activity: EditActivity) {
 
         private inner class ViewHolder {
             internal lateinit var compoundTextView: TextView
-            internal lateinit var percentageTextView: TextView
             internal lateinit var unitTextView: TextView
             internal lateinit var extraTextView: TextView
             internal lateinit var checkBox: CheckBox
