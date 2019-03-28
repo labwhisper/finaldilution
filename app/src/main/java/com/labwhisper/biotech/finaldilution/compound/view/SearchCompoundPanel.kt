@@ -48,7 +48,9 @@ class SearchCompoundPanel(private val activity: Activity) {
         searchEditText.layoutParams.width =
             (screenSize.x - 2 * activity.resources.getDimension(R.dimen.grid_margin_side)).toInt()
         exitSearchButton.visibility = View.VISIBLE
-        searchEditText.setPadding(120, 0, 50, 0)
+        searchEditText.setPadding(
+            activity.resources.getDimensionPixelSize(R.dimen.search_button_offset_open), 0, 0, 0
+        )
         val imm =
             activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(searchEditText, 0)
@@ -59,7 +61,9 @@ class SearchCompoundPanel(private val activity: Activity) {
         val searchEditText = activity.editText(R.id.search_compound_button)
         val exitSearchButton = activity.imageButton(R.id.exit_search_button)
         searchEditText.setText("")
-        searchEditText.setPadding(50, 0, 50, 0)
+        searchEditText.setPadding(
+            activity.resources.getDimensionPixelSize(R.dimen.search_button_offset_closed), 0, 0, 0
+        )
         searchEditText.layoutParams.width =
             activity.resources.getDimension(R.dimen.button_size).toInt()
         searchEditText.clearFocus()
