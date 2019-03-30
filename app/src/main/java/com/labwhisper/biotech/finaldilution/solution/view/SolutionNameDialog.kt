@@ -16,9 +16,16 @@ class SolutionNameDialog(val context: Context, val appModel: StartupAppModel) {
         return create("Enter new solution name: ", onAccept = ::onAcceptNew)
     }
 
+    fun forClone(solution: Solution): AlertDialog {
+        val oldName = solution.name
+        return create("Clone $oldName:", oldName) { newName ->
+            onAcceptClone(solution, newName)
+        }
+    }
+
     fun forRename(solution: Solution): AlertDialog {
         val oldName = solution.name
-        return create("Rename $oldName solution:", oldName) { newName ->
+        return create("Rename $oldName:", oldName) { newName ->
             onAcceptRename(solution.apply { name = newName }, oldName)
         }
     }
@@ -51,6 +58,11 @@ class SolutionNameDialog(val context: Context, val appModel: StartupAppModel) {
     private fun onAcceptNew(newName: String) {
         appModel.addNewSolution(newName)
         appModel.loadSolution(newName)?.let { enterSolution(it) }
+    }
+
+    private fun onAcceptClone(oldSolution: Solution, newName: String) {
+        val newSolution = oldSolution.deepCopy().apply { name = newName }
+        appModel.addNewSolutionFilled(newSolution)
     }
 
     private fun onAcceptRename(solution: Solution, oldName: String) {

@@ -5,9 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.ContextMenu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
@@ -62,9 +66,37 @@ class StartupActivity : AppCompatActivity() {
         solutionListView.setOnItemClickListener { parent, _, position, _ ->
             enterSolution(parent.adapter.getItem(position) as Solution)
         }
-        solutionListView.setOnItemLongClickListener { parent, _, position, _ ->
-            val solution = parent.adapter.getItem(position) as Solution
-            SolutionNameDialog(this, appModel).forRename(solution).show(); true
+        registerForContextMenu(solutionListView)
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?
+    ) = menuInflater.inflate(R.menu.menu_solution, menu)
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        if (item == null) {
+            return super.onContextItemSelected(null)
+        }
+        return when (item.itemId) {
+            R.id.action_rename -> {
+                val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+                val listView = info.targetView.parent as ListView
+                val solution = listView.adapter.getItem(info.position) as Solution
+                SolutionNameDialog(this, appModel).forRename(solution).show(); true
+            }
+            R.id.action_clone -> {
+                val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+                val listView = info.targetView.parent as ListView
+                val solution = listView.adapter.getItem(info.position) as Solution
+                SolutionNameDialog(this, appModel).forClone(solution).show(); true
+            }
+            R.id.action_delete -> {
+                val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+                val listView = info.targetView.parent as ListView
+                val solution = listView.adapter.getItem(info.position) as Solution
+                DeleteConfirmDialog(this, appModel).create(solution).show(); true
+            }
+            else -> false
         }
     }
 

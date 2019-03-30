@@ -30,6 +30,14 @@ class StartupAppModel(val solutionGateway: DataGatewayOperations<Solution>) {
         refresh()
     }
 
+    fun addNewSolutionFilled(newSolution: Solution) {
+        if (solutionGateway.load(newSolution.name) != null) {
+            return
+        }
+        solutionGateway.save(newSolution)
+        refresh()
+    }
+
     fun deleteSolution(solution: Solution) {
         solutionGateway.remove(solution)
         refresh()
