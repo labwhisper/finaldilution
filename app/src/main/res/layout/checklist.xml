@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
+    android:minHeight="48dp"
     android:layout_height="48dp">
 
     <TextView
@@ -12,6 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@+id/checklist_extraTextView"
         app:layout_constraintEnd_toStartOf="@+id/checklist_amount"
@@ -19,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Aror" />
+        tools:text="17,21-dihydroxypregna-1,4-diene-3,11,20-trione whatsoever whatsoever" />
 
     <TextView
         android:id="@+id/checklist_amount"

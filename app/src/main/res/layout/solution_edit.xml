@@ -49,6 +49,8 @@
             android:layout_marginEnd="@dimen/grid_margin_side"
             android:ems="10"
             android:text=""
+            android:divider="@color/bluish_gray"
+            android:dividerHeight="0.5dp"
             app:layout_constraintBottom_toTopOf="@+id/beaker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

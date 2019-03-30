@@ -16,13 +16,13 @@
 
     <style name="FinalDilutionListTextPrimary">
         <item name="android:textColor">@color/text_default</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:typeface">sans</item>
     </style>
 
     <style name="FinalDilutionListTextSecondary">
         <item name="android:textColor">@color/text_secondary</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:typeface">sans</item>
     </style>
 

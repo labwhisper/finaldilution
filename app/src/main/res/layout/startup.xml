@@ -28,6 +28,8 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="650"
+        android:divider="@color/bluish_gray"
+        android:dividerHeight="0.5dp"
         android:paddingLeft="50dp"
         android:paddingRight="50dp" />
 

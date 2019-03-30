@@ -5,6 +5,7 @@
     <color name="grey2">#F2F2F2</color>
     <color name="background_color">@color/white</color>
     <color name="cyan">#66E2FF</color>
+    <color name="bluish_gray">#80d6d0</color>
     <color name="background_accent">#D2EEFA</color>
     <color name="background_accent_saturated">#f8f9fa</color>
     <color name="blue">#86D7F5</color>
