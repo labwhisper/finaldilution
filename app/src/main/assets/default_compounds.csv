@@ -1,10 +1,14 @@
+Acetic acid,,liquid,CH3CO2H,60.052
+Acetone,,liquid,CH3COCH3,58.0791
 Agarose,,solid,variable,
 Ammonium acetate,,solid,CH3CO2NH4,77.0825
 Ammonium Chloride,,solid,NH4Cl,53.4915
 Ammonium sulfate,,solid,(NH4)2SO4,132.1395
 Biotin,,solid,C10H16N2O3S,244.3106
 Naphthol Blue Black,Amino Black,solid,C22H14N6Na2O9S2,616.4909
+β-Mercaptoethanol,BME,liquid,C2H6OS,78.1334
 Boric acid,,solid,H3BO3,61.833
+Brilliant Blue G,,solid,C47H48N3NaO7S2,854.0197
 Brilliant Blue R,,solid,C45H44N3NaO7S2,825.9665
 bromophenol blue,,solid,C19H10Br4O5S,669.9607
 Calcium carbonate precipitated,,solid,CcaO3,100.0869
@@ -12,21 +16,26 @@ Calcium Chloride (anhydrous),,solid,CaCl2,110.984
 Calcium Chloride (dihydrate),,solid,CaCl2 · 2H2O,147.0146
 Calcium sulphate (dihydrate),,solid,CaSO4 · 2H2O,172.1712
 Cesium Chloride,,solid,CsCl,168.3585
-Brilliant Blue G,,solid,C47H48N3NaO7S2,854.0197
+Chloroform,,liquid,CHCl3,119.3776
 Copper (II) sulphate (anhydrous),,solid,CuSO4,159.6086
 Copper (II) sulphate (pentahydrate),,solid,CuSO4 · 5H2O,249.685
 Crystal violet,,solid,C25H30N3Cl,407.9788
 Sodium deoxycholate,,solid,C24H39NaO4,414.5538
 Dimethyl sulfoxide,DMSO,liquid,(CH3)2SO,78.1334
 Ethylenediaminetetraacetic acid,EDTA,solid,(HO2CCH2)2NCH2CH2N(CH2CO2H)2,292.2426
+Ethyl alcohol (pure),Ethanol,liquid,CH3CH2OH,46.0684
 Ferrous Chloride (anhydrous),,solid,FeCl2,126.751
 Ferrous Chloride (tetrahydrate),,solid,FeCl2 · 4H2O,198.8121
+Formaldehyde,Formalin,liquid,HCHO,30.0260
 Glucose,,solid,C6H12O6,180.1559
 Glutamic acid,,solid,HO2CCH2CH2CH(NH2)CO2H,147.1293
+Glycerin,,liquid,HOCH2CH(OH)CH2OH,92.0938
 Glycine,,solid,NH2CH2COOH,75.0666
 Guanidine,,solid,C1H5N3,59.0705
 "4-(2-Hydroxyethyl)piperazine-1-ethanesulfonic acid, N-(2-Hydroxyethyl)piperazine-N′-(2-ethanesulfonic acid)",HEPES,solid,C8H18N2O4S,238.3045
+Hydrogen chloride,,solid,HCl,36.4609
 "1,3-Diaza-2,4-cyclopentadiene",Imidazole,solid,C3H4N2,68.0773
+Isopropyl alcohol,2-Propanol,solid,(CH3)2CHOH,60.095
 (S)-2-Amino-3-(4-imidazolyl)propionic acid,L-histidine,solid,C6H9N3O2,155.1546
 Lithium Chloride (anhydrous),,solid,LiCl,42.394
 Magnesium acetate (tetrahydrate),,solid,(CH3COO)2Mg · 4H2O,214.4542
@@ -37,6 +46,7 @@ Magnesium Sulfate (heptahydrate),,solid,MgSO4 · 7H2O,246.4746
 Manganese (II) Chloride (anhydrous),,solid,MnCl2,125.844
 Manganese (II) Chloride (tetrahydrate),,solid,MnCl2 · 4H2O,197.9052
 "2-(N-Morpholino)ethanesulfonic acid, 4-Morpholineethanesulfonic acid (anhydrous)",MES,solid,C6H13NO4S,195.2367
+Methyl alcohol,Methanol,liquid,CH4O,32.0419
 Methyl cellulose,,solid,variable,
 "3-(N-Morpholino)propanesulfonic acid, 4-Morpholinepropanesulfonic acid",MOPS,solid,C7H15NO4S,209.2633
 "N,N-Dimethylacetamide",,liquid,CH3CON(CH3)2,87.1204
@@ -45,6 +55,7 @@ Sodium thiosulfate (pentahydrate),,solid,Na2S2O3·5H2O,248.1841
 "3-Amino-7-dimethylamino-2-methylphenazine hydrochloride, Basic Red 5, Toluylene red",Neutral Red,solid,C15H17ClN4,288.7753
 Nickel(II) chloride,,solid,NiCl2,129.5994
 Nickel(II) chloride (hexahydrate),,solid,NiCl2 · 6H2O,237.6911
+Nitric acid,,solid,HNO3,63.0128
 "3-Hydroxy-4-(2-sulfo-4-[4-sulfophenylazo]phenylazo)-2,7-naphthalenedisulfonic acid sodium salt",Ponceau S,solid,C22H12N4Na4O13S4,760.5688
 Potassium acetate,,solid,CH3COOK,98.1423
 Potassium chloride,,solid,KCl,74.5513
@@ -64,9 +75,11 @@ Sodium dodecyl sulfate,SDS,solid,CH3(CH2)11OSO3Na,288.3793
 Sodium hydroxide,,solid,NaOH,39.9971
 Sodium iodate,,solid,NaIO3,197.8924
 Sodium sulfite (anhydrous),,solid,Na2SO3,126.0427
-sodium tetraborate (anhydrous),,solid,Na2B4O7,201.2193
-sodium tetraborate (decahydrate),,solid,Na2B4O7 · 10H2O,381.3721
+Sodium tetraborate (anhydrous),,solid,Na2B4O7,201.2193
+Sodium tetraborate (decahydrate),,solid,Na2B4O7 · 10H2O,381.3721
 Succrose,,solid,C12H22O11,342.2965
+Sulfuric acid,,liquid,H2SO4,98.0785
+Toluene,,liquid,C7H8,92.1384
 Trichloroacetic acid,,solid,Cl3CCOOH,163.3871
 "4-(1,1,3,3-Tetramethylbutyl)phenyl-polyethylene glycol, t-Octylphenoxypolyethoxyethanol, Polyethylene glycol tert-octylphenyl ether",TRITON X-100,liquid,variable,
 Trypan Blue,,solid,C34H24N6O14S4Na4,960.8052
