@@ -111,11 +111,20 @@ class CompoundsPanel(private val activity: EditActivity) {
             bundle.putSerializable("COMPOUND", compound)
             newCompoundFragment.arguments = bundle
         }
-        newCompoundFragment.setOnFragmentCloseListener {
+        newCompoundFragment.setOnFragmentCloseListener { newCompound ->
             activity.findViewById<ImageButton>(R.id.new_compound_button).visibility = View.VISIBLE
             val appState: ApplicationContext = activity.applicationContext as ApplicationContext
             compoundListAdapter.compoundList = appState.loadAllCompoundsSorted().toMutableList()
             compoundListAdapter.notifyDataSetChanged()
+            val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
+            val newCompoundPosition = compoundListAdapter.compoundList.indexOf(newCompound)
+            val offset =
+                2 * activity.resources.getDimension(R.dimen.compound_list_item_height).toInt()
+            (compoundsListView.layoutManager as LinearLayoutManager?)?.scrollToPositionWithOffset(
+                newCompoundPosition,
+                offset
+            )
+
         }
         fragmentTransaction.replace(R.id.compoundsList, newCompoundFragment)
         fragmentTransaction.addToBackStack(null)

@@ -161,11 +161,7 @@ class EditComponentActivity : Activity() {
     }
 
     private fun onCancelComponent() {
-        val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
-        intent.putExtraAnItem(solution)
-        intent.putExtra("CARE_TAKER", solutionCareTaker)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
+        onBackPressed()
     }
 
     //TODO run this listener also on back and generally close?

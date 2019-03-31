@@ -21,6 +21,7 @@ import com.labwhisper.biotech.finaldilution.util.*
 class NewCompoundFragment : Fragment() {
 
     val appModel = NewCompoundAppModel()
+    var newCompound: Compound? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -144,6 +145,7 @@ class NewCompoundFragment : Fragment() {
         //TODO safeSave -> on error the question replace should be asked
         appModel.initialCompound?.let { appState.updateCompound(compound) }
             ?: appState.safeSaveCompound(compound)
+        newCompound = compound
         fragmentManager?.popBackStack()
     }
 
@@ -160,14 +162,15 @@ class NewCompoundFragment : Fragment() {
         return Compound(iupacName, false, molarMass, trivialName, formula)
     }
 
-    private var onFragmentCloseListener: (() -> Unit)? = null
+    private var onFragmentCloseListener: ((compound: Compound?) -> Unit)? = null
 
-    fun setOnFragmentCloseListener(function: () -> Unit) {
+    fun setOnFragmentCloseListener(function: (compound: Compound?) -> Unit) {
         onFragmentCloseListener = function
     }
 
     override fun onStop() {
-        onFragmentCloseListener?.invoke()
+        onFragmentCloseListener?.invoke(newCompound)
+        newCompound = null
         super.onStop()
     }
 }
