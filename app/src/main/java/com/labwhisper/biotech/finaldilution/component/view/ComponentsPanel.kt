@@ -2,9 +2,7 @@ package com.labwhisper.biotech.finaldilution.component.view
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v4.widget.TextViewCompat
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +33,9 @@ class ComponentsPanel(private val activity: EditActivity) {
 
     private val componentClick: (AdapterView<*>, View, Int, Long) -> Unit =
         onClick@{ parent, _, position, _ ->
-            val component = parent.adapter.getItem(position) as Component
+            val component = parent.adapter.getItem(position)
+            if (!(component is Component))
+                return@onClick
             component.compound.let { activity.startComponentEdition(it) }
         }
 
@@ -70,10 +70,13 @@ class ComponentsPanel(private val activity: EditActivity) {
         BaseAdapter() {
 
         override fun getCount(): Int {
-            return componentList.size
+            return componentList.size + 1
         }
 
         override fun getItem(position: Int): Any {
+            if (position >= componentList.size) {
+                return "Fill"
+            }
             return componentList[position]
         }
 
@@ -111,6 +114,13 @@ class ComponentsPanel(private val activity: EditActivity) {
                 //                });
             }
 
+            if (position >= componentList.size) {
+                holder.compoundTextView.text = "Fill up to ${activity.solution.displayVolume()}"
+                holder.extraTextView.visibility = View.GONE
+                holder.unitTextView.visibility = View.GONE
+                holder.checkBox.isChecked = false
+                return convertedView!!
+            }
 
             val component = getItem(position) as Component
             val compound = component.compound
@@ -119,9 +129,9 @@ class ComponentsPanel(private val activity: EditActivity) {
             Log.d(TAG, "Component stock: " + component.availableConcentration)
             Log.d(TAG, "Compound: " + compound)
             holder.compoundTextView.text = component.compound.displayName
-            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
-                holder.compoundTextView, 1, 20, 1, TypedValue.COMPLEX_UNIT_DIP
-            )
+//            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
+//                holder.compoundTextView, 12, 20, 1, TypedValue.COMPLEX_UNIT_SP
+//            )
             holder.unitTextView.text =
                 component.getAmountStringForVolume(activity.solution.volume)
             if (component.fromStock) {

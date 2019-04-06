@@ -20,28 +20,30 @@ import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.view.EditComponentActivity
 import com.labwhisper.biotech.finaldilution.compound.Compound
+import com.labwhisper.biotech.finaldilution.compound.appmodel.CompoundsPanelAppModel
 import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 
-/**
- * Project: FinalDilution
- * Created by dawid.chmielewski on 11/2/2017.
- */
 
 class CompoundsPanel(private val activity: EditActivity) {
 
-    private val compoundListAdapter = CompoundListAdapter()
+    private lateinit var appModel: CompoundsPanelAppModel
+
     private val searchCompoundPanel = SearchCompoundPanel(activity)
 
     fun displayCompoundList() {
-        val appState: ApplicationContext = activity.applicationContext as ApplicationContext
-        compoundListAdapter.compoundList = appState.loadAllCompoundsSorted().toMutableList()
+        appModel = CompoundsPanelAppModel(
+            activity.applicationContext as ApplicationContext,
+            CompoundListAdapter(),
+            activity.solution
+        )
+        appModel.compoundListAdapter.compoundList = appModel.compoundList
         val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
         val layoutManager = LinearLayoutManager(activity)
         compoundsListView.layoutManager = layoutManager
         compoundsListView.itemAnimator = DefaultItemAnimator()
-        compoundsListView.adapter = compoundListAdapter
+        compoundsListView.adapter = appModel.compoundListAdapter
         compoundsListView.addOnItemTouchListener(
             CompoundListTouchListener(
                 activity, compoundsListView, compoundTouchListener()
@@ -50,7 +52,7 @@ class CompoundsPanel(private val activity: EditActivity) {
         activity.findViewById<ImageButton>(R.id.new_compound_button).setOnClickListener {
             startCompoundEdition()
         }
-        searchCompoundPanel.initSearchFunctionality(compoundListAdapter)
+        searchCompoundPanel.initSearchFunctionality(appModel)
     }
 
     fun isExpanded(): Boolean {
@@ -84,10 +86,10 @@ class CompoundsPanel(private val activity: EditActivity) {
     private fun compoundTouchListener(): CompoundListTouchListener.TouchListener {
         return object : CompoundListTouchListener.TouchListener {
             override fun onTouch(view: View, position: Int) {
-                if (position > compoundListAdapter.compoundList.size - 1) {
+                if (position > appModel.compoundListAdapter.compoundList.size - 1) {
                     return
                 }
-                val compound = compoundListAdapter.compoundList[position]
+                val compound = appModel.compoundListAdapter.compoundList[position]
                 if (activity.solution.getComponentWithCompound(compound) != null) {
                     informAboutCompoundAlreadyAdded(view, compound)
                     return
@@ -96,7 +98,7 @@ class CompoundsPanel(private val activity: EditActivity) {
             }
 
             override fun onLongTouch(view: View, position: Int) {
-                val compound = compoundListAdapter.compoundList[position]
+                val compound = appModel.compoundListAdapter.compoundList[position]
                 startCompoundEdition(compound)
             }
 
@@ -114,10 +116,10 @@ class CompoundsPanel(private val activity: EditActivity) {
         newCompoundFragment.setOnFragmentCloseListener { newCompound ->
             activity.findViewById<ImageButton>(R.id.new_compound_button).visibility = View.VISIBLE
             val appState: ApplicationContext = activity.applicationContext as ApplicationContext
-            compoundListAdapter.compoundList = appState.loadAllCompoundsSorted().toMutableList()
-            compoundListAdapter.notifyDataSetChanged()
+            appModel.compoundListAdapter.compoundList = appModel.compoundList
+            appModel.compoundListAdapter.notifyDataSetChanged()
             val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
-            val newCompoundPosition = compoundListAdapter.compoundList.indexOf(newCompound)
+            val newCompoundPosition = appModel.compoundListAdapter.compoundList.indexOf(newCompound)
             val offset =
                 2 * activity.resources.getDimension(R.dimen.compound_list_item_height).toInt()
             (compoundsListView.layoutManager as LinearLayoutManager?)?.scrollToPositionWithOffset(
@@ -133,7 +135,7 @@ class CompoundsPanel(private val activity: EditActivity) {
     }
 
     private fun deleteCompound(position: Int) {
-        val compound = compoundListAdapter.compoundList[position]
+        val compound = appModel.compoundListAdapter.compoundList[position]
         val appState: ApplicationContext = activity.applicationContext as ApplicationContext
         appState.saveCurrentWorkOnSolution(activity.solution)
         appState.removeCompoundFromEverywhere(compound)

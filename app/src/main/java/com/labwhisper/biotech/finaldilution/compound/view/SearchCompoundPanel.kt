@@ -7,9 +7,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
-import com.labwhisper.biotech.finaldilution.compound.CompoundSearch
+import com.labwhisper.biotech.finaldilution.compound.appmodel.CompoundsPanelAppModel
 import com.labwhisper.biotech.finaldilution.util.editText
 import com.labwhisper.biotech.finaldilution.util.imageButton
 
@@ -17,7 +16,7 @@ class SearchCompoundPanel(private val activity: Activity) {
 
     var searchOpen: Boolean = false
 
-    fun initSearchFunctionality(compoundListAdapter: CompoundListAdapter) {
+    fun initSearchFunctionality(compoundsPanelAppModel: CompoundsPanelAppModel) {
         val searchEditText = activity.editText(R.id.search_compound_button)
         searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -32,7 +31,7 @@ class SearchCompoundPanel(private val activity: Activity) {
             }
 
             override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                filterCompoundList(compoundListAdapter, text)
+                compoundsPanelAppModel.filterCompoundList(text)
             }
 
         })
@@ -74,11 +73,4 @@ class SearchCompoundPanel(private val activity: Activity) {
         searchOpen = false
     }
 
-    private fun filterCompoundList(compoundListAdapter: CompoundListAdapter, text: CharSequence?) {
-        val appState: ApplicationContext = activity.applicationContext as ApplicationContext
-        compoundListAdapter.compoundList =
-            CompoundSearch.searchForCompound(appState.loadAllCompoundsSorted(), text.toString())
-                .toMutableList()
-        compoundListAdapter.notifyDataSetChanged()
-    }
 }

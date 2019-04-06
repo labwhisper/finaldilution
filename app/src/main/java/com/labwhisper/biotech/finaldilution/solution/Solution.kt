@@ -21,25 +21,21 @@ data class Solution(
 
     val allLiquidComponentsVolume: Double
         get() {
-            var allLiquidComponentsVolume = 0.0
-            for (component in components) {
-                if (component.fromStock) {
-                    allLiquidComponentsVolume +=
-                        try {
-                            component.getQuantity(volume)
-                        } catch (e: NoMolarMassException) {
-                            0.0
-                        }
+            return components
+                .asSequence()
+                .filter { it.fromStock }
+                .sumByDouble {
+                    try {
+                        it.getQuantity(volume)
+                    } catch (e: NoMolarMassException) {
+                        0.0
+                    }
                 }
-            }
-            return allLiquidComponentsVolume
         }
 
     fun recalculateVolume(volume: Double) {
         this.volume = volume
-        for (component in components) {
-            component.setSolutionVolume(volume)
-        }
+        components.forEach { component -> component.setSolutionVolume(volume) }
     }
 
     fun calculateQuantities(): String {
@@ -53,13 +49,18 @@ data class Solution(
 
 
     fun displayString(): String {
-        val volFormat = DecimalFormat("0.##")
+        val volFormat = DecimalFormat("0.###")
         val format = String.format(
             "%s ml  %d components",
             volFormat.format(volume),
             components.size
         )
         return format
+    }
+
+    fun displayVolume(): String {
+        val volFormat = DecimalFormat("0.###")
+        return volFormat.format(volume) + " ml"
     }
 
     fun removeComponent(component: Component) {
