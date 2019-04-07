@@ -30,19 +30,38 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
 
     fun getAmountString(amount: Double): String {
         val niceOutput = StringBuilder(200)
-        if (amount > 1) {
-            niceOutput.append(DecimalFormat("0.###").format(amount))
-            when {
-                compound.liquid -> niceOutput.append(" ml")
-                fromStock -> niceOutput.append(" ml")
-                else -> niceOutput.append(" g")
+        when {
+            amount > 1000 -> {
+                niceOutput.append(DecimalFormat("0.###").format(amount / 1000))
+                when {
+                    compound.liquid -> niceOutput.append(" l")
+                    fromStock -> niceOutput.append(" l")
+                    else -> niceOutput.append(" kg")
+                }
             }
-        } else {
-            niceOutput.append(DecimalFormat("0.#").format(amount * 1000))
-            when {
-                compound.liquid -> niceOutput.append(" ul")
-                fromStock -> niceOutput.append(" ul")
-                else -> niceOutput.append(" mg")
+            amount > 1 -> {
+                niceOutput.append(DecimalFormat("0.###").format(amount))
+                when {
+                    compound.liquid -> niceOutput.append(" ml")
+                    fromStock -> niceOutput.append(" ml")
+                    else -> niceOutput.append(" g")
+                }
+            }
+            amount > 0.001 -> {
+                niceOutput.append(DecimalFormat("0.###").format(amount * 1000))
+                when {
+                    compound.liquid -> niceOutput.append(" \u03bcl")
+                    fromStock -> niceOutput.append(" \u03bcl")
+                    else -> niceOutput.append(" mg")
+                }
+            }
+            else -> {
+                niceOutput.append(DecimalFormat("0.###").format(amount * 1000000))
+                when {
+                    compound.liquid -> niceOutput.append(" nl")
+                    fromStock -> niceOutput.append(" nl")
+                    else -> niceOutput.append(" \u03bcg")
+                }
             }
         }
         return niceOutput.toString()

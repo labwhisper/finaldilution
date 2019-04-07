@@ -49,18 +49,26 @@ data class Solution(
 
 
     fun displayString(): String {
-        val volFormat = DecimalFormat("0.###")
         val format = String.format(
-            "%s ml  %d components",
-            volFormat.format(volume),
+            "%s  %d components",
+            displayVolume(),
             components.size
         )
         return format
     }
 
-    fun displayVolume(): String {
-        val volFormat = DecimalFormat("0.###")
-        return volFormat.format(volume) + " ml"
+    fun displayVolume(): String = "${volumeAmountForCurrentUnit()} ${volumeUnit()}"
+
+    fun volumeUnit(): String = when {
+        volume > 1000 -> "l"
+        volume < 1 -> "\u03bcl"
+        else -> "ml"
+    }
+
+    fun volumeAmountForCurrentUnit(): String = when {
+        volume > 1000 -> DecimalFormat("0.###").format(volume / 1000)
+        volume < 1 -> DecimalFormat("0.###").format(volume * 1000)
+        else -> DecimalFormat("0.###").format(volume)
     }
 
     fun removeComponent(component: Component) {
