@@ -114,28 +114,28 @@ class EditComponentActivity : Activity() {
 
     private fun fillComponentFields() {
         val component = solution.getComponentWithCompound(compound)
-        if (component != null) {
-            desiredConcType = component.desiredConcentration.type
-            val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
-            desiredConcEditText.setText(java.lang.Double.toString(component.desiredConcentration.concentration))
+            ?: return
+        desiredConcType = component.desiredConcentration.type
+        val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
+        desiredConcEditText.setText(java.lang.Double.toString(component.desiredConcentration.concentration))
 
-            if (component.fromStock) {
-                component.availableConcentration?.let {
-                    val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
-                    stockConcType = it.type
-                    stockConcEditText.setText(java.lang.Double.toString(it.concentration))
-                }
-
+        if (component.fromStock) {
+            component.availableConcentration?.let {
+                val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
+                stockConcType = it.type
+                stockConcEditText.setText(java.lang.Double.toString(it.concentration))
             }
-            setConcentrationButtonsState(component.fromStock, component.compound.molarMass)
+
         }
+        setConcentrationButtonsState(component.fromStock, component.compound.molarMass)
     }
 
     private fun setConcentrationButtonsState(fromStock: Boolean, molarMass: Double?) {
         (findViewById<View>(R.id.enableStockDilutionButton) as ToggleButton).isChecked = fromStock
         val desiredRadioGroup = findViewById<View>(R.id.desiredConcButtonsBar) as RadioGroup
-        desiredConcType =
-            ConcentrationType.MOLAR.takeIf { molarMass != null } ?: ConcentrationType.PERCENTAGE
+        if (molarMass == null && (desiredConcType == ConcentrationType.MOLAR)) {
+            desiredConcType = ConcentrationType.PERCENTAGE
+        }
         when (desiredConcType) {
             ConcentrationType.PERCENTAGE -> desiredRadioGroup.check(R.id.desiredPercentageConcButton)
             ConcentrationType.MOLAR -> desiredRadioGroup.check(R.id.desiredMolarConcButton)
