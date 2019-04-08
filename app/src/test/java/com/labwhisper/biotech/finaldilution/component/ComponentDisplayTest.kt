@@ -38,8 +38,13 @@ class ComponentDisplayTest {
     }
 
     @Test
-    fun `Solid component (no stock) with amount lesser then 1mg should display ug`() {
-        assertEquals("800 \u03bcg", solid.getAmountString(0.0008))
+    fun `Solid component (no stock) with amount lesser then 1mg should still display mg`() {
+        assertEquals("0.08 mg", solid.getAmountString(0.00008))
+    }
+
+    @Test
+    fun `Solid component (no stock) with amount lesser then 10ug should display ug`() {
+        assertEquals("8 \u03bcg", solid.getAmountString(0.000008))
     }
 
 
@@ -59,8 +64,13 @@ class ComponentDisplayTest {
     }
 
     @Test
+    fun `Liquid component (no stock) with amount lesser then 1ul should still display ul`() {
+        assertEquals("0.8 \u03bcl", liquid.getAmountString(0.0008))
+    }
+
+    @Test
     fun `Liquid component (no stock) with amount lesser then 1ul should display nl`() {
-        assertEquals("800 nl", liquid.getAmountString(0.0008))
+        assertEquals("8 nl", liquid.getAmountString(0.000008))
     }
 
 
@@ -80,8 +90,13 @@ class ComponentDisplayTest {
     }
 
     @Test
+    fun `Solid component from stock with amount lesser then 1ul should still display ul`() {
+        assertEquals("0.8 \u03bcl", solidStock.getAmountString(0.0008))
+    }
+
+    @Test
     fun `Solid component from stock with amount lesser then 1ul should display nl`() {
-        assertEquals("800 nl", solidStock.getAmountString(0.0008))
+        assertEquals("8 nl", solidStock.getAmountString(0.000008))
     }
 
 
@@ -101,8 +116,13 @@ class ComponentDisplayTest {
     }
 
     @Test
+    fun `Liquid component from stock with amount lesser then 1ul should still display ul`() {
+        assertEquals("0.8 \u03bcl", liquidStock.getAmountString(0.0008))
+    }
+
+    @Test
     fun `Liquid component from stock with amount lesser then 1ul should display nl`() {
-        assertEquals("800 nl", liquidStock.getAmountString(0.0008))
+        assertEquals("8 nl", liquidStock.getAmountString(0.000008))
     }
 
 }

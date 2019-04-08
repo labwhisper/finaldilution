@@ -60,12 +60,14 @@ data class Solution(
     fun displayVolume(): String = "${volumeAmountForCurrentUnit()} ${volumeUnit()}"
 
     fun volumeUnit(): String = when {
-        volume > 1000 -> "l"
+        volume == 0.0 -> "ml"
+        volume >= 1000 -> "l"
         volume < 1 -> "\u03bcl"
         else -> "ml"
     }
 
     fun volumeAmountForCurrentUnit(): String = when {
+        volume == 0.0 -> DecimalFormat("0.###").format(volume)
         volume > 1000 -> DecimalFormat("0.###").format(volume / 1000)
         volume < 1 -> DecimalFormat("0.###").format(volume * 1000)
         else -> DecimalFormat("0.###").format(volume)

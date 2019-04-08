@@ -31,7 +31,7 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
     fun getAmountString(amount: Double): String {
         val niceOutput = StringBuilder(200)
         when {
-            amount > 1000 -> {
+            amount >= 1000 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount / 1000))
                 when {
                     compound.liquid -> niceOutput.append(" l")
@@ -39,7 +39,7 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
                     else -> niceOutput.append(" kg")
                 }
             }
-            amount > 1 -> {
+            amount >= 1 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount))
                 when {
                     compound.liquid -> niceOutput.append(" ml")
@@ -47,7 +47,7 @@ class Component(var compound: Compound, desired: Concentration, stock: Concentra
                     else -> niceOutput.append(" g")
                 }
             }
-            amount > 0.001 -> {
+            amount >= 0.00001 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount * 1000))
                 when {
                     compound.liquid -> niceOutput.append(" \u03bcl")
