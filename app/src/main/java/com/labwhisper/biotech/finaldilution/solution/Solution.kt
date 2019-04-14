@@ -19,34 +19,22 @@ data class Solution(
     val isOverflown: Boolean
         get() = allLiquidComponentsVolume > volume
 
-    val allLiquidComponentsVolume: Double
-        get() {
-            return components
-                .asSequence()
-                .filter { it.fromStock }
-                .sumByDouble {
-                    try {
-                        it.getQuantity(volume)
-                    } catch (e: NoMolarMassException) {
-                        0.0
-                    }
+    private val allLiquidComponentsVolume: Double
+        get() = components
+            .asSequence()
+            .filter { it.fromStock || it.compound.liquid }
+            .sumByDouble {
+                try {
+                    it.getQuantity(volume)
+                } catch (e: NoMolarMassException) {
+                    0.0
                 }
-        }
+            }
 
     fun recalculateVolume(volume: Double) {
         this.volume = volume
         components.forEach { component -> component.setSolutionVolume(volume) }
     }
-
-    fun calculateQuantities(): String {
-        val niceOutput = StringBuilder(800)
-        for (component in components) {
-            niceOutput.append(component.getAmountStringForVolume(volume))
-            niceOutput.append(System.getProperty("line.separator"))
-        }
-        return niceOutput.toString()
-    }
-
 
     fun displayString(): String {
         val format = String.format(
@@ -78,13 +66,7 @@ data class Solution(
     }
 
     fun getComponentWithCompound(compound: Compound): Component? {
-        //TODO Change to stream when ready on Android
-        for (component in components) {
-            if (component.compound == compound) {
-                return component
-            }
-        }
-        return null
+        return components.firstOrNull { it.compound == compound }
     }
 
     fun addComponent(component: Component) {

@@ -201,13 +201,6 @@ class EditComponentActivity : Activity() {
                 0.0
             }
         }
-        val allComponentsVolume = solution.allLiquidComponentsVolume
-        if (allComponentsVolume + currentComponentVolume > solution.volume) {
-            //TODO Color?? move this code
-            //            appState.getDb().removeComponentFromCurrentSolution(component);
-            //            appState.getDb().update(appState.getSolution());
-            //            appState.getSolution().resetComponents();
-        }
 
         val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
         intent.putExtraAnItem(solution)
