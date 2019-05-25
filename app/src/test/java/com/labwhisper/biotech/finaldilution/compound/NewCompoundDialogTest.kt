@@ -1,6 +1,6 @@
 package com.labwhisper.biotech.finaldilution.compound
 
-import com.labwhisper.biotech.finaldilution.compound.view.NewCompoundAppModel
+import com.labwhisper.biotech.finaldilution.compound.appmodel.NewCompoundAppModel
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 

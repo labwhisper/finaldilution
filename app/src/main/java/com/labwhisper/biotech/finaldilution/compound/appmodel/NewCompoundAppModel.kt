@@ -1,4 +1,4 @@
-package com.labwhisper.biotech.finaldilution.compound.view
+package com.labwhisper.biotech.finaldilution.compound.appmodel
 
 import com.labwhisper.biotech.finaldilution.compound.Compound
 

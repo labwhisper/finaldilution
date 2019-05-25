@@ -16,6 +16,7 @@ import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.CompoundValidator
+import com.labwhisper.biotech.finaldilution.compound.appmodel.NewCompoundAppModel
 import com.labwhisper.biotech.finaldilution.util.*
 
 class NewCompoundFragment : Fragment() {

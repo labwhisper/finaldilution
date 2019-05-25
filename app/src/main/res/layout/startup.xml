@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="190"
-        android:background="@color/grey2">
+        android:background="@color/secondary_background">
 
         <TextView
             android:id="@+id/textView2"
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="208"
-        android:background="@color/grey2">
+        android:background="@color/secondary_background">
 
         <Button
             android:id="@+id/addNewSolutionButton"

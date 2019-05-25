@@ -32,7 +32,15 @@
     <string name="state_of_matter_solid">Solid</string>
     <string name="state_of_matter_liquid">Liquid</string>
     <string name="chemical_formula">Chemical formula (optional)</string>
-    <string name="new_compound_back">back</string>
-    <string name="new_compound_proceed">Done</string>
+    <string name="navigation_back">back</string>
+    <string name="navigation_proceed">Done</string>
+    <string name="advanced_options">Advanced options</string>
+    <string name="dilution_from_stock">Make it dilution from stock…</string>
     <string name="exit_search_description">Exit search</string>
+    <string name="desired_concentration">Desired concentration</string>
+    <string name="stock_concentration">Stock concentration</string>
+    <string name="percent">%</string>
+    <string name="mol">M</string>
+    <string name="milimol">mM</string>
+    <string name="mg_ml">mg/ml</string>
 </resources>
