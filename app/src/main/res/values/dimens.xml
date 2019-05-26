@@ -6,7 +6,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="bottom_sheet_collapsed_height">54dp</dimen>
-    <dimen name="bottom_sheet_expanded_height">520dp</dimen>
+    <dimen name="bottom_sheet_expanded_height">420dp</dimen>
     <dimen name="grid_margin_side">16dp</dimen>
     <dimen name="small_vertical_margin">4dp</dimen>
     <dimen name="medium_vertical_margin">8dp</dimen>
@@ -14,5 +14,5 @@
     <dimen name="search_button_offset_open">13dp</dimen>
     <dimen name="search_button_offset_closed">12dp</dimen>
     <dimen name="compound_list_item_height">60dp</dimen>
-    <dimen name="button_one_fifth">70dp</dimen>
+    <dimen name="button_one_fifth">60dp</dimen>
 </resources>
