@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/compoundsList"
+    android:id="@+id/compounds_fragment"
     android:layout_width="match_parent"
     android:layout_height="@dimen/bottom_sheet_expanded_height"
     android:background="#00ffffff"
@@ -30,19 +30,9 @@
         android:background="@color/grey1"
         android:gravity="center"
         android:text="@string/compound_list"
-        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/compoundsListHeader" />
-
-    <View
-        android:id="@+id/transparent_window"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="#80FFCC00"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/compoundsListTitle" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/compoundsListView"
@@ -52,7 +42,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transparent_window" />
+        app:layout_constraintTop_toBottomOf="@+id/compoundsListTitle" />
 
     <ImageButton
         android:id="@+id/new_compound_button"

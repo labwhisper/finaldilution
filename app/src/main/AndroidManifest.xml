@@ -23,10 +23,6 @@
         <activity
             android:name="com.labwhisper.biotech.finaldilution.solution.view.EditActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.labwhisper.biotech.finaldilution.component.view.EditComponentActivity"
-            android:noHistory="true"
-            android:label="@string/title_activity_compound" />
     </application>
 
 </manifest>

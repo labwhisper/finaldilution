@@ -23,6 +23,10 @@ fun Activity.button(id: Int): Button {
     return findViewById(id)
 }
 
+fun Fragment.button(id: Int): Button {
+    return requireActivity().findViewById(id)
+}
+
 fun Activity.imageButton(id: Int): ImageButton {
     return findViewById(id)
 }
@@ -48,6 +52,10 @@ fun Fragment.editTextValue(id: Int): String {
 }
 
 fun Fragment.radioGroup(id: Int): RadioGroup {
+    return requireActivity().findViewById(id)
+}
+
+fun Fragment.radioButton(id: Int): RadioButton {
     return requireActivity().findViewById(id)
 }
 

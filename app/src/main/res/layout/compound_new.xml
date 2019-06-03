@@ -30,21 +30,10 @@
         android:background="@color/grey1"
         android:gravity="center"
         android:text="@string/title_add_new_compound"
-        android:textSize="28sp"
-        app:layout_constraintBottom_toTopOf="@+id/transparent_window"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/compoundsListHeader" />
-
-    <View
-        android:id="@+id/transparent_window"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/all_texts_wrapped"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_compound_title" />
+        app:layout_constraintTop_toBottomOf="@+id/compoundsListHeader" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/all_texts_wrapped"
@@ -54,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transparent_window">
+        app:layout_constraintTop_toBottomOf="@+id/new_compound_title">
 
         <RadioGroup
             android:id="@+id/radio_group_state_of_matter"

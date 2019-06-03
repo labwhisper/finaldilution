@@ -1,17 +1,20 @@
 package com.labwhisper.biotech.finaldilution.component.view
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.text.InputType
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.EditText
+import android.widget.RadioButton
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.component.appmodel.ComponentEditAppModel
@@ -19,18 +22,17 @@ import com.labwhisper.biotech.finaldilution.component.concentration.Concentratio
 import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationFactory
 import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType
 import com.labwhisper.biotech.finaldilution.compound.Compound
-import com.labwhisper.biotech.finaldilution.compound.NoMolarMassException
 import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
-import com.labwhisper.biotech.finaldilution.util.imageButton
-import com.labwhisper.biotech.finaldilution.util.textView
+import com.labwhisper.biotech.finaldilution.util.*
 import java.util.*
 
-class EditComponentActivity : Activity() {
+class EditComponentFragment : Fragment() {
 
+    //TODO ADD TAG
     private lateinit var solution: Solution
     internal lateinit var compound: Compound
     private var desiredConcType: ConcentrationType = ConcentrationType.MOLAR
@@ -43,44 +45,47 @@ class EditComponentActivity : Activity() {
 
     val appModel = ComponentEditAppModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.component_edit)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        arguments?.getSerializable("COMPOUND").let { compound = it as Compound }
+        arguments?.getSerializable("SOLUTION").let { solution = it as Solution }
+        arguments?.getSerializable("CARE_TAKER").let { solutionCareTaker = it as SolutionCareTaker }
+        return inflater.inflate(R.layout.component_edit, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // TODO use getChildAt instead of creaing such lists
 
         desiredButtonList = ArrayList()
-        desiredButtonList.add(findViewById<View>(R.id.desiredPercentageConcButton) as RadioButton)
-        desiredButtonList.add(findViewById<View>(R.id.desiredMolarConcButton) as RadioButton)
-        desiredButtonList.add(findViewById<View>(R.id.desiredMilimolarConcButton) as RadioButton)
-        desiredButtonList.add(findViewById<View>(R.id.desiredMgMlConcButton) as RadioButton)
+        desiredButtonList.add(radioButton(R.id.desiredPercentageConcButton))
+        desiredButtonList.add(radioButton(R.id.desiredMolarConcButton))
+        desiredButtonList.add(radioButton(R.id.desiredMilimolarConcButton))
+        desiredButtonList.add(radioButton(R.id.desiredMgMlConcButton))
 
         stockButtonList = ArrayList()
-        stockButtonList.add(findViewById<View>(R.id.stockPercentageConcButton) as RadioButton)
-        stockButtonList.add(findViewById<View>(R.id.stockMolarConcButton) as RadioButton)
-        stockButtonList.add(findViewById<View>(R.id.stockMilimolarConcButton) as RadioButton)
-        stockButtonList.add(findViewById<View>(R.id.stockMgMlConcButton) as RadioButton)
+        stockButtonList.add(radioButton(R.id.stockPercentageConcButton))
+        stockButtonList.add(radioButton(R.id.stockMolarConcButton))
+        stockButtonList.add(radioButton(R.id.stockMilimolarConcButton))
+        stockButtonList.add(radioButton(R.id.stockMgMlConcButton))
 
         desiredViewsList = ArrayList()
-        desiredViewsList.add(findViewById<View>(R.id.desiredConcEditText))
-        desiredViewsList.add(findViewById<View>(R.id.desiredConcButtonsBar))
-        desiredViewsList.add(findViewById<View>(R.id.desiredConcTextView))
+        desiredViewsList.add(editText(R.id.desiredConcEditText))
+        desiredViewsList.add(radioGroup(R.id.desiredConcButtonsBar))
+        desiredViewsList.add(textView(R.id.desiredConcTextView))
         desiredViewsList.addAll(desiredButtonList)
 
         stockViewsList = ArrayList()
-        stockViewsList.add(findViewById<View>(R.id.stockConcEditText))
-        stockViewsList.add(findViewById<View>(R.id.stockConcButtonsBar))
-        stockViewsList.add(findViewById<View>(R.id.stockConcTextView))
+        stockViewsList.add(editText(R.id.stockConcEditText))
+        stockViewsList.add(radioGroup(R.id.stockConcButtonsBar))
+        stockViewsList.add(textView(R.id.stockConcTextView))
         stockViewsList.addAll(stockButtonList)
 
-        compound = intent.getSerializableExtra("COMPOUND") as Compound
-        solution = intent.getSerializableExtra("SOLUTION") as Solution
-        solutionCareTaker = intent.getSerializableExtra("CARE_TAKER") as SolutionCareTaker
-        title = compound.displayName
-        findViewById<TextView>(R.id.new_component_title).text = title
+        textView(R.id.new_component_title).text = compound.displayName
 
-//        (findViewById<View>(R.id.desiredConcButtonsBar)).viewTreeObserver
-//            .addOnGlobalLayoutListener { this.renderButtonsSquare() }
         setKeyboardOnInputs()
         bindListeners()
         setConcentrationButtonsState(false, compound.molarMass)
@@ -94,7 +99,7 @@ class EditComponentActivity : Activity() {
         for ((i, concentrationButton) in desiredButtonList.withIndex()) {
             concentrationButton.setOnClickListener {
                 desiredConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
-                    (findViewById<View>(R.id.desiredConcEditText) as EditText).hint = hint()
+                    (editText(R.id.desiredConcEditText)).hint = hint()
                 }
             }
         }
@@ -102,18 +107,18 @@ class EditComponentActivity : Activity() {
         for ((i, concentrationButton) in stockButtonList.withIndex()) {
             concentrationButton.setOnClickListener {
                 stockConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
-                    (findViewById<View>(R.id.stockConcEditText) as EditText).hint = hint()
+                    (editText(R.id.stockConcEditText)).hint = hint()
                 }
             }
         }
 
-        findViewById<View>(R.id.enableStockDilutionButton).setOnClickListener { toggleSolutionFromStock() }
+        imageButton(R.id.enableStockDilutionButton).setOnClickListener { toggleSolutionFromStock() }
 
-        findViewById<View>(R.id.buttonAddCompoundDone).setOnClickListener { onAcceptComponent() }
+        imageButton(R.id.buttonAddCompoundDone).setOnClickListener { onAcceptComponent() }
 
-        findViewById<View>(R.id.buttonAddCompoundCancel).setOnClickListener { onCancelComponent() }
+        imageButton(R.id.buttonAddCompoundCancel).setOnClickListener { onCancelComponent() }
 
-        findViewById<View>(R.id.buttonAddCompoundDelete).setOnClickListener { onDeleteComponent() }
+        imageButton(R.id.buttonAddCompoundDelete).setOnClickListener { onDeleteComponent() }
 
     }
 
@@ -121,12 +126,12 @@ class EditComponentActivity : Activity() {
         val component = solution.getComponentWithCompound(compound)
             ?: return
         desiredConcType = component.desiredConcentration.type
-        val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
+        val desiredConcEditText = editText(R.id.desiredConcEditText)
         desiredConcEditText.setText(java.lang.Double.toString(component.desiredConcentration.concentration))
 
         if (component.fromStock) {
             component.availableConcentration?.let {
-                val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
+                val stockConcEditText = editText(R.id.stockConcEditText)
                 stockConcType = it.type
                 stockConcEditText.setText(java.lang.Double.toString(it.concentration))
             }
@@ -137,7 +142,7 @@ class EditComponentActivity : Activity() {
 
     private fun setConcentrationButtonsState(fromStock: Boolean, molarMass: Double?) {
         appModel.fromStock = fromStock
-        val desiredRadioGroup = findViewById<View>(R.id.desiredConcButtonsBar) as RadioGroup
+        val desiredRadioGroup = radioGroup(R.id.desiredConcButtonsBar)
         if (molarMass == null && (desiredConcType == ConcentrationType.MOLAR)) {
             desiredConcType = ConcentrationType.PERCENTAGE
         }
@@ -149,7 +154,7 @@ class EditComponentActivity : Activity() {
         }
 
         if (fromStock) {
-            val stockRadioGroup = findViewById<View>(R.id.stockConcButtonsBar) as RadioGroup
+            val stockRadioGroup = radioGroup(R.id.stockConcButtonsBar)
             when (stockConcType) {
                 ConcentrationType.PERCENTAGE -> stockRadioGroup.check(R.id.stockPercentageConcButton)
                 ConcentrationType.MOLAR -> stockRadioGroup.check(R.id.stockMolarConcButton)
@@ -159,22 +164,22 @@ class EditComponentActivity : Activity() {
         }
 
         val molarEnabled = molarMass != null
-        findViewById<Button>(R.id.desiredMolarConcButton).isEnabled = molarEnabled
-        findViewById<Button>(R.id.desiredMilimolarConcButton).isEnabled = molarEnabled
-        findViewById<Button>(R.id.stockMolarConcButton).isEnabled = molarEnabled
-        findViewById<Button>(R.id.stockMilimolarConcButton).isEnabled = molarEnabled
+        radioButton(R.id.desiredMolarConcButton).isEnabled = molarEnabled
+        radioButton(R.id.desiredMilimolarConcButton).isEnabled = molarEnabled
+        radioButton(R.id.stockMolarConcButton).isEnabled = molarEnabled
+        radioButton(R.id.stockMilimolarConcButton).isEnabled = molarEnabled
     }
 
     private fun onCancelComponent() {
-        onBackPressed()
+        requireActivity().onBackPressed()
     }
 
     //TODO run this listener also on back and generally close?
     private fun onAcceptComponent() {
 
         //TODO Add all checks!
-        val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
-        val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
+        val desiredConcEditText = editText(R.id.desiredConcEditText)
+        val stockConcEditText = editText(R.id.stockConcEditText)
         if (desiredConcEditText.text.toString().trim { it <= ' ' }.isEmpty()) {
             Anim().blink(desiredConcEditText)
             return
@@ -191,21 +196,11 @@ class EditComponentActivity : Activity() {
         }
 
 
-        val component: Component =
-            (solution.getComponentWithCompound(compound)?.also {
-                updateComponent(it)
-            } ?: createComponent())
+        (solution.getComponentWithCompound(compound)?.also {
+            updateComponent(it)
+        } ?: createComponent())
 
-        var currentComponentVolume = 0.0
-        if (appModel.fromStock) {
-            currentComponentVolume = try {
-                component.getQuantity(solution.volume)
-            } catch (e: NoMolarMassException) {
-                0.0
-            }
-        }
-
-        val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
+        val intent = Intent(requireContext(), EditActivity::class.java)
         intent.putExtraAnItem(solution)
         intent.putExtra("CARE_TAKER", solutionCareTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -221,7 +216,7 @@ class EditComponentActivity : Activity() {
             onCancelComponent()
         } else {
             solution.removeComponent(component)
-            val intent = Intent(this@EditComponentActivity, EditActivity::class.java)
+            val intent = Intent(requireContext(), EditActivity::class.java)
             intent.putExtraAnItem(solution)
             intent.putExtra("CARE_TAKER", solutionCareTaker)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -241,7 +236,7 @@ class EditComponentActivity : Activity() {
         if (!appModel.fromStock) {
             return null
         }
-        val stockConcEditText = findViewById<View>(R.id.stockConcEditText) as EditText
+        val stockConcEditText = editText(R.id.stockConcEditText)
         val stockConcentrationValue = parseDoubleFromEditText(stockConcEditText)
         stockConcType?.let {
             return ConcentrationFactory.createConcentration(it, stockConcentrationValue)
@@ -250,7 +245,7 @@ class EditComponentActivity : Activity() {
     }
 
     private fun retrieveDesiredConcFromInput(): Concentration {
-        val desiredConcEditText = findViewById<View>(R.id.desiredConcEditText) as EditText
+        val desiredConcEditText = editText(R.id.desiredConcEditText)
         val concentrationValue = parseDoubleFromEditText(desiredConcEditText)
         return ConcentrationFactory.createConcentration(desiredConcType, concentrationValue)
     }
@@ -268,8 +263,8 @@ class EditComponentActivity : Activity() {
 
     private fun setKeyboardOnInputs() {
         val concEditTexts = ArrayList<EditText>()
-        concEditTexts.add(findViewById<View>(R.id.desiredConcEditText) as EditText)
-        concEditTexts.add(findViewById<View>(R.id.stockConcEditText) as EditText)
+        concEditTexts.add(editText(R.id.desiredConcEditText))
+        concEditTexts.add(editText(R.id.stockConcEditText))
         for (editText in concEditTexts) {
 
             editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
@@ -278,21 +273,14 @@ class EditComponentActivity : Activity() {
                 //TODO: Check this code for different versions of Android
                 if (keyCode == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) {
                     // hide virtual keyboard
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
             }
         }
-    }
-
-    private fun renderButtonsSquare() {
-        val buttonsBar = findViewById<View>(R.id.desiredConcButtonsBar) as RadioGroup
-        buttonsBar.layoutParams.height = buttonsBar.width / 4
-
-        val stockButtonsBar = findViewById<View>(R.id.stockConcButtonsBar) as RadioGroup
-        stockButtonsBar.layoutParams.height = buttonsBar.width / 4
     }
 
     private fun toggleSolutionFromStock() {
@@ -307,19 +295,28 @@ class EditComponentActivity : Activity() {
             if (appModel.fromStock) {
                 stockView.visibility = View.VISIBLE
                 expandButton.setImageDrawable(
-                    ContextCompat.getDrawable(this, R.drawable.ic_expand_less_black_24dp)
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_expand_less_black_24dp
+                    )
                 )
-                fromStockText?.visibility = View.INVISIBLE
+                fromStockText.visibility = View.INVISIBLE
             } else {
                 stockView.visibility = View.INVISIBLE
                 expandButton.setImageDrawable(
-                    ContextCompat.getDrawable(this, R.drawable.ic_expand_more_black_24dp)
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_expand_more_black_24dp
+                    )
                 )
-                fromStockText?.visibility = View.VISIBLE
+                fromStockText.visibility = View.VISIBLE
             }
 
         }
     }
 
+    companion object {
+        val TAG = "Edit Component"
+    }
 
 }

@@ -174,4 +174,8 @@ class NewCompoundFragment : Fragment() {
         newCompound = null
         super.onStop()
     }
+
+    companion object {
+        val TAG = "New Compound"
+    }
 }

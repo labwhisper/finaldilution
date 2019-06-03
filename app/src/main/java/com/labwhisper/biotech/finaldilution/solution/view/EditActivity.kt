@@ -1,8 +1,6 @@
 package com.labwhisper.biotech.finaldilution.solution.view
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,10 +11,10 @@ import android.widget.EditText
 import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.view.ComponentsPanel
-import com.labwhisper.biotech.finaldilution.component.view.EditComponentActivity
+import com.labwhisper.biotech.finaldilution.component.view.EditComponentFragment
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
-import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
+import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.gestures.EditGestureListener
 import com.labwhisper.biotech.finaldilution.solution.RedoOnLastChangeException
 import com.labwhisper.biotech.finaldilution.solution.Solution
@@ -159,18 +157,22 @@ class EditActivity : AppCompatActivity() {
         menu?.findItem(R.id.action_redo)?.isEnabled = solutionCareTaker.canRedo
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    //    @SuppressLint("ClickableViewAccessibility")
     private fun displayAddCompoundFragment() {
         compoundsPanel = CompoundsPanel(this)
         compoundsPanel?.displayCompoundList()
     }
 
     fun startComponentEdition(compound: Compound) {
-        val intent = Intent(this, EditComponentActivity::class.java)
-        intent.putExtraAnItem(compound)
-        intent.putExtraAnItem(solution)
-        intent.putExtra("CARE_TAKER", solutionCareTaker)
-        startActivity(intent)
+        val bundle = Bundle()
+        bundle.putSerializableAnItem(compound)
+        bundle.putSerializableAnItem(solution)
+        bundle.putSerializable("CARE_TAKER", solutionCareTaker)
+        val transaction = supportFragmentManager.beginTransaction()
+        val fragment = EditComponentFragment().apply { arguments = bundle }
+        transaction.replace(android.R.id.content, fragment, EditComponentFragment.TAG)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

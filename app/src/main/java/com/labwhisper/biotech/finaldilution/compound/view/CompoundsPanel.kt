@@ -1,7 +1,6 @@
 package com.labwhisper.biotech.finaldilution.compound.view
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Point
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
@@ -18,10 +17,10 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
-import com.labwhisper.biotech.finaldilution.component.view.EditComponentActivity
+import com.labwhisper.biotech.finaldilution.component.view.EditComponentFragment
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.appmodel.CompoundsPanelAppModel
-import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
+import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 
@@ -36,7 +35,8 @@ class CompoundsPanel(private val activity: EditActivity) {
         appModel = CompoundsPanelAppModel(
             activity.applicationContext as ApplicationContext,
             CompoundListAdapter(),
-            activity.solution
+            activity.solution,
+            activity.solutionCareTaker
         )
         appModel.compoundListAdapter.compoundList = appModel.compoundList
         val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
@@ -56,7 +56,7 @@ class CompoundsPanel(private val activity: EditActivity) {
     }
 
     fun isExpanded(): Boolean {
-        val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compoundsList)
+        val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compounds_fragment)
         val screenSize = Point()
         activity.windowManager.defaultDisplay.getSize(screenSize)
         val locationOnScreen = IntArray(2)
@@ -68,7 +68,7 @@ class CompoundsPanel(private val activity: EditActivity) {
     }
 
     fun collapse() {
-        val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compoundsList)
+        val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compounds_fragment)
         val collapsedHeight =
             activity.resources.getDimension(R.dimen.bottom_sheet_collapsed_height).toInt()
         val expandedHeight =
@@ -115,7 +115,6 @@ class CompoundsPanel(private val activity: EditActivity) {
         }
         newCompoundFragment.setOnFragmentCloseListener { newCompound ->
             activity.findViewById<ImageButton>(R.id.new_compound_button).visibility = View.VISIBLE
-            val appState: ApplicationContext = activity.applicationContext as ApplicationContext
             appModel.compoundListAdapter.compoundList = appModel.compoundList
             appModel.compoundListAdapter.notifyDataSetChanged()
             val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
@@ -128,7 +127,7 @@ class CompoundsPanel(private val activity: EditActivity) {
             )
 
         }
-        fragmentTransaction.replace(R.id.compoundsList, newCompoundFragment)
+        fragmentTransaction.replace(R.id.compounds_fragment, newCompoundFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
         activity.findViewById<ImageButton>(R.id.new_compound_button).visibility = View.GONE
@@ -157,16 +156,25 @@ class CompoundsPanel(private val activity: EditActivity) {
     }
 
     private fun startComponentEdition(compound: Compound) {
-        val intent = Intent(activity, EditComponentActivity::class.java)
-        intent.putExtraAnItem(compound)
-        intent.putExtraAnItem(activity.solution)
-        intent.putExtra("CARE_TAKER", activity.solutionCareTaker)
-        activity.startActivity(intent)
+        val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+        val editComponentFragment = EditComponentFragment()
+        val bundle = Bundle()
+        bundle.putSerializableAnItem(compound)
+        bundle.putSerializableAnItem(appModel.solution)
+        bundle.putSerializable("CARE_TAKER", appModel.careTaker)
+        editComponentFragment.arguments = bundle
+        fragmentTransaction.replace(
+            android.R.id.content,
+            editComponentFragment,
+            EditComponentFragment.TAG
+        )
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     companion object {
 
-        private const val TAG = "Compound Panel"
+        const val TAG = "Compound Panel"
     }
 
     class CompoundListTouchListener(
