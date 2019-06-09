@@ -7,13 +7,14 @@
     <color name="grey3">#F5F3E9</color>
     <color name="grey4">#757575</color>
     <color name="background_color">@color/white</color>
-    <color name="cyan">#66E2FF</color>
-    <color name="darker_cyan">#65defc</color>
+    <color name="cyan">#87D7F8</color>
+    <color name="cyan_transparent">#7f00d0ff</color>
+    <color name="darker_cyan">#83d1f2</color>
     <color name="yellow">#ffe266</color>
     <color name="darker_yellow">#fcde65</color>
     <color name="darkest_yellow">#dec37a</color>
     <color name="bluish_gray">#80d6d0</color>
-    <color name="background_accent">#D2EEFA</color>
+    <color name="background_accent">#D8E9F0</color>
     <color name="background_accent_saturated">#f8f9fa</color>
     <color name="background_error">#fad0d0</color>
     <color name="blue">#86D7F5</color>
@@ -21,6 +22,8 @@
     <color name="dark_blue">#548699</color>
     <color name="text_default">#000000</color>
     <color name="transparent">#00000000</color>
+    <color name="glass">#80FFCC00</color>
+
 
     <color name="text_secondary">@color/grey4</color>
     <color name="colorPrimary">@color/cyan</color>
