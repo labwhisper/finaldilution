@@ -57,7 +57,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.25"
             app:layout_constraintVertical_chainStyle="packed">
 
             <RadioButton
@@ -113,8 +112,8 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_expand_more_black_24dp"
             android:tint="@color/cyan"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/form_trivial_name"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/form_molar_mass" />
 
         <include
@@ -122,7 +121,6 @@
             layout="@layout/form_input_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:layout_marginStart="@dimen/grid_margin_side"
             android:layout_marginEnd="@dimen/grid_margin_side"
             android:layout_marginBottom="@dimen/small_vertical_margin"
@@ -130,9 +128,7 @@
             app:layout_constraintBottom_toTopOf="@+id/form_formula"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/form_molar_mass"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toBottomOf="@+id/form_expand_advanced" />
 
         <include
             android:id="@+id/form_formula"
@@ -155,7 +151,6 @@
             android:contentDescription="@string/navigation_proceed"
             android:src="@drawable/ic_check_black_24dp"
             android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/button_new_compound_cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/button_new_compound_cancel" />
 
