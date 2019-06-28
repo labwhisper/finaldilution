@@ -15,8 +15,8 @@ import android.widget.ListView
 import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
+import com.labwhisper.biotech.finaldilution.solution.CareTaker
 import com.labwhisper.biotech.finaldilution.solution.Solution
-import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
 import com.labwhisper.biotech.finaldilution.solution.appmodel.StartupAppModel
 import com.labwhisper.biotech.finaldilution.util.button
 import com.labwhisper.biotech.finaldilution.util.listView
@@ -103,7 +103,7 @@ class StartupActivity : AppCompatActivity() {
     private fun enterSolution(solution: Solution) {
         val intent = Intent(this@StartupActivity, EditActivity::class.java)
         intent.putExtraAnItem(solution)
-        intent.putExtra("CARE_TAKER", SolutionCareTaker())
+        intent.putExtra("CARE_TAKER", CareTaker<Solution>())
         startActivity(intent)
     }
 

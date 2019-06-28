@@ -6,8 +6,8 @@ import android.content.Intent
 import android.view.WindowManager
 import android.widget.EditText
 import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
+import com.labwhisper.biotech.finaldilution.solution.CareTaker
 import com.labwhisper.biotech.finaldilution.solution.Solution
-import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
 import com.labwhisper.biotech.finaldilution.solution.appmodel.StartupAppModel
 
 class SolutionNameDialog(val context: Context, val appModel: StartupAppModel) {
@@ -72,7 +72,7 @@ class SolutionNameDialog(val context: Context, val appModel: StartupAppModel) {
     private fun enterSolution(solution: Solution) {
         val intent = Intent(context, EditActivity::class.java)
         intent.putExtraAnItem(solution)
-        intent.putExtra("CARE_TAKER", SolutionCareTaker())
+        intent.putExtra("CARE_TAKER", CareTaker<Solution>())
         context.startActivity(intent)
     }
 

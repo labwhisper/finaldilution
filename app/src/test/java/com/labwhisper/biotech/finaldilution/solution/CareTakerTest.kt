@@ -1,12 +1,13 @@
 package com.labwhisper.biotech.finaldilution.solution
 
+import com.labwhisper.biotech.finaldilution.genericitem.Item
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class SolutionCareTakerTest {
+class CareTakerTest {
 
-    val solutionCareTaker = SolutionCareTaker()
+    val solutionCareTaker = CareTaker<Solution>()
 
     @Before
     fun init() {
@@ -80,7 +81,7 @@ class SolutionCareTakerTest {
             Solution("solution5")
         )
         saves.forEach { solutionCareTaker.addMemento(it) }
-        val testSolutionList = ArrayList<Solution?>()
+        val testSolutionList = ArrayList<Item?>()
 
         solutionCareTaker.apply {
             (1..4).map { testSolutionList.add(undo()) }
@@ -89,7 +90,9 @@ class SolutionCareTakerTest {
 
         assertEquals(
             testSolutionList,
-            saves.dropLast(1).reversed()
+            saves
+                .dropLast(1)
+                .reversed()
                 .plus(saves.takeLast(4))
         )
     }

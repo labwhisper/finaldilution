@@ -10,6 +10,7 @@ data class Compound(
     val trivialName: String? = null,
     val chemicalFormula: String? = null
 ) : Item {
+
     override val name: String = iupacName
     override val seriesName: String
         get() = "COMPOUND"
@@ -30,6 +31,10 @@ data class Compound(
 
     override fun toString(): String {
         return "$displayName [$displayMass]"
+    }
+
+    override fun deepCopy(): Item {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

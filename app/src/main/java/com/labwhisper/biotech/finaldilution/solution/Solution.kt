@@ -73,7 +73,7 @@ data class Solution(
         components.add(component)
     }
 
-    fun deepCopy(): Solution {
+    override fun deepCopy(): Solution {
         val deepCopy = Solution(name, volume)
         deepCopy.components.apply { addAll(components) }
         return deepCopy

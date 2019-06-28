@@ -24,8 +24,8 @@ import com.labwhisper.biotech.finaldilution.component.concentration.Concentratio
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
+import com.labwhisper.biotech.finaldilution.solution.CareTaker
 import com.labwhisper.biotech.finaldilution.solution.Solution
-import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import com.labwhisper.biotech.finaldilution.util.*
 import java.util.*
@@ -41,10 +41,11 @@ class EditComponentFragment : Fragment() {
     private lateinit var stockViewsList: MutableList<View>
     private lateinit var desiredButtonList: MutableList<RadioButton>
     private lateinit var stockButtonList: MutableList<RadioButton>
-    private lateinit var solutionCareTaker: SolutionCareTaker
+    private lateinit var careTaker: CareTaker<Solution>
 
     val appModel = ComponentEditAppModel()
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,7 +53,7 @@ class EditComponentFragment : Fragment() {
     ): View? {
         arguments?.getSerializable("COMPOUND").let { compound = it as Compound }
         arguments?.getSerializable("SOLUTION").let { solution = it as Solution }
-        arguments?.getSerializable("CARE_TAKER").let { solutionCareTaker = it as SolutionCareTaker }
+        arguments?.getSerializable("CARE_TAKER").let { careTaker = it as CareTaker<Solution> }
         return inflater.inflate(R.layout.component_edit, container, false)
     }
 
@@ -202,7 +203,7 @@ class EditComponentFragment : Fragment() {
 
         val intent = Intent(requireContext(), EditActivity::class.java)
         intent.putExtraAnItem(solution)
-        intent.putExtra("CARE_TAKER", solutionCareTaker)
+        intent.putExtra("CARE_TAKER", careTaker)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         //TODO WHEN ITEM EXISTS SHOW STH? OR BEFORE EVEN OPENING COMP.ACTIVITY?
@@ -218,7 +219,7 @@ class EditComponentFragment : Fragment() {
             solution.removeComponent(component)
             val intent = Intent(requireContext(), EditActivity::class.java)
             intent.putExtraAnItem(solution)
-            intent.putExtra("CARE_TAKER", solutionCareTaker)
+            intent.putExtra("CARE_TAKER", careTaker)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }

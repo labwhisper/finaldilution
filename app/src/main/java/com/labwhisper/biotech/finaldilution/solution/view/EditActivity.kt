@@ -16,9 +16,9 @@ import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
 import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.gestures.EditGestureListener
+import com.labwhisper.biotech.finaldilution.solution.CareTaker
 import com.labwhisper.biotech.finaldilution.solution.RedoOnLastChangeException
 import com.labwhisper.biotech.finaldilution.solution.Solution
-import com.labwhisper.biotech.finaldilution.solution.SolutionCareTaker
 import com.labwhisper.biotech.finaldilution.solution.UndoOnEmptyListException
 import com.labwhisper.biotech.finaldilution.util.editText
 
@@ -29,14 +29,15 @@ class EditActivity : AppCompatActivity() {
     private var compoundsPanel: CompoundsPanel? = null
     private var screenGestureDetector: GestureDetector? = null
     lateinit var solution: Solution
-    lateinit var solutionCareTaker: SolutionCareTaker
+    lateinit var careTaker: CareTaker<Solution>
 
     private var menu: Menu? = null
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         solution = intent.getSerializableExtra("SOLUTION") as Solution
-        solutionCareTaker = intent.getSerializableExtra("CARE_TAKER") as SolutionCareTaker
+        careTaker = intent.getSerializableExtra("CARE_TAKER") as CareTaker<Solution>
         setContentView(R.layout.solution_edit)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -64,9 +65,9 @@ class EditActivity : AppCompatActivity() {
 
     private fun enableSolutionRenaming() {
         val title = findViewById<EditText>(R.id.solution_toolbar_text)
-        title.onFocusChangeListener = View.OnFocusChangeListener { p0, p1 ->
-            if (p1 == true) return@OnFocusChangeListener
-            val text = (p0 as EditText).text
+        title.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) return@OnFocusChangeListener
+            val text = (view as EditText).text
             if (text.isNullOrBlank()) return@OnFocusChangeListener
             if (text.toString() == solution.name) return@OnFocusChangeListener
             val appState = applicationContext as ApplicationContext
@@ -97,7 +98,7 @@ class EditActivity : AppCompatActivity() {
             }
             R.id.action_undo -> {
                 return try {
-                    val newSolution = solutionCareTaker.undo()
+                    val newSolution = careTaker.undo()
                     if (newSolution.name != solution.name) {
                         appState.renameSolution(newSolution, solution.name)
                     }
@@ -110,7 +111,7 @@ class EditActivity : AppCompatActivity() {
             }
             R.id.action_redo -> {
                 return try {
-                    val newSolution = solutionCareTaker.redo()
+                    val newSolution = careTaker.redo()
                     if (newSolution.name != solution.name) {
                         appState.renameSolution(newSolution, solution.name)
                     }
@@ -138,7 +139,7 @@ class EditActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        solutionCareTaker.addMemento(solution)
+        careTaker.addMemento(solution)
         val title = findViewById<EditText>(R.id.solution_toolbar_text)
         title.setText(solution.name)
     }
@@ -146,15 +147,15 @@ class EditActivity : AppCompatActivity() {
     fun refresh() {
         componentsPanel?.updateComponentList()
         volumePanel?.updateVolumeTextView()
-        solutionCareTaker.addMemento(solution)
+        careTaker.addMemento(solution)
         val title = findViewById<EditText>(R.id.solution_toolbar_text)
         title.setText(solution.name)
         refreshMenu()
     }
 
     private fun refreshMenu() {
-        menu?.findItem(R.id.action_undo)?.isEnabled = solutionCareTaker.canUndo
-        menu?.findItem(R.id.action_redo)?.isEnabled = solutionCareTaker.canRedo
+        menu?.findItem(R.id.action_undo)?.isEnabled = careTaker.canUndo
+        menu?.findItem(R.id.action_redo)?.isEnabled = careTaker.canRedo
     }
 
     //    @SuppressLint("ClickableViewAccessibility")
@@ -167,7 +168,7 @@ class EditActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putSerializableAnItem(compound)
         bundle.putSerializableAnItem(solution)
-        bundle.putSerializable("CARE_TAKER", solutionCareTaker)
+        bundle.putSerializable("CARE_TAKER", careTaker)
         val transaction = supportFragmentManager.beginTransaction()
         val fragment = EditComponentFragment().apply { arguments = bundle }
         transaction.replace(android.R.id.content, fragment, EditComponentFragment.TAG)

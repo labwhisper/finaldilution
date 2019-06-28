@@ -36,7 +36,7 @@ class CompoundsPanel(private val activity: EditActivity) {
             activity.applicationContext as ApplicationContext,
             CompoundListAdapter(),
             activity.solution,
-            activity.solutionCareTaker
+            activity.careTaker
         )
         appModel.compoundListAdapter.compoundList = appModel.compoundList
         val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
