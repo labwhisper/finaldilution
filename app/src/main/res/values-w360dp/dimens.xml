@@ -1,5 +1,4 @@
 <resources>
-    <dimen name="bottom_sheet_collapsed_height">54dp</dimen>
     <dimen name="bottom_sheet_expanded_height">620dp</dimen>
     <dimen name="button_one_fifth">70dp</dimen>
     <dimen name="grid_margin_side">24dp</dimen>
