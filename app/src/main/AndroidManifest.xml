@@ -22,7 +22,7 @@
             android:label="@string/title_activity_startup" />
         <activity
             android:name="com.labwhisper.biotech.finaldilution.solution.view.EditActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

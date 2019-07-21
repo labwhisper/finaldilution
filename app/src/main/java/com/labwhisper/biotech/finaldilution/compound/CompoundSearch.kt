@@ -10,8 +10,8 @@ class CompoundSearch {
             return allCompounds.toMutableList()
                 .filter {
                     it.iupacName.contains(text, true)
-                            || it.trivialName?.contains(text, true) ?: true
-                            || it.chemicalFormula?.contains(text, true) ?: true
+                            || it.trivialName?.contains(text, true) ?: false
+                            || it.chemicalFormula?.contains(text, true) ?: false
                 }.toMutableList()
         }
 

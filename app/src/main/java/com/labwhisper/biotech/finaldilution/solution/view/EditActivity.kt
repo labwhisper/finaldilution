@@ -193,8 +193,4 @@ class EditActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
-    companion object {
-        private val TAG = "Edit Activity"
-    }
-
 }
