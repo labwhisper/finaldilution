@@ -1,9 +1,8 @@
 package com.labwhisper.biotech.finaldilution.compound.view
 
 import android.content.Context
-import android.graphics.Point
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -53,30 +52,25 @@ class CompoundsPanel(private val activity: EditActivity) {
             startCompoundEdition()
         }
         searchCompoundPanel.initSearchFunctionality(appModel)
+        activity.findViewById<AddComponentButtonView>(R.id.compoundsListHeader).setOnClickListener {
+            if (!isExpanded()) expand() else collapse()
+        }
     }
 
     fun isExpanded(): Boolean {
         val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compounds_fragment)
-        val screenSize = Point()
-        activity.windowManager.defaultDisplay.getSize(screenSize)
-        val locationOnScreen = IntArray(2)
-        compoundsListView.getLocationOnScreen(locationOnScreen)
-        val currentHeight = screenSize.y - locationOnScreen[1] - 1
-        val expandedHeight =
-            activity.resources.getDimension(R.dimen.bottom_sheet_expanded_height).toInt()
-        return currentHeight == expandedHeight
+        val state = BottomSheetBehavior.from(compoundsListView).state
+        return state != BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    fun expand() {
+        val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compounds_fragment)
+        BottomSheetBehavior.from(compoundsListView).state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun collapse() {
         val compoundsListView = activity.findViewById<ConstraintLayout>(R.id.compounds_fragment)
-        val collapsedHeight =
-            activity.resources.getDimension(R.dimen.bottom_sheet_collapsed_height).toInt()
-        val expandedHeight =
-            activity.resources.getDimension(R.dimen.bottom_sheet_expanded_height).toInt()
-        ViewCompat.offsetTopAndBottom(
-            compoundsListView,
-            expandedHeight - collapsedHeight
-        )
+        BottomSheetBehavior.from(compoundsListView).state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     fun isSearchOpen() = searchCompoundPanel.searchOpen

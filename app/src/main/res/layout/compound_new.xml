@@ -12,7 +12,7 @@
         android:id="@+id/compoundsListHeader"
         style="@style/FinalDilutionH1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/bottom_sheet_header_height"
         android:layout_marginTop="@dimen/bottom_sheet_top_margin"
         android:text="@string/buttonNewCompound"
         android:textAlignment="center"
