@@ -1,45 +1,44 @@
 package com.labwhisper.biotech.finaldilution.component.view
 
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.DividerItemDecoration.VERTICAL
+import android.support.v7.widget.LinearLayoutManager
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
+import com.labwhisper.biotech.finaldilution.util.recyclerView
 
 
 class ComponentsPanel(internal val activity: EditActivity) {
 
     private val componentListAdapter: ChecklistAdapter =
-        ChecklistAdapter(
-            activity.solution.components,
-            this
-        )
+        ChecklistAdapter(activity.solution)
 
     fun displayComponentList() {
-        val componentsListView = activity.findViewById<View>(R.id.componentsTextView) as ListView
-        componentsListView.setOnItemClickListener(componentClick)
-        componentsListView.setOnItemLongClickListener(componentLongClick)
+        componentListAdapter.onClickListener = ::editComponent
+        componentListAdapter.onLongClickListener = ::removeComponent
+        val componentsListView = activity.recyclerView(R.id.componentsList)
+        componentsListView.layoutManager = LinearLayoutManager(activity)
         componentsListView.adapter = componentListAdapter
-        updateComponentList()
+        val divider = DividerItemDecoration(activity, VERTICAL)
+        ContextCompat.getDrawable(activity, R.drawable.components_divider)
+            ?.let { divider.setDrawable(it) }
+        componentsListView.addItemDecoration(divider)
+        updateSolution()
     }
 
-    private val componentClick: (AdapterView<*>, View, Int, Long) -> Unit =
-        onClick@{ parent, _, position, _ ->
-            val component = parent.adapter.getItem(position) as? Component ?: return@onClick
-            component.compound.let { activity.startComponentEdition(it) }
-        }
+    private fun removeComponent(component: Component) {
+        activity.solution.removeComponent(component)
+        activity.refresh()
+    }
 
-    private val componentLongClick: (AdapterView<*>, View, Int, Long) -> Boolean =
-        { parent, _, position, _ ->
-            val component = parent.adapter.getItem(position) as Component
-            activity.solution.removeComponent(component)
-            activity.refresh()
-            true
-        }
+    private fun editComponent(component: Component) {
+        component.compound.let { activity.startComponentEdition(it) }
+    }
 
-    fun updateComponentList() {
-        componentListAdapter.updateComponents(activity.solution.components)
+    fun updateSolution() {
+        componentListAdapter.updateComponents(activity.solution)
         updateOverflowState()
     }
 

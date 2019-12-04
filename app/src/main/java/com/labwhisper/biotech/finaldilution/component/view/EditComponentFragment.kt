@@ -92,6 +92,8 @@ class EditComponentFragment : Fragment() {
         setConcentrationButtonsState(false, compound.molarMass)
         fillComponentFields()
         refreshFromStock()
+        (editText(R.id.desiredConcEditText)).hint = desiredConcType.hint()
+        stockConcType?.let { (editText(R.id.stockConcEditText)).hint = it.hint() }
     }
 
 
@@ -127,14 +129,18 @@ class EditComponentFragment : Fragment() {
         val component = solution.getComponentWithCompound(compound)
             ?: return
         desiredConcType = component.desiredConcentration.type
-        val desiredConcEditText = editText(R.id.desiredConcEditText)
-        desiredConcEditText.setText(java.lang.Double.toString(component.desiredConcentration.concentration))
+        editText(R.id.desiredConcEditText).apply {
+            hint = desiredConcType.hint()
+            setText(java.lang.Double.toString(component.desiredConcentration.concentration))
+        }
 
         if (component.fromStock) {
             component.availableConcentration?.let {
-                val stockConcEditText = editText(R.id.stockConcEditText)
                 stockConcType = it.type
-                stockConcEditText.setText(java.lang.Double.toString(it.concentration))
+                editText(R.id.stockConcEditText).apply {
+                    setText(java.lang.Double.toString(it.concentration))
+                    hint = it.type.hint()
+                }
             }
 
         }

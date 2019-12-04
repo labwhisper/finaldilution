@@ -2,12 +2,17 @@ package com.labwhisper.biotech.finaldilution.util
 
 import android.app.Activity
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 
-fun View.textView(textViewId: Int): TextView {
-    return findViewById(textViewId)
+fun View.textView(id: Int): TextView {
+    return findViewById(id)
+}
+
+fun View.checkBox(id: Int): CheckBox {
+    return findViewById(id)
 }
 
 fun Activity.textView(textViewId: Int): TextView? {
@@ -36,6 +41,10 @@ fun Fragment.imageButton(id: Int): ImageButton {
 }
 
 fun Activity.listView(id: Int): ListView {
+    return findViewById(id)
+}
+
+fun Activity.recyclerView(id: Int): RecyclerView {
     return findViewById(id)
 }
 
@@ -85,4 +94,8 @@ fun Fragment.editTextValue(constraintLayoutId: Int, editTextId: Int): String {
 
 fun Fragment.string(stringId: Int): String {
     return resources.getString(stringId)
+}
+
+fun Fragment.recyclerView(id: Int): RecyclerView {
+    return requireActivity().findViewById(id)
 }

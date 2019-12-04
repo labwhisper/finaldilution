@@ -1,0 +1,18 @@
+<en-GB>
+New  features
+
+ -
+
+
+Fixes
+
+ - Changed text  Volume: -> Total volume: On the beaker
+
+ - Fixed Checklist behaviour for long checklist
+
+ - Fixed units: M/l ->  mol/l
+
+ - Repaired missing hint for first concentration
+
+</en-GB>
+

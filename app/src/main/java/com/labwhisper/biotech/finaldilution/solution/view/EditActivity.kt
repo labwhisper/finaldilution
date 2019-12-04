@@ -145,7 +145,7 @@ class EditActivity : AppCompatActivity() {
     }
 
     fun refresh() {
-        componentsPanel?.updateComponentList()
+        componentsPanel?.updateSolution()
         volumePanel?.updateVolumeTextView()
         careTaker.addMemento(solution)
         val title = findViewById<EditText>(R.id.solution_toolbar_text)

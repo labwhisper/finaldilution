@@ -13,6 +13,9 @@ data class Solution(
     val components: MutableList<Component> = ArrayList()
 ) : Item {
 
+    var componentsAdded: MutableSet<Component> = hashSetOf()
+    var isFilledInWithWater: Boolean = false
+
     override val seriesName: String
         get() = "SOLUTION"
 
@@ -76,6 +79,8 @@ data class Solution(
     override fun deepCopy(): Solution {
         val deepCopy = Solution(name, volume)
         deepCopy.components.apply { addAll(components) }
+        deepCopy.componentsAdded = mutableSetOf<Component>().apply { addAll(componentsAdded) }
+        deepCopy.isFilledInWithWater = isFilledInWithWater
         return deepCopy
     }
 

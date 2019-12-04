@@ -1,19 +1,30 @@
 package com.labwhisper.biotech.finaldilution.component
 
 import com.labwhisper.biotech.finaldilution.component.concentration.Concentration
+import com.labwhisper.biotech.finaldilution.component.concentration.MolarConcentration
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.NoMolarMassException
 import java.io.Serializable
 import java.text.DecimalFormat
 
-class Component(var compound: Compound, desired: Concentration, stock: Concentration? = null) :
+data class Component(val compound: Compound) :
     Serializable {
+
+    constructor(
+        compound: Compound,
+        desiredConcentration: Concentration,
+        availableConcentration: Concentration? = null
+    ) : this(compound) {
+        this.desiredConcentration = desiredConcentration
+        this.availableConcentration = availableConcentration
+    }
 
     val fromStock get() = availableConcentration != null
 
-    var desiredConcentration: Concentration = desired
-    var availableConcentration: Concentration? = stock
+    var desiredConcentration: Concentration = MolarConcentration(0.0)
+    var availableConcentration: Concentration? = null
     private var solutionVolume = 0.0
+
 
     override fun toString(): String {
         return compound.trivialName + " : " + getAmountStringForVolume(solutionVolume)

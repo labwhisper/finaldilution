@@ -8,17 +8,17 @@ import org.junit.Test
 
 class ComponentDisplayTest {
 
-    val solid = Component(Compound("solid1", false, 30.0), MolarConcentration(20.0))
-    val solidStock = Component(
+    private val solid = Component(Compound("solid1", false, 30.0), MolarConcentration(20.0))
+    private val solidStock = Component(
         compound = Compound("solid1", false, 30.0),
-        desired = MolarConcentration(20.0),
-        stock = MolarConcentration(10.0)
+        desiredConcentration = MolarConcentration(20.0),
+        availableConcentration = MolarConcentration(10.0)
     )
-    val liquid = Component(Compound("liquid1", true), PercentageConcentration(10.0))
-    val liquidStock = Component(
+    private val liquid = Component(Compound("liquid1", true), PercentageConcentration(10.0))
+    private val liquidStock = Component(
         compound = Compound("solid1", false, 30.0),
-        desired = PercentageConcentration(20.0),
-        stock = PercentageConcentration(10.0)
+        desiredConcentration = PercentageConcentration(20.0),
+        availableConcentration = PercentageConcentration(10.0)
     )
 
 

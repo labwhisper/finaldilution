@@ -9,8 +9,8 @@ enum class ConcentrationType(val value: Int) {
     fun hint(): String {
         return when (this.value) {
             0 -> "%"
-            1 -> "M/l"
-            2 -> "mM/l"
+            1 -> "mol/l"
+            2 -> "mmol/l"
             3 -> "mg/ml"
             else -> ""
         }
