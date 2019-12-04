@@ -57,6 +57,8 @@ class EditActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         when {
+            supportFragmentManager.fragments.filter { it is EditComponentFragment }
+                .isNotEmpty() -> super.onBackPressed()
             compoundsPanel?.isSearchOpen() == true -> compoundsPanel?.exitSearch()
             compoundsPanel?.isExpanded() == true -> compoundsPanel?.collapse()
             else -> super.onBackPressed()
