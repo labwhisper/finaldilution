@@ -1,7 +1,9 @@
 <en-GB>
 New  features
 
- -
+ - Enlarged buttons for checklist
+
+ - Beaker scrolls down when the list grows
 
 
 Fixes
@@ -13,6 +15,8 @@ Fixes
  - Fixed units: M/l ->  mol/l
 
  - Repaired missing hint for first concentration
+
+ - Corrected back button behavior on new component and component edition
 
 </en-GB>
 
