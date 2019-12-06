@@ -14,6 +14,7 @@ import com.labwhisper.biotech.finaldilution.component.view.ComponentsPanel
 import com.labwhisper.biotech.finaldilution.component.view.EditComponentFragment
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
+import com.labwhisper.biotech.finaldilution.compound.view.NewCompoundFragment
 import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
 import com.labwhisper.biotech.finaldilution.peripherals.gestures.EditGestureListener
 import com.labwhisper.biotech.finaldilution.solution.CareTaker
@@ -57,9 +58,11 @@ class EditActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         when {
-            supportFragmentManager.fragments.filter { it is EditComponentFragment }
+            supportFragmentManager.fragments.filterIsInstance<EditComponentFragment>()
                 .isNotEmpty() -> super.onBackPressed()
             compoundsPanel?.isSearchOpen() == true -> compoundsPanel?.exitSearch()
+            supportFragmentManager.fragments.filterIsInstance<NewCompoundFragment>()
+                .isNotEmpty() -> super.onBackPressed()
             compoundsPanel?.isExpanded() == true -> compoundsPanel?.collapse()
             else -> super.onBackPressed()
         }
