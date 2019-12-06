@@ -11,6 +11,7 @@ import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.compound.appmodel.CompoundsPanelAppModel
 import com.labwhisper.biotech.finaldilution.util.editText
 import com.labwhisper.biotech.finaldilution.util.imageButton
+import com.labwhisper.biotech.finaldilution.util.recyclerView
 
 class SearchCompoundPanel(private val activity: Activity) {
 
@@ -53,6 +54,12 @@ class SearchCompoundPanel(private val activity: Activity) {
         val imm =
             activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(searchEditText, 0)
+        activity.recyclerView(R.id.compoundsListView).setPadding(
+            0, 0, 0,
+            activity.resources.getDimensionPixelSize(R.dimen.button_size)
+                    + activity.resources.getDimensionPixelSize(R.dimen.grid_margin_side)
+
+        )
         searchOpen = true
     }
 
@@ -70,6 +77,7 @@ class SearchCompoundPanel(private val activity: Activity) {
             activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(searchEditText.windowToken, 0)
         exitSearchButton.visibility = View.INVISIBLE
+        activity.recyclerView(R.id.compoundsListView).setPadding(0, 0, 0, 0)
         searchOpen = false
     }
 
