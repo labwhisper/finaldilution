@@ -1,22 +1,12 @@
 <en-GB>
 New  features
 
- - Enlarged buttons for checklist
-
- - Beaker scrolls down when the list grows
-
 
 Fixes
 
- - Changed text  Volume: -> Total volume: On the beaker
+ - Fixed hidden compound during search
 
- - Fixed Checklist behaviour for long checklist
-
- - Fixed units: M/l ->  mol/l
-
- - Repaired missing hint for first concentration
-
- - Corrected back button behavior on new component and component edition
+ - Fixed Sucrose
 
 </en-GB>
 
