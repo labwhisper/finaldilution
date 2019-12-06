@@ -10,7 +10,6 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/bottom_sheet_collapsed_visible_height"
         tools:context=".solution.view.EditActivity">
 
         <android.support.v7.widget.Toolbar
@@ -43,13 +42,16 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:fadingEdgeLength="@dimen/bottom_sheet_collapsed_visible_height"
             android:fillViewport="true"
+            android:requiresFadingEdge="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/bottom_sheet_collapsed_visible_height">
 
 
                 <android.support.v7.widget.RecyclerView
@@ -58,11 +60,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/grid_margin_side"
                     android:layout_marginEnd="@dimen/grid_margin_side"
-                    app:layout_constraintVertical_chainStyle="spread_inside"
                     app:layout_constraintBottom_toTopOf="@+id/beaker"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="spread_inside" />
 
                 <ImageView
                     android:id="@+id/beaker"
