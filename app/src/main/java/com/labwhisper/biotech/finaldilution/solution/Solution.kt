@@ -59,7 +59,7 @@ data class Solution(
 
     fun volumeAmountForCurrentUnit(): String = when {
         volume == 0.0 -> DecimalFormat("0.###").format(volume)
-        volume > 1000 -> DecimalFormat("0.###").format(volume / 1000)
+        volume >= 1000 -> DecimalFormat("0.###").format(volume / 1000)
         volume < 1 -> DecimalFormat("0.###").format(volume * 1000)
         else -> DecimalFormat("0.###").format(volume)
     }
