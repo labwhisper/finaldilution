@@ -185,7 +185,12 @@ class EditActivity : AppCompatActivity() {
         if (event.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus as? EditText ?: return super.dispatchTouchEvent(event)
             //Work around - to not exit search edit text before choosing item
-            if (v == editText(R.id.search_compound_button)) return super.dispatchTouchEvent(event)
+            //Exception - do not remove focus when switching toggles
+            when (v) {
+                editText(R.id.search_compound_button),
+                editText(R.id.desiredConcEditText),
+                editText(R.id.stockConcEditText) -> return super.dispatchTouchEvent(event)
+            }
             val outRect = Rect()
             v.getGlobalVisibleRect(outRect)
             if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {

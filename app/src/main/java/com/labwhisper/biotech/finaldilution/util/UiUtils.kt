@@ -20,7 +20,7 @@ fun Activity.textView(textViewId: Int): TextView? {
     return findViewById
 }
 
-fun Activity.editText(editTextId: Int): EditText {
+fun Activity.editText(editTextId: Int): EditText? {
     return findViewById(editTextId)
 }
 
@@ -58,6 +58,10 @@ fun Fragment.editText(id: Int): EditText {
 
 fun Fragment.editTextValue(id: Int): String {
     return editText(id).text.toString()
+}
+
+fun Activity.radioButton(id: Int): RadioButton {
+    return findViewById(id)
 }
 
 fun Fragment.radioGroup(id: Int): RadioGroup {

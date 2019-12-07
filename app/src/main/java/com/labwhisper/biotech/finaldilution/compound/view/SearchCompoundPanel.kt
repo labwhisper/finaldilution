@@ -19,12 +19,12 @@ class SearchCompoundPanel(private val activity: Activity) {
 
     fun initSearchFunctionality(compoundsPanelAppModel: CompoundsPanelAppModel) {
         val searchEditText = activity.editText(R.id.search_compound_button)
-        searchEditText.setOnFocusChangeListener { _, hasFocus ->
+        searchEditText?.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 enterSearch()
             }
         }
-        searchEditText.addTextChangedListener(object : TextWatcher {
+        searchEditText?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
 
@@ -45,10 +45,10 @@ class SearchCompoundPanel(private val activity: Activity) {
         val exitSearchButton = activity.imageButton(R.id.exit_search_button)
         val screenSize = Point()
         activity.windowManager.defaultDisplay.getSize(screenSize)
-        searchEditText.layoutParams.width =
+        searchEditText?.layoutParams?.width =
             (screenSize.x - 2 * activity.resources.getDimension(R.dimen.grid_margin_side)).toInt()
         exitSearchButton.visibility = View.VISIBLE
-        searchEditText.setPadding(
+        searchEditText?.setPadding(
             activity.resources.getDimensionPixelSize(R.dimen.search_button_offset_open), 0, 0, 0
         )
         val imm =
@@ -66,16 +66,16 @@ class SearchCompoundPanel(private val activity: Activity) {
     fun exitSearch() {
         val searchEditText = activity.editText(R.id.search_compound_button)
         val exitSearchButton = activity.imageButton(R.id.exit_search_button)
-        searchEditText.setText("")
-        searchEditText.setPadding(
+        searchEditText?.setText("")
+        searchEditText?.setPadding(
             activity.resources.getDimensionPixelSize(R.dimen.search_button_offset_closed), 0, 0, 0
         )
-        searchEditText.layoutParams.width =
+        searchEditText?.layoutParams?.width =
             activity.resources.getDimension(R.dimen.button_size).toInt()
-        searchEditText.clearFocus()
+        searchEditText?.clearFocus()
         val imm =
             activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(searchEditText.windowToken, 0)
+        imm.hideSoftInputFromWindow(searchEditText?.windowToken, 0)
         exitSearchButton.visibility = View.INVISIBLE
         activity.recyclerView(R.id.compoundsListView).setPadding(0, 0, 0, 0)
         searchOpen = false
