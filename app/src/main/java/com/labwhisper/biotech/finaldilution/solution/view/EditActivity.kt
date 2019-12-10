@@ -16,12 +16,12 @@ import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
 import com.labwhisper.biotech.finaldilution.compound.view.NewCompoundFragment
 import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
-import com.labwhisper.biotech.finaldilution.peripherals.gestures.EditGestureListener
 import com.labwhisper.biotech.finaldilution.solution.CareTaker
 import com.labwhisper.biotech.finaldilution.solution.RedoOnLastChangeException
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.UndoOnEmptyListException
 import com.labwhisper.biotech.finaldilution.util.editText
+import com.labwhisper.biotech.finaldilution.util.view
 
 
 class EditActivity : AppCompatActivity() {
@@ -43,6 +43,7 @@ class EditActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        view(R.id.back).setOnClickListener { onBackPressed() }
         enableSolutionRenaming()
 
         volumePanel = VolumePanel(this)
@@ -53,7 +54,6 @@ class EditActivity : AppCompatActivity() {
         componentsPanel?.displayComponentList()
 
         displayAddCompoundFragment()
-        screenGestureDetector = GestureDetector(this, EditGestureListener(this))
     }
 
     override fun onBackPressed() {

@@ -26,6 +26,14 @@
             app:layout_constraintVertical_chainStyle="spread_inside"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="@dimen/grid_margin_side"
+                android:contentDescription="@string/navigation_back"
+                android:src="@drawable/ic_chevron_left_black_24dp" />
+
             <EditText
                 android:id="@+id/solution_toolbar_text"
                 style="@style/FinalDilutionH1"
