@@ -2,9 +2,7 @@ package com.labwhisper.biotech.finaldilution.component.view
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.CheckBox
 import android.widget.TextView
 import com.labwhisper.biotech.finaldilution.R
@@ -20,7 +18,7 @@ class ChecklistAdapter(
     var overflown: Boolean = false
 
     var onClickListener: ((Component) -> Unit)? = null
-    var onLongClickListener: ((Component) -> Unit)? = null
+    var onLongClickListener: ((Component) -> Boolean)? = null
 
     fun updateComponents(solution: Solution) {
         this.solution = solution
@@ -89,10 +87,11 @@ class ChecklistAdapter(
         }
 
         holder.itemView.setOnClickListener { onClickListener?.invoke(component) }
-        holder.itemView.setOnLongClickListener { onLongClickListener?.invoke(component); true }
+        holder.itemView.setOnLongClickListener { onLongClickListener?.invoke(component) ?: false }
     }
 
     class ChecklistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         var compoundTextView: TextView? = null
         var unitTextView: TextView? = null
         var extraTextView: TextView? = null
@@ -105,5 +104,4 @@ class ChecklistAdapter(
             checkBox = itemView.checkBox(R.id.checklist_checkBox1)
         }
     }
-
 }

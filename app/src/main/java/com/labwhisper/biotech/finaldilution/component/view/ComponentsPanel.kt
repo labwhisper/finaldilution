@@ -15,9 +15,11 @@ class ComponentsPanel(internal val activity: EditActivity) {
     private val componentListAdapter: ChecklistAdapter =
         ChecklistAdapter(activity.solution)
 
+    var componentInContextMenu: Component? = null
+
     fun displayComponentList() {
         componentListAdapter.onClickListener = ::editComponent
-        componentListAdapter.onLongClickListener = ::removeComponent
+        componentListAdapter.onLongClickListener = { componentInContextMenu = it; false }
         val componentsListView = activity.recyclerView(R.id.componentsList)
         componentsListView.layoutManager = LinearLayoutManager(activity)
         componentsListView.adapter = componentListAdapter
@@ -25,12 +27,15 @@ class ComponentsPanel(internal val activity: EditActivity) {
         ContextCompat.getDrawable(activity, R.drawable.components_divider)
             ?.let { divider.setDrawable(it) }
         componentsListView.addItemDecoration(divider)
+        activity.registerForContextMenu(componentsListView)
         updateSolution()
     }
 
-    private fun removeComponent(component: Component) {
-        activity.solution.removeComponent(component)
-        activity.refresh()
+    fun removeComponentSelectedInContextMenu() {
+        componentInContextMenu?.let {
+            activity.solution.removeComponent(it)
+            activity.refresh()
+        }
     }
 
     private fun editComponent(component: Component) {

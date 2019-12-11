@@ -4,8 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout2"
     android:layout_width="match_parent"
-    android:minHeight="52dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:focusable="true"
+    android:clickable="true"
+    android:minHeight="52dp">
 
     <TextView
         android:id="@+id/checklist_component"

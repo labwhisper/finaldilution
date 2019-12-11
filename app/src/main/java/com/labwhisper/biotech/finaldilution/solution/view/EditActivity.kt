@@ -131,6 +131,24 @@ class EditActivity : AppCompatActivity() {
         return false
     }
 
+    override fun onCreateContextMenu(
+        menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?
+    ) = menuInflater.inflate(R.menu.menu_component, menu)
+
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        if (item == null) {
+            return super.onContextItemSelected(null)
+        }
+        return when (item.itemId) {
+            R.id.action_delete_component -> {
+                componentsPanel?.removeComponentSelectedInContextMenu()
+                true
+            }
+            else -> false
+        }
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         screenGestureDetector?.onTouchEvent(event)
         return super.onTouchEvent(event)
@@ -163,7 +181,6 @@ class EditActivity : AppCompatActivity() {
         menu?.findItem(R.id.action_redo)?.isEnabled = careTaker.canRedo
     }
 
-    //    @SuppressLint("ClickableViewAccessibility")
     private fun displayAddCompoundFragment() {
         compoundsPanel = CompoundsPanel(this)
         compoundsPanel?.displayCompoundList()
