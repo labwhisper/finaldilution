@@ -1,12 +1,19 @@
 <en-GB>
 New  features
 
+ - Added context menu for deleting components from solution
+
+Improvements
+
+ - Added ripple effect on components taps
+
+ - When changing unit of concentration focus stays on amount edition
+
+ - Clicks outside the visible part of collapsed compound list are now ignored
 
 Fixes
 
- - Fixed Sucrose
-
- - Focus stays on Edit component text edition when changing concentration
+ - Edit text on volume edition now resizes dynamically
 
 </en-GB>
 
