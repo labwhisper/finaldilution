@@ -50,7 +50,7 @@ data class Component(val compound: Compound) :
                     else -> niceOutput.append(" kg")
                 }
             }
-            amount >= 1 -> {
+            amount == 0.0 || amount >= 1 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount))
                 when {
                     compound.liquid -> niceOutput.append(" ml")
