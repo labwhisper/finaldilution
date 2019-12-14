@@ -53,12 +53,15 @@ class NewCompoundFragment : Fragment() {
     }
 
     private fun populateCompoundIntoFields(compound: Compound) {
-        radioGroup(R.id.radio_group_state_of_matter).check(
-            when {
-                compound.liquid -> R.id.radioButtonLiquid
-                else -> R.id.radioButtonSolid
-            }
-        )
+        radioGroup(R.id.radio_group_state_of_matter).apply {
+            check(
+                when {
+                    compound.liquid -> R.id.radioButtonLiquid
+                    else -> R.id.radioButtonSolid
+                }
+            )
+            jumpDrawablesToCurrentState()
+        }
         constraintLayout(R.id.form_name).editText(R.id.editText).setText(compound.iupacName)
         compound.molarMass?.let {
             constraintLayout(R.id.form_molar_mass).editText(R.id.editText)
@@ -151,6 +154,8 @@ class NewCompoundFragment : Fragment() {
     }
 
     private fun attemptToCreateCompoundFromFields(): Compound {
+        val liquid = radioGroup(R.id.radio_group_state_of_matter)
+            .checkedRadioButtonId == R.id.radioButtonLiquid
         val iupacName = editTextValue(R.id.form_name, R.id.editText)
         val trivialName = editTextValue(R.id.form_trivial_name, R.id.editText)
         val formula = editTextValue(R.id.form_formula, R.id.editText)
@@ -160,7 +165,7 @@ class NewCompoundFragment : Fragment() {
         } catch (e: NumberFormatException) {
             null
         }
-        return Compound(iupacName, false, molarMass, trivialName, formula)
+        return Compound(iupacName, liquid, molarMass, trivialName, formula)
     }
 
     private var onFragmentCloseListener: ((compound: Compound?) -> Unit)? = null
