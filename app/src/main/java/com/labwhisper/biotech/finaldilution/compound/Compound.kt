@@ -26,7 +26,7 @@ data class Compound(
         get() {
             return molarMass?.let {
                 "[${DecimalFormat("0.##").format(molarMass)}]"
-            } ?: "[liquid]".takeIf { liquid } ?: "[variable]"
+            } ?: "[liquid]".takeIf { liquid } ?: "[undefined]"
         }
 
     override fun toString(): String {

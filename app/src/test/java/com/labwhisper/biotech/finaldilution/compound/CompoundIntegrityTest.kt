@@ -38,10 +38,10 @@ class CompoundIntegrityTest {
     }
 
     @Test
-    fun `"variable" mass is displayed for null solid`() {
+    fun `"undefined" mass is displayed for null solid`() {
         val compound = Compound(iupacName1, false, null, "", chemFormula1)
         val displayedMass = compound.displayMass
-        assertEquals("[variable]", displayedMass)
+        assertEquals("[undefined]", displayedMass)
     }
 
     @Test
