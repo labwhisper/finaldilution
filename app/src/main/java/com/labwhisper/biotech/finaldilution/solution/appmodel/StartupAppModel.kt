@@ -16,7 +16,7 @@ class StartupAppModel(val solutionGateway: DataGatewayOperations<Solution>) {
 
     fun refresh() {
         (solutionList as MutableLiveData<List<Solution>>).value =
-            solutionGateway.loadAll()
+            solutionGateway.loadAll().sorted()
     }
 
     fun addNewSolution(newName: String) {

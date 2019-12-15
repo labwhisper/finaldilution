@@ -2,6 +2,7 @@ package com.labwhisper.biotech.finaldilution.compound
 
 import com.labwhisper.biotech.finaldilution.genericitem.Item
 import java.text.DecimalFormat
+import java.util.*
 
 data class Compound(
     val iupacName: String,
@@ -9,7 +10,10 @@ data class Compound(
     val molarMass: Double? = null,
     val trivialName: String? = null,
     val chemicalFormula: String? = null
-) : Item {
+) : Item, Comparable<Compound> {
+
+    override fun compareTo(other: Compound) = displayName.toLowerCase(Locale.ENGLISH)
+        .compareTo(other.displayName.toLowerCase(Locale.ENGLISH))
 
     override val name: String = iupacName
     override val seriesName: String

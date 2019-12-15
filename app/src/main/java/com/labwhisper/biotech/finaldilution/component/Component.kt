@@ -8,7 +8,9 @@ import java.io.Serializable
 import java.text.DecimalFormat
 
 data class Component(val compound: Compound) :
-    Serializable {
+    Serializable, Comparable<Component> {
+
+    override fun compareTo(other: Component) = compound.compareTo(other.compound)
 
     constructor(
         compound: Compound,

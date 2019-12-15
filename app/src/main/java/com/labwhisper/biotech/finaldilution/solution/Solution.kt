@@ -11,7 +11,10 @@ data class Solution(
     override var name: String,
     var volume: Double = 0.0,
     val components: MutableList<Component> = ArrayList()
-) : Item {
+) : Item, Comparable<Solution> {
+
+    override fun compareTo(other: Solution) =
+        name.toLowerCase(Locale.ENGLISH).compareTo(other.name.toLowerCase(Locale.ENGLISH))
 
     var componentsAdded: MutableSet<Component> = hashSetOf()
     var isFilledInWithWater: Boolean = false

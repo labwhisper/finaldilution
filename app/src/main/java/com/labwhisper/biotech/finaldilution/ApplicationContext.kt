@@ -47,7 +47,7 @@ class ApplicationContext : Application() {
     }
 
     fun loadAllCompoundsSorted(): List<Compound> {
-        return compoundGateway.loadAll().sortedBy { it.displayName.toLowerCase() }
+        return compoundGateway.loadAll().sorted()
     }
 
     fun safeSaveCompound(compound: Compound) {
