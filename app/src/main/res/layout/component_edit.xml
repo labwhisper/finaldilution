@@ -34,25 +34,10 @@
             android:layout_marginTop="8dp"
             android:text="@string/desired_concentration"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            app:layout_constraintBottom_toTopOf="@+id/desiredConcEditText"
+            app:layout_constraintBottom_toTopOf="@+id/desiredConcButtonsBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/new_component_title"
             app:layout_constraintVertical_chainStyle="packed" />
-
-        <EditText
-            android:id="@+id/desiredConcEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/grid_margin_side"
-            android:layout_marginEnd="@dimen/grid_margin_side"
-            android:layout_marginBottom="8dp"
-            android:imeOptions="actionDone"
-            android:inputType="numberDecimal"
-            android:selectAllOnFocus="true"
-            app:layout_constraintBottom_toTopOf="@+id/desiredConcButtonsBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/desiredConcTextView" />
 
         <RadioGroup
             android:id="@+id/desiredConcButtonsBar"
@@ -63,10 +48,10 @@
             android:clipToPadding="false"
             android:orientation="horizontal"
             android:padding="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/secondView"
+            app:layout_constraintBottom_toTopOf="@+id/desiredConcEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/desiredConcEditText">
+            app:layout_constraintTop_toBottomOf="@+id/desiredConcTextView">
 
             <RadioButton
                 android:id="@+id/desiredPercentageConcButton"
@@ -108,6 +93,21 @@
                 android:text="@string/mg_ml" />
         </RadioGroup>
 
+        <EditText
+            android:id="@+id/desiredConcEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/grid_margin_side"
+            android:layout_marginEnd="@dimen/grid_margin_side"
+            android:layout_marginBottom="8dp"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:selectAllOnFocus="true"
+            app:layout_constraintBottom_toTopOf="@+id/secondView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/desiredConcButtonsBar" />
+
         <View
             android:id="@+id/secondView"
             android:layout_width="match_parent"
@@ -116,7 +116,7 @@
             app:layout_constraintBottom_toTopOf="@+id/enableStockDilutionButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/desiredConcButtonsBar" />
+            app:layout_constraintTop_toBottomOf="@+id/desiredConcEditText" />
 
         <ImageButton
             android:id="@+id/enableStockDilutionButton"
@@ -154,28 +154,9 @@
             android:text="@string/stock_concentration"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/stockConcEditText"
+            app:layout_constraintBottom_toTopOf="@+id/stockConcButtonsBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/enableStockDilutionButton"
-            tools:visibility="visible" />
-
-        <EditText
-            android:id="@+id/stockConcEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/grid_margin_side"
-            android:layout_marginEnd="@dimen/grid_margin_side"
-            android:layout_marginBottom="8dp"
-            android:clickable="false"
-            android:ems="10"
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:selectAllOnFocus="true"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/stockConcButtonsBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stockConcTextView"
             tools:visibility="visible" />
 
         <RadioGroup
@@ -189,10 +170,10 @@
             android:orientation="horizontal"
             android:padding="10dp"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_view"
+            app:layout_constraintBottom_toTopOf="@+id/stockConcEditText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stockConcEditText"
+            app:layout_constraintTop_toBottomOf="@+id/stockConcTextView"
             tools:visibility="visible">
 
             <RadioButton
@@ -243,6 +224,25 @@
                 tools:visibility="visible" />
 
         </RadioGroup>
+
+        <EditText
+            android:id="@+id/stockConcEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/grid_margin_side"
+            android:layout_marginEnd="@dimen/grid_margin_side"
+            android:layout_marginBottom="8dp"
+            android:clickable="false"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stockConcButtonsBar"
+            tools:visibility="visible" />
 
         <ImageButton
             android:id="@+id/buttonAddCompoundDone"
