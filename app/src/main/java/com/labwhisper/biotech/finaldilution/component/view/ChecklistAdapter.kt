@@ -2,7 +2,9 @@ package com.labwhisper.biotech.finaldilution.component.view
 
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import com.labwhisper.biotech.finaldilution.R
@@ -56,6 +58,7 @@ class ChecklistAdapter(
         val component = solution.components[holder.adapterPosition]
         val compound = component.compound
         holder.compoundTextView?.text = compound.displayName
+        holder.unitTextView?.visibility = View.VISIBLE
         holder.unitTextView?.text =
             component.getAmountStringForVolume(solution.volume)
         if (component.fromStock) {
