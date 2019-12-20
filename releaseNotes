@@ -1,19 +1,32 @@
 <en-GB>
+
 New  features
 
- - Added context menu for deleting components from solution
+ - added 50x concentrated type ( both desired & stock conc )
+
+ - Sorting solutions by name
 
 Improvements
 
- - Added ripple effect on components taps
+ - [variable] changed to [undefined]
 
- - When changing unit of concentration focus stays on amount edition
-
- - Clicks outside the visible part of collapsed compound list are now ignored
+ - auto 0nl in components - changed to 0ml
 
 Fixes
 
- - Edit text on volume edition now resizes dynamically
+ - liquid is now preserved
+
+ - Refresh didn't work on volume change
+
+ - Removed spell checking on solution name
+
+ - liquid unit were sometimes grams - corrected to ml
+
+ - couldn't click outside the concentration edit texts to dismiss them (reverted last fix)
+
+ - from stock - unit was hidden by the keyboard
+
+ - Top back button was misused - moved to bottom
 
 </en-GB>
 
