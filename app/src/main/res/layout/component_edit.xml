@@ -88,9 +88,20 @@
                 style="@style/FinalDilutionBigButton"
                 android:layout_width="@dimen/button_one_fifth"
                 android:layout_height="@dimen/button_one_fifth"
+                android:layout_marginEnd="6dp"
                 android:button="@null"
                 android:gravity="center"
                 android:text="@string/mg_ml" />
+
+            <RadioButton
+                android:id="@+id/desiredNxConcButton"
+                style="@style/FinalDilutionBigButton"
+                android:layout_width="@dimen/button_one_fifth"
+                android:layout_height="@dimen/button_one_fifth"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/nx" />
+
         </RadioGroup>
 
         <EditText
@@ -217,9 +228,21 @@
                 style="@style/FinalDilutionBigButton"
                 android:layout_width="@dimen/button_one_fifth"
                 android:layout_height="@dimen/button_one_fifth"
+                android:layout_marginEnd="6dp"
                 android:button="@null"
                 android:gravity="center"
                 android:text="@string/mg_ml"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
+            <RadioButton
+                android:id="@+id/stockNxConcButton"
+                style="@style/FinalDilutionBigButton"
+                android:layout_width="@dimen/button_one_fifth"
+                android:layout_height="@dimen/button_one_fifth"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/nx"
                 android:visibility="invisible"
                 tools:visibility="visible" />
 

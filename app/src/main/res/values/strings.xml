@@ -43,4 +43,5 @@
     <string name="mol">M</string>
     <string name="milimol">mM</string>
     <string name="mg_ml">mg/ml</string>
+    <string name="nx">nX</string>
 </resources>

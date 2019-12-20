@@ -35,6 +35,7 @@ class EditComponentFragment : Fragment() {
     //TODO ADD TAG
     private lateinit var solution: Solution
     internal lateinit var compound: Compound
+    private val initialConcentrationType = ConcentrationType.MOLAR
     private var desiredConcType: ConcentrationType = ConcentrationType.MOLAR
     private var stockConcType: ConcentrationType? = null
     private lateinit var desiredViewsList: MutableList<View>
@@ -66,12 +67,14 @@ class EditComponentFragment : Fragment() {
         desiredButtonList.add(radioButton(R.id.desiredMolarConcButton))
         desiredButtonList.add(radioButton(R.id.desiredMilimolarConcButton))
         desiredButtonList.add(radioButton(R.id.desiredMgMlConcButton))
+        desiredButtonList.add(radioButton(R.id.desiredNxConcButton))
 
         stockButtonList = ArrayList()
         stockButtonList.add(radioButton(R.id.stockPercentageConcButton))
         stockButtonList.add(radioButton(R.id.stockMolarConcButton))
         stockButtonList.add(radioButton(R.id.stockMilimolarConcButton))
         stockButtonList.add(radioButton(R.id.stockMgMlConcButton))
+        stockButtonList.add(radioButton(R.id.stockNxConcButton))
 
         desiredViewsList = ArrayList()
         desiredViewsList.add(editText(R.id.desiredConcEditText))
@@ -89,30 +92,21 @@ class EditComponentFragment : Fragment() {
 
         setKeyboardOnInputs()
         bindListeners()
-        setConcentrationButtonsState(false, compound.molarMass)
+        setConcentrationButtonsState(initialConcentrationType)
         fillComponentFields()
         refreshFromStock()
-        (editText(R.id.desiredConcEditText)).hint = desiredConcType.hint()
-        stockConcType?.let { (editText(R.id.stockConcEditText)).hint = it.hint() }
     }
 
 
     private fun bindListeners() {
 
-        for ((i, concentrationButton) in desiredButtonList.withIndex()) {
-            concentrationButton.setOnClickListener {
-                desiredConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
-                    (editText(R.id.desiredConcEditText)).hint = hint()
-                }
-            }
+        //FIXME 2 Add observers
+        for ((i, button) in desiredButtonList.withIndex()) {
+            button.setOnClickListener { changeDesireConcentration(ConcentrationType.fromInt(i)) }
         }
 
-        for ((i, concentrationButton) in stockButtonList.withIndex()) {
-            concentrationButton.setOnClickListener {
-                stockConcType = (ConcentrationType.fromInt(i) ?: ConcentrationType.MOLAR).apply {
-                    (editText(R.id.stockConcEditText)).hint = hint()
-                }
-            }
+        for ((i, button) in stockButtonList.withIndex()) {
+            button.setOnClickListener { changeStockConcentration(ConcentrationType.fromInt(i)) }
         }
 
         imageButton(R.id.enableStockDilutionButton).setOnClickListener { toggleSolutionFromStock() }
@@ -125,57 +119,116 @@ class EditComponentFragment : Fragment() {
 
     }
 
-    private fun fillComponentFields() {
-        val component = solution.getComponentWithCompound(compound)
-            ?: return
-        desiredConcType = component.desiredConcentration.type
-        editText(R.id.desiredConcEditText).apply {
-            hint = desiredConcType.hint()
-            setText(java.lang.Double.toString(component.desiredConcentration.concentration))
-        }
-
-        if (component.fromStock) {
-            component.availableConcentration?.let {
-                stockConcType = it.type
-                editText(R.id.stockConcEditText).apply {
-                    setText(java.lang.Double.toString(it.concentration))
-                    hint = it.type.hint()
-                }
+    private fun changeDesireConcentration(type: ConcentrationType?) {
+        applyDesiredConcButtonCheck(type ?: ConcentrationType.MOLAR)
+        if (desiredConcType == ConcentrationType.NX) {
+            appModel.fromStock = true
+            refreshFromStock()
+            checkStockConcButton(ConcentrationType.NX)
+        } else {
+            if (stockConcType == ConcentrationType.NX) {
+                checkStockConcButton(ConcentrationType.MILIGRAM_PER_MILLILITER)
             }
-
         }
-        setConcentrationButtonsState(component.fromStock, component.compound.molarMass)
     }
 
-    private fun setConcentrationButtonsState(fromStock: Boolean, molarMass: Double?) {
-        appModel.fromStock = fromStock
-        val desiredRadioGroup = radioGroup(R.id.desiredConcButtonsBar)
-        if (molarMass == null && (desiredConcType == ConcentrationType.MOLAR)) {
-            desiredConcType = ConcentrationType.PERCENTAGE
+    private fun changeStockConcentration(type: ConcentrationType?) {
+        applyStockConcButtonCheck(type ?: ConcentrationType.MOLAR)
+        if (stockConcType == ConcentrationType.NX) {
+            checkDesiredConcButton(ConcentrationType.NX)
+        } else {
+            if (desiredConcType == ConcentrationType.NX) {
+                checkDesiredConcButton(ConcentrationType.MILIGRAM_PER_MILLILITER)
+            }
         }
-        when (desiredConcType) {
-            ConcentrationType.PERCENTAGE -> desiredRadioGroup.check(R.id.desiredPercentageConcButton)
-            ConcentrationType.MOLAR -> desiredRadioGroup.check(R.id.desiredMolarConcButton)
-            ConcentrationType.MILIMOLAR -> desiredRadioGroup.check(R.id.desiredMilimolarConcButton)
-            ConcentrationType.MILIGRAM_PER_MILLILITER -> desiredRadioGroup.check(R.id.desiredMgMlConcButton)
+    }
+
+    private fun checkDesiredConcButton(type: ConcentrationType) {
+        radioGroup(R.id.desiredConcButtonsBar).check(getDesiredConcButton(type))
+        applyDesiredConcButtonCheck(type)
+    }
+
+    private fun applyDesiredConcButtonCheck(type: ConcentrationType) {
+        desiredConcType = type
+        editText(R.id.desiredConcEditText).hint = desiredConcType.hint()
+    }
+
+    private fun checkStockConcButton(type: ConcentrationType) {
+        radioGroup(R.id.stockConcButtonsBar).check(getStockConcButton(type))
+        applyStockConcButtonCheck(type)
+    }
+
+    private fun applyStockConcButtonCheck(type: ConcentrationType) {
+        stockConcType = type
+        editText(R.id.stockConcEditText).hint = stockConcType?.hint() ?: ""
+    }
+
+    private fun getDesiredConcButton(type: ConcentrationType): Int {
+        return when (type) {
+            ConcentrationType.PERCENTAGE -> R.id.desiredPercentageConcButton
+            ConcentrationType.MOLAR -> R.id.desiredMolarConcButton
+            ConcentrationType.MILIMOLAR -> R.id.desiredMilimolarConcButton
+            ConcentrationType.MILIGRAM_PER_MILLILITER -> R.id.desiredMgMlConcButton
+            ConcentrationType.NX -> R.id.desiredNxConcButton
+        }
+    }
+
+    private fun getStockConcButton(type: ConcentrationType): Int {
+        return when (type) {
+            ConcentrationType.PERCENTAGE -> R.id.stockPercentageConcButton
+            ConcentrationType.MOLAR -> R.id.stockMolarConcButton
+            ConcentrationType.MILIMOLAR -> R.id.stockMilimolarConcButton
+            ConcentrationType.MILIGRAM_PER_MILLILITER -> R.id.stockMgMlConcButton
+            ConcentrationType.NX -> R.id.stockNxConcButton
+        }
+    }
+
+    private fun fillComponentFields() {
+        val component = solution.getComponentWithCompound(compound) ?: return
+
+        editText(R.id.desiredConcEditText).apply {
+            setText(component.desiredConcentration.concentration.toString())
         }
 
-        if (fromStock) {
-            val stockRadioGroup = radioGroup(R.id.stockConcButtonsBar)
-            when (stockConcType) {
-                ConcentrationType.PERCENTAGE -> stockRadioGroup.check(R.id.stockPercentageConcButton)
-                ConcentrationType.MOLAR -> stockRadioGroup.check(R.id.stockMolarConcButton)
-                ConcentrationType.MILIMOLAR -> stockRadioGroup.check(R.id.stockMilimolarConcButton)
-                ConcentrationType.MILIGRAM_PER_MILLILITER -> stockRadioGroup.check(R.id.stockMgMlConcButton)
+        component.availableConcentration?.let {
+            editText(R.id.stockConcEditText).apply {
+                setText(it.concentration.toString())
             }
         }
 
+        setConcentrationButtonsState(
+            component.desiredConcentration.type,
+            component.availableConcentration?.type
+        )
+    }
+
+    //TODO Change signature to component and concentration type...
+    private fun setConcentrationButtonsState(
+        desiredType: ConcentrationType,
+        stockType: ConcentrationType? = null
+    ) {
+        appModel.fromStock = stockType != null
+        if (molarWithNoMolarMass(compound.molarMass, desiredType)) {
+            checkDesiredConcButton(ConcentrationType.PERCENTAGE)
+        } else {
+            checkDesiredConcButton(desiredType)
+        }
+
+        stockType?.let { checkStockConcButton(it) }
+
+        setMolarButtonsVisibility(compound.molarMass)
+    }
+
+    private fun setMolarButtonsVisibility(molarMass: Double?) {
         val molarEnabled = molarMass != null
         radioButton(R.id.desiredMolarConcButton).isEnabled = molarEnabled
         radioButton(R.id.desiredMilimolarConcButton).isEnabled = molarEnabled
         radioButton(R.id.stockMolarConcButton).isEnabled = molarEnabled
         radioButton(R.id.stockMilimolarConcButton).isEnabled = molarEnabled
     }
+
+    private fun molarWithNoMolarMass(molarMass: Double?, type: ConcentrationType) =
+        molarMass == null && (type == ConcentrationType.MOLAR || type == ConcentrationType.MILIMOLAR)
 
     private fun onCancelComponent() {
         requireActivity().onBackPressed()
@@ -293,6 +346,11 @@ class EditComponentFragment : Fragment() {
     private fun toggleSolutionFromStock() {
         appModel.fromStock = !appModel.fromStock
         refreshFromStock()
+        if (!appModel.fromStock) {
+            if (desiredConcType == ConcentrationType.NX) {
+                checkDesiredConcButton(ConcentrationType.MILIGRAM_PER_MILLILITER)
+            }
+        }
     }
 
     private fun refreshFromStock() {

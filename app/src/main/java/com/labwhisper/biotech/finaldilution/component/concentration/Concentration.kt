@@ -6,7 +6,7 @@ abstract class Concentration(var concentration: Double, var type: ConcentrationT
     Serializable {
 
     override fun toString(): String {
-        return concentration.toString() + " [" + type.toString() + "]"
+        return "$concentration [$type]"
     }
 
     /**

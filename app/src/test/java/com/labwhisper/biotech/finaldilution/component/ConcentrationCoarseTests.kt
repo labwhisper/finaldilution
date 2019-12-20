@@ -1,9 +1,6 @@
 package com.labwhisper.biotech.finaldilution.component
 
-import com.labwhisper.biotech.finaldilution.component.concentration.MgMlConcentration
-import com.labwhisper.biotech.finaldilution.component.concentration.MilimolarConcentration
-import com.labwhisper.biotech.finaldilution.component.concentration.MolarConcentration
-import com.labwhisper.biotech.finaldilution.component.concentration.PercentageConcentration
+import com.labwhisper.biotech.finaldilution.component.concentration.*
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -198,6 +195,15 @@ class ConcentrationCoarseTests {
         val stock = MgMlConcentration(400.0)
         val component = Component(compound, desired, stock)
         assertEquals(20.0, component.getQuantity(volume), 0.1)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun testNxToNx() {
+        val desired = NXConcentration(2.0)
+        val stock = NXConcentration(50.0)
+        val component = Component(compound, desired, stock)
+        assertEquals(80.0, component.getQuantity(volume), 0.1)
     }
 
 }

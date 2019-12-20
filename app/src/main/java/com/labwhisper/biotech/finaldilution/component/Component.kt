@@ -83,9 +83,11 @@ data class Component(val compound: Compound) :
     fun getQuantity(volume: Double): Double {
         val M = compound.molarMass
         return when {
-            fromStock -> availableConcentration!!.calcVolumeForDesiredMass(
-                desiredConcentration.calcDesiredMass(volume, M), M
-            )
+            fromStock -> {
+                availableConcentration?.calcVolumeForDesiredMass(
+                    desiredConcentration.calcDesiredMass(volume, M), M
+                ) ?: 0.0
+            }
             else -> desiredConcentration.calcDesiredMass(volume, M)
         }
     }

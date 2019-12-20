@@ -7,6 +7,7 @@ object ConcentrationFactory {
             ConcentrationType.MILIMOLAR -> MilimolarConcentration(amount)
             ConcentrationType.PERCENTAGE -> PercentageConcentration(amount)
             ConcentrationType.MILIGRAM_PER_MILLILITER -> MgMlConcentration(amount)
+            ConcentrationType.NX -> NXConcentration(amount)
         }
     }
 }
