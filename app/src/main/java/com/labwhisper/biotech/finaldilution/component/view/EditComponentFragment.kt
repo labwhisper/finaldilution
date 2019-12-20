@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.text.InputType
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -15,6 +13,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioButton
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.component.appmodel.ComponentEditAppModel

@@ -5,14 +5,13 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.MotionEvent
-
+import androidx.core.content.ContextCompat
 import com.labwhisper.biotech.finaldilution.R
 
-class AddComponentButtonView : android.support.v7.widget.AppCompatTextView {
+class AddComponentButtonView : androidx.appcompat.widget.AppCompatTextView {
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -58,10 +57,6 @@ class AddComponentButtonView : android.support.v7.widget.AppCompatTextView {
 
     private fun isInShape(x: Float): Boolean {
         return x > (screenWidth / 3) && x < (screenWidth * 2 / 3)
-    }
-
-    override fun performClick(): Boolean {
-        return super.performClick()
     }
 
     private fun getPath(): Path {

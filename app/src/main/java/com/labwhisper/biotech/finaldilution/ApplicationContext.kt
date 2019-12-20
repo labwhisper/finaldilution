@@ -2,8 +2,8 @@ package com.labwhisper.biotech.finaldilution
 
 import android.app.Application
 import android.content.Context
-import android.support.multidex.MultiDex
 import android.util.Log
+import androidx.multidex.MultiDex
 import com.google.gson.reflect.TypeToken
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.init.loadDefaultCompounds

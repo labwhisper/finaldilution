@@ -2,8 +2,6 @@ package com.labwhisper.biotech.finaldilution.compound.view
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
@@ -12,6 +10,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.compound.Compound

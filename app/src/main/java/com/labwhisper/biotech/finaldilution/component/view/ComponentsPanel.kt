@@ -1,9 +1,9 @@
 package com.labwhisper.biotech.finaldilution.component.view
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.DividerItemDecoration.VERTICAL
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
@@ -21,7 +21,8 @@ class ComponentsPanel(internal val activity: EditActivity) {
         componentListAdapter.onClickListener = ::editComponent
         componentListAdapter.onLongClickListener = { componentInContextMenu = it; false }
         val componentsListView = activity.recyclerView(R.id.componentsList)
-        componentsListView.layoutManager = LinearLayoutManager(activity)
+        componentsListView.layoutManager =
+            LinearLayoutManager(activity)
         componentsListView.adapter = componentListAdapter
         val divider = DividerItemDecoration(activity, VERTICAL)
         ContextCompat.getDrawable(activity, R.drawable.components_divider)

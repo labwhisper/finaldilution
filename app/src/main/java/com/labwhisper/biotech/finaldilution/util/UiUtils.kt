@@ -1,11 +1,11 @@
 package com.labwhisper.biotech.finaldilution.util
 
 import android.app.Activity
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 
 fun View.textView(id: Int): TextView {
     return findViewById(id)
