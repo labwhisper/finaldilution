@@ -4,9 +4,11 @@ New  features
 
 Improvements
 
+- Removed unnecessary Floating action buttons
+
 Fixes
 
- - scaled down concentration buttons
+- When hiding stock - move away from nx concentration from both desired and stock
 
 </en-GB>
 
