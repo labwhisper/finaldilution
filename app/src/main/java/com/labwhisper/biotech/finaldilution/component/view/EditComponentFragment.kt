@@ -113,9 +113,7 @@ class EditComponentFragment : Fragment() {
 
         imageButton(R.id.buttonAddCompoundDone).setOnClickListener { onAcceptComponent() }
 
-        imageButton(R.id.buttonAddCompoundCancel).setOnClickListener { onCancelComponent() }
-
-        imageButton(R.id.buttonAddCompoundDelete).setOnClickListener { onDeleteComponent() }
+        imageView(R.id.backToSolution).setOnClickListener { onCancelComponent() }
 
     }
 

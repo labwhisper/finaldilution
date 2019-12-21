@@ -44,6 +44,14 @@ fun Fragment.imageButton(id: Int): ImageButton {
     return requireActivity().findViewById(id)
 }
 
+fun Activity.imageView(id: Int): ImageView {
+    return findViewById(id)
+}
+
+fun Fragment.imageView(id: Int): ImageView {
+    return requireActivity().findViewById(id)
+}
+
 fun Activity.listView(id: Int): ListView {
     return findViewById(id)
 }
