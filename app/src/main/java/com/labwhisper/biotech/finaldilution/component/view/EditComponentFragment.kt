@@ -348,6 +348,9 @@ class EditComponentFragment : Fragment() {
             if (desiredConcType == ConcentrationType.NX) {
                 checkDesiredConcButton(ConcentrationType.MILIGRAM_PER_MILLILITER)
             }
+            if (stockConcType == ConcentrationType.NX) {
+                checkStockConcButton(ConcentrationType.MILIGRAM_PER_MILLILITER)
+            }
         }
     }
 
