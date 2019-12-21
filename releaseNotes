@@ -2,31 +2,11 @@
 
 New  features
 
- - added 50x concentrated type ( both desired & stock conc )
-
- - Sorting solutions by name
-
 Improvements
-
- - [variable] changed to [undefined]
-
- - auto 0nl in components - changed to 0ml
 
 Fixes
 
- - liquid is now preserved
-
- - Refresh didn't work on volume change
-
- - Removed spell checking on solution name
-
- - liquid unit were sometimes grams - corrected to ml
-
- - couldn't click outside the concentration edit texts to dismiss them (reverted last fix)
-
- - from stock - unit was hidden by the keyboard
-
- - Top back button was misused - moved to bottom
+ - scaled down concentration buttons
 
 </en-GB>
 

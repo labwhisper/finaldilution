@@ -16,9 +16,10 @@
     <dimen name="search_button_offset_open">13dp</dimen>
     <dimen name="search_button_offset_closed">12dp</dimen>
     <dimen name="compound_list_item_height">60dp</dimen>
-    <dimen name="button_one_fifth">50dp</dimen>
+    <dimen name="button_one_fifth">54dp</dimen>
     <dimen name="bottom_sheet_header_height">50dp</dimen>
     <dimen name="bottom_sheet_elevation">40dp</dimen>
     <dimen name="button_search_elevation">6dp</dimen>
     <dimen name="button_above_search_elevation">10dp</dimen>
+    <dimen name="concentrationButtonsHorizontalSpace">4dp</dimen>
 </resources>

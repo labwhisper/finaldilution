@@ -2,4 +2,5 @@
     <dimen name="bottom_sheet_expanded_height">620dp</dimen>
     <dimen name="button_one_fifth">60dp</dimen>
     <dimen name="grid_margin_side">24dp</dimen>
+    <dimen name="concentrationButtonsHorizontalSpace">6dp</dimen>
 </resources>
