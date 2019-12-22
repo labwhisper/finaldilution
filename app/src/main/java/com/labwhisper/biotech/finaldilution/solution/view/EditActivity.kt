@@ -133,7 +133,16 @@ class EditActivity : AppCompatActivity() {
 
     override fun onCreateContextMenu(
         menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?
-    ) = menuInflater.inflate(R.menu.menu_component, menu)
+    ) {
+        when (v?.id) {
+            R.id.componentsList -> {
+                menuInflater.inflate(R.menu.menu_component, menu)
+            }
+            R.id.compoundsListView -> {
+                menuInflater.inflate(R.menu.menu_compound, menu)
+            }
+        }
+    }
 
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
@@ -141,8 +150,16 @@ class EditActivity : AppCompatActivity() {
             return super.onContextItemSelected(null)
         }
         return when (item.itemId) {
-            R.id.action_delete_component -> {
+            R.id.action_remove_component -> {
                 componentsPanel?.removeComponentSelectedInContextMenu()
+                true
+            }
+            R.id.action_delete_compound -> {
+                compoundsPanel?.deleteCompoundSelectedInContextMenu()
+                true
+            }
+            R.id.action_edit_compound -> {
+                compoundsPanel?.editCompoundSelectedInContextMenu()
                 true
             }
             else -> false

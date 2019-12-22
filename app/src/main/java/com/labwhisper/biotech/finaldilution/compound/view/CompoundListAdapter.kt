@@ -16,6 +16,8 @@ class CompoundListAdapter :
     var compoundList: MutableList<Compound> = mutableListOf()
     var compoundsInSolution: MutableList<Compound> = mutableListOf()
     var solution: Solution? = null
+    var onClickListener: ((View, Compound) -> Unit)? = null
+    var onLongClickListener: ((Compound) -> Boolean)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CompoundViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -39,6 +41,9 @@ class CompoundListAdapter :
         holder.itemView.setBackgroundColor(
             ContextCompat.getColor(holder.itemView.context, color)
         )
+
+        holder.itemView.setOnClickListener { view -> onClickListener?.invoke(view, compound) }
+        holder.itemView.setOnLongClickListener { onLongClickListener?.invoke(compound) ?: false }
     }
 
 

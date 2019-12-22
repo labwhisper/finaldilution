@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#00ffffff"
+    android:clickable="true"
     android:elevation="@dimen/bottom_sheet_elevation"
+    android:focusable="true"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/bottom_sheet_collapsed_height"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
@@ -83,11 +85,11 @@
 
     <ImageButton
         android:id="@+id/exit_search_button"
-        android:elevation="@dimen/button_above_search_elevation"
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
         android:background="@color/transparent"
         android:contentDescription="@string/exit_search_description"
+        android:elevation="@dimen/button_above_search_elevation"
         android:src="@drawable/ic_clear_white_24dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/search_compound_button"
