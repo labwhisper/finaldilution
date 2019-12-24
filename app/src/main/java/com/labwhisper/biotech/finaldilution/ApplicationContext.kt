@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.multidex.MultiDex
 import com.google.gson.reflect.TypeToken
+import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.init.loadDefaultCompounds
 import com.labwhisper.biotech.finaldilution.peripherals.DataGatewayOperations
@@ -57,6 +58,24 @@ class ApplicationContext : Application() {
 
     fun updateCompound(compound: Compound) {
         return compoundGateway.update(compound)
+    }
+
+    //FIXME Add test cases
+    fun renameCompound(compound: Compound, oldCompound: Compound) {
+        compoundGateway.rename(compound, oldCompound.name)
+        for (solution in solutionGateway.loadAll()) {
+            val oldComponent = solution.getComponentWithCompound(oldCompound)
+            oldComponent?.let {
+                val newComponent = Component(
+                    compound,
+                    oldComponent.desiredConcentration,
+                    oldComponent.availableConcentration
+                ).apply { setSolutionVolume(solution.volume) }
+                solution.removeComponent(oldComponent)
+                solution.addComponent(newComponent)
+                solutionGateway.update(solution)
+            }
+        }
     }
 
     fun removeCompoundFromEverywhere(compound: Compound) {

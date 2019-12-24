@@ -94,7 +94,13 @@ class CompoundsPanel(private val activity: EditActivity) {
             newCompoundFragment.arguments = bundle
         }
         newCompoundFragment.setOnFragmentCloseListener { newCompound ->
-            activity.findViewById<ImageButton>(R.id.new_compound_button).visibility = View.VISIBLE
+            //FIXME Add test case
+            if (compound?.name != newCompound?.name) {
+                val appState: ApplicationContext = activity.applicationContext as ApplicationContext
+                activity.solution = appState.reloadSolution(activity.solution)!!
+                activity.refresh()
+            }
+            activity.imageButton(R.id.new_compound_button).visibility = View.VISIBLE
             appModel.compoundListAdapter.compoundList = appModel.compoundList
             appModel.compoundListAdapter.notifyDataSetChanged()
             val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)

@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
@@ -35,6 +36,9 @@ class ComponentsPanel(internal val activity: EditActivity) {
     fun removeComponentSelectedInContextMenu() {
         componentInContextMenu?.let {
             activity.solution.removeComponent(it)
+            val appState: ApplicationContext = activity.applicationContext as ApplicationContext
+            appState.saveCurrentWorkOnSolution(activity.solution)
+            //FIXME Add test case
             activity.refresh()
         }
     }

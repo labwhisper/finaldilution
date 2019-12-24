@@ -147,7 +147,13 @@ class NewCompoundFragment : Fragment() {
             requireActivity().applicationContext as ApplicationContext
         //TODO update should ask for update / save new
         //TODO safeSave -> on error the question replace should be asked
-        appModel.initialCompound?.let { appState.updateCompound(compound) }
+        //FIXME Add test cases
+        appModel.initialCompound?.let {
+            if (compound.name != it.name) {
+                appState.renameCompound(compound, it)
+            }
+            appState.updateCompound(compound)
+        }
             ?: appState.safeSaveCompound(compound)
         newCompound = compound
         fragmentManager?.popBackStack()
