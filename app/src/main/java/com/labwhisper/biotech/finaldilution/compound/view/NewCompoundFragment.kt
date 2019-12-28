@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.labwhisper.biotech.finaldilution.ApplicationContext
@@ -21,16 +22,17 @@ import com.labwhisper.biotech.finaldilution.util.*
 
 class NewCompoundFragment : Fragment() {
 
-    val appModel = NewCompoundAppModel()
-    var newCompound: Compound? = null
+    var appModel: NewCompoundAppModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        arguments?.getSerializable("COMPOUND").let { appModel.initialCompound = it as Compound? }
-        return inflater.inflate(R.layout.compound_new, container, false)
+        val fragment = inflater.inflate(R.layout.compound_new, container, false)
+        appModel = NewCompoundAppModel(requireActivity().applicationContext as ApplicationContext)
+        arguments?.getSerializable("COMPOUND").let { appModel?.initialCompound = it as Compound? }
+        return fragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +43,7 @@ class NewCompoundFragment : Fragment() {
         editText(R.id.form_molar_mass, R.id.editText).keyListener =
             DigitsKeyListener.getInstance("0123456789.")
         textView(R.id.form_formula, R.id.textView).text = getString(R.string.chemical_formula)
-        appModel.initialCompound?.let {
+        appModel?.initialCompound?.let {
             textView(R.id.new_compound_title).text = "Edit ${it.iupacName}"
             populateCompoundIntoFields(it)
         }
@@ -80,18 +82,18 @@ class NewCompoundFragment : Fragment() {
     private fun initAdvancedButton() {
         loadFromAppModel()
         imageButton(R.id.form_expand_advanced).setOnClickListener {
-            appModel.advancedOptions = !appModel.advancedOptions
+            appModel?.advancedOptions = !(appModel?.advancedOptions == true)
             loadFromAppModel()
         }
     }
 
     fun loadFromAppModel() {
         constraintLayout(R.id.form_trivial_name).visibility =
-            if (appModel.advancedOptions) View.VISIBLE else View.INVISIBLE
+            if (appModel?.advancedOptions == true) View.VISIBLE else View.INVISIBLE
         constraintLayout(R.id.form_formula).visibility =
-            if (appModel.advancedOptions) View.VISIBLE else View.INVISIBLE
+            if (appModel?.advancedOptions == true) View.VISIBLE else View.INVISIBLE
         imageButton(R.id.form_expand_advanced).setImageDrawable(
-            if (appModel.advancedOptions)
+            if (appModel?.advancedOptions == true)
                 ContextCompat.getDrawable(
                     requireActivity(),
                     R.drawable.ic_expand_less_black_24dp
@@ -131,32 +133,27 @@ class NewCompoundFragment : Fragment() {
         }
     }
 
-    private fun onProceed() {
+    @VisibleForTesting
+    internal fun onProceed() {
         val compound = attemptToCreateCompoundFromFields()
         if (!CompoundValidator.validateNewCompound(compound)) {
             fragmentManager?.popBackStack()
             return
         }
+        hideKeyboard()
+        //TODO update should ask for update / save new
+        //TODO safeSave -> on error the question replace should be asked
+        appModel?.proceedWithCompound(compound)
+        fragmentManager?.popBackStack()
+    }
+
+    private fun hideKeyboard() {
         val imm =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(editText(R.id.form_name, R.id.editText).windowToken, 0)
         imm.hideSoftInputFromWindow(editText(R.id.form_trivial_name, R.id.editText).windowToken, 0)
         imm.hideSoftInputFromWindow(editText(R.id.form_formula, R.id.editText).windowToken, 0)
         imm.hideSoftInputFromWindow(editText(R.id.form_molar_mass, R.id.editText).windowToken, 0)
-        val appState: ApplicationContext =
-            requireActivity().applicationContext as ApplicationContext
-        //TODO update should ask for update / save new
-        //TODO safeSave -> on error the question replace should be asked
-        //FIXME Add test cases
-        appModel.initialCompound?.let {
-            if (compound.name != it.name) {
-                appState.renameCompound(compound, it)
-            }
-            appState.updateCompound(compound)
-        }
-            ?: appState.safeSaveCompound(compound)
-        newCompound = compound
-        fragmentManager?.popBackStack()
     }
 
     private fun attemptToCreateCompoundFromFields(): Compound {
@@ -181,8 +178,8 @@ class NewCompoundFragment : Fragment() {
     }
 
     override fun onStop() {
-        onFragmentCloseListener?.invoke(newCompound)
-        newCompound = null
+        onFragmentCloseListener?.invoke(appModel?.newCompound)
+        appModel?.newCompound = null
         super.onStop()
     }
 

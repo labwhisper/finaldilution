@@ -12,7 +12,10 @@ import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.view.ComponentsPanel
 import com.labwhisper.biotech.finaldilution.component.view.EditComponentFragment
+import com.labwhisper.biotech.finaldilution.component.view.EditCompoundFragmentCreator
 import com.labwhisper.biotech.finaldilution.compound.Compound
+import com.labwhisper.biotech.finaldilution.compound.appmodel.CompoundsPanelAppModel
+import com.labwhisper.biotech.finaldilution.compound.view.CompoundListAdapter
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
 import com.labwhisper.biotech.finaldilution.compound.view.NewCompoundFragment
 import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
@@ -184,6 +187,13 @@ class EditActivity : AppCompatActivity() {
         title.setText(solution.name)
     }
 
+
+    fun propagateAllChanges() {
+        val appState: ApplicationContext = applicationContext as ApplicationContext
+        solution = appState.reloadSolution(solution)!!
+        refresh()
+    }
+
     fun refresh() {
         componentsPanel?.updateSolution()
         volumePanel?.updateVolumeTextView()
@@ -199,7 +209,16 @@ class EditActivity : AppCompatActivity() {
     }
 
     private fun displayAddCompoundFragment() {
-        compoundsPanel = CompoundsPanel(this)
+        compoundsPanel = CompoundsPanel(
+            activity = this,
+            appModel = CompoundsPanelAppModel(
+                applicationContext as ApplicationContext,
+                CompoundListAdapter(),
+                solution,
+                careTaker
+            ),
+            editCompoundFragmentCreator = EditCompoundFragmentCreator()
+        )
         compoundsPanel?.displayCompoundList()
     }
 

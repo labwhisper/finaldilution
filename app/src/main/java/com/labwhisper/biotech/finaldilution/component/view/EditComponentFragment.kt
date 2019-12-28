@@ -267,21 +267,6 @@ class EditComponentFragment : Fragment() {
 
     }
 
-    private fun onDeleteComponent() {
-
-        val component = solution.getComponentWithCompound(compound)
-        if (component == null) {
-            onCancelComponent()
-        } else {
-            solution.removeComponent(component)
-            val intent = Intent(requireContext(), EditActivity::class.java)
-            intent.putExtraAnItem(solution)
-            intent.putExtra("CARE_TAKER", careTaker)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-        }
-    }
-
     private fun createComponent(): Component {
         val component =
             Component(compound, retrieveDesiredConcFromInput(), retrieveStockConcFromInput())

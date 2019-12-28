@@ -5,8 +5,8 @@ import android.content.Context
 import android.util.Log
 import androidx.multidex.MultiDex
 import com.google.gson.reflect.TypeToken
-import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.compound.Compound
+import com.labwhisper.biotech.finaldilution.compound.CompoundChangePropagator
 import com.labwhisper.biotech.finaldilution.init.loadDefaultCompounds
 import com.labwhisper.biotech.finaldilution.peripherals.DataGatewayOperations
 import com.labwhisper.biotech.finaldilution.peripherals.datastores.SharedPreferencesStore
@@ -23,7 +23,6 @@ class ApplicationContext : Application() {
         SharedPreferencesStore(
             getSharedPreferences("solutions", Context.MODE_PRIVATE),
             object : TypeToken<List<Solution>>() {})
-
     }
 
     val compoundGateway: DataGatewayOperations<Compound> by lazy {
@@ -36,14 +35,13 @@ class ApplicationContext : Application() {
         store
     }
 
-    init {
-        Log.d(TAG, "Creating an application context")
-        instance = this
+    val compoundChangePropagator by lazy {
+        CompoundChangePropagator(solutionGateway, compoundGateway)
     }
 
     fun initEmptyCompoundList(store: DataGatewayOperations<Compound>) {
         Log.d(TAG, "No compounds found. Creating initial compound list")
-        val compounds = loadDefaultCompounds(instance)
+        val compounds = loadDefaultCompounds(this)
         compounds.forEach { it?.let { compound -> store.save(compound) } }
     }
 
@@ -62,31 +60,11 @@ class ApplicationContext : Application() {
 
     //FIXME Add test cases
     fun renameCompound(compound: Compound, oldCompound: Compound) {
-        compoundGateway.rename(compound, oldCompound.name)
-        for (solution in solutionGateway.loadAll()) {
-            val oldComponent = solution.getComponentWithCompound(oldCompound)
-            oldComponent?.let {
-                val newComponent = Component(
-                    compound,
-                    oldComponent.desiredConcentration,
-                    oldComponent.availableConcentration
-                ).apply { setSolutionVolume(solution.volume) }
-                solution.removeComponent(oldComponent)
-                solution.addComponent(newComponent)
-                solutionGateway.update(solution)
-            }
-        }
+        compoundChangePropagator.renameCompoundInAllSolutions(compound, oldCompound)
     }
 
     fun removeCompoundFromEverywhere(compound: Compound) {
-        for (solution in solutionGateway.loadAll()) {
-            val component = solution.getComponentWithCompound(compound)
-            if (component != null) {
-                solution.removeComponent(component)
-                solutionGateway.update(solution)
-            }
-        }
-        compoundGateway.remove(compound)
+        compoundChangePropagator.removeCompoundsFromAllSolutions(compound)
     }
 
     fun saveCurrentWorkOnSolution(solution: Solution) {
@@ -103,10 +81,5 @@ class ApplicationContext : Application() {
 
     companion object {
         private val TAG = "Application Context"
-        val FINAL_DILUTION_PREFERENCES = "FINAL_DILUTION_PREFERENCES"
-        private lateinit var instance: ApplicationContext
-
-        val context: Context
-            get() = instance
     }
 }

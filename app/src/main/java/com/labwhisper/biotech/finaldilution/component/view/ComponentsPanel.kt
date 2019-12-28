@@ -38,7 +38,6 @@ class ComponentsPanel(internal val activity: EditActivity) {
             activity.solution.removeComponent(it)
             val appState: ApplicationContext = activity.applicationContext as ApplicationContext
             appState.saveCurrentWorkOnSolution(activity.solution)
-            //FIXME Add test case
             activity.refresh()
         }
     }

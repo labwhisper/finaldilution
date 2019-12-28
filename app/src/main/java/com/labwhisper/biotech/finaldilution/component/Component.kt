@@ -29,14 +29,14 @@ data class Component(val compound: Compound) :
 
 
     override fun toString(): String {
-        return compound.trivialName + " : " + getAmountStringForVolume(solutionVolume)
+        return compound.name + " : " + getAmountStringForVolume(solutionVolume)
     }
 
     fun getAmountStringForVolume(volume: Double): String {
         val amount = try {
             getQuantity(volume)
         } catch (e: NoMolarMassException) {
-            return "Error"
+            return "NoMolar!"
         }
         return getAmountString(amount)
     }
