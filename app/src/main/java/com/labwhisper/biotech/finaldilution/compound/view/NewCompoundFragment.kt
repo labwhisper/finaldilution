@@ -11,8 +11,10 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import androidx.annotation.VisibleForTesting
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.compound.Compound
@@ -51,7 +53,31 @@ class NewCompoundFragment : Fragment() {
         initCancelButton()
         initDoneButton()
         setProceedOnLastEditText()
+        requireActivity().findViewById<AddComponentButtonView>(R.id.compoundsListHeaderNew)
+            .setOnClickListener {
+                if (!isExpanded()) expand() else collapse()
+            }
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    //FIXME All expand collapse functions are duplicated
+    fun isExpanded(): Boolean {
+        val compoundsListView =
+            requireActivity().findViewById<ConstraintLayout>(R.id.compounds_fragment)
+        val state = BottomSheetBehavior.from(compoundsListView).state
+        return state != BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    fun expand() {
+        val compoundsListView =
+            requireActivity().findViewById<ConstraintLayout>(R.id.compounds_fragment)
+        BottomSheetBehavior.from(compoundsListView).state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    fun collapse() {
+        val compoundsListView =
+            requireActivity().findViewById<ConstraintLayout>(R.id.compounds_fragment)
+        BottomSheetBehavior.from(compoundsListView).state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private fun populateCompoundIntoFields(compound: Compound) {

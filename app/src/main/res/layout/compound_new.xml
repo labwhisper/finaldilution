@@ -4,13 +4,11 @@
     android:id="@+id/new_compound_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
     android:elevation="@dimen/bottom_sheet_elevation"
-    android:focusable="true"
     android:orientation="vertical">
 
     <com.labwhisper.biotech.finaldilution.compound.view.AddComponentButtonView
-        android:id="@+id/compoundsListHeader"
+        android:id="@+id/compoundsListHeaderNew"
         style="@style/FinalDilutionH1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_sheet_header_height"
@@ -30,12 +28,14 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@color/grey1"
+        android:clickable="true"
+        android:focusable="true"
         android:gravity="center"
         android:text="@string/title_add_new_compound"
         app:layout_constraintBottom_toTopOf="@+id/all_texts_wrapped"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/compoundsListHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/compoundsListHeaderNew" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/all_texts_wrapped"
