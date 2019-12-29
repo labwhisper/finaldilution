@@ -101,6 +101,7 @@ class StartupActivity : AppCompatActivity() {
     }
 
     private fun enterSolution(solution: Solution) {
+        appModel.cleanSolutionProgressIfDone(solution)
         val intent = Intent(this@StartupActivity, EditActivity::class.java)
         intent.putExtraAnItem(solution)
         intent.putExtra("CARE_TAKER", CareTaker<Solution>())

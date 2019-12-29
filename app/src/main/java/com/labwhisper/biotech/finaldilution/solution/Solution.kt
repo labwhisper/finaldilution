@@ -37,6 +37,9 @@ data class Solution(
                 }
             }
 
+    val done
+        get() = isFilledInWithWater && componentsAdded.containsAll(components)
+
     fun recalculateVolume(volume: Double) {
         this.volume = volume
         components.forEach { component -> component.setSolutionVolume(volume) }

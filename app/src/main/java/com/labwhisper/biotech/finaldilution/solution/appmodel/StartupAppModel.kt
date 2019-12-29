@@ -19,6 +19,14 @@ class StartupAppModel(val solutionGateway: DataGatewayOperations<Solution>) {
             solutionGateway.loadAll().sorted()
     }
 
+    fun cleanSolutionProgressIfDone(solution: Solution) {
+        if (solution.done) {
+            solution.componentsAdded.clear()
+            solution.isFilledInWithWater = false
+            updateSolution(solution)
+        }
+    }
+
     fun addNewSolution(newName: String) {
         if (newName.isBlank()) {
             return
@@ -44,6 +52,11 @@ class StartupAppModel(val solutionGateway: DataGatewayOperations<Solution>) {
     }
 
     fun loadSolution(newName: String): Solution? = solutionGateway.load(newName)
+
+    fun updateSolution(solution: Solution) {
+        solutionGateway.update(solution)
+    }
+
     fun renameSolution(solution: Solution, oldName: String) =
         solutionGateway.rename(solution, oldName)
 }

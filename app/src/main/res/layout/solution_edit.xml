@@ -156,6 +156,20 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <ImageView
+            android:id="@+id/well_done"
+            android:layout_width="@dimen/well_done_size"
+            android:layout_height="@dimen/well_done_size"
+            android:contentDescription="@string/well_done"
+            android:rotationY="180"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/head"
+            tools:visibility="visible" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/compound_panel" />

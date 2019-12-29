@@ -1,5 +1,6 @@
 package com.labwhisper.biotech.finaldilution.component.view
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
+import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.util.checkBox
+import com.labwhisper.biotech.finaldilution.util.imageView
 import com.labwhisper.biotech.finaldilution.util.textView
 
 class ChecklistAdapter(
@@ -51,6 +54,7 @@ class ChecklistAdapter(
 
             holder.checkBox?.setOnCheckedChangeListener { _, isChecked ->
                 solution.isFilledInWithWater = isChecked
+                setWellDoneIfAllChecked(holder)
             }
             return
         }
@@ -87,10 +91,22 @@ class ChecklistAdapter(
             } else {
                 solution.componentsAdded.remove(component)
             }
+            setWellDoneIfAllChecked(holder)
         }
 
         holder.itemView.setOnClickListener { onClickListener?.invoke(component) }
         holder.itemView.setOnLongClickListener { onLongClickListener?.invoke(component) ?: false }
+    }
+
+    private fun setWellDoneIfAllChecked(
+        holder: ChecklistViewHolder
+    ) {
+        if (solution.done) {
+            val activity = holder.itemView.context
+            if (activity is Activity) {
+                Anim().animWellDone(activity.imageView(R.id.well_done))
+            }
+        }
     }
 
     class ChecklistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -52,6 +52,10 @@ fun Fragment.imageView(id: Int): ImageView {
     return requireActivity().findViewById(id)
 }
 
+fun View.imageView(id: Int): ImageView {
+    return findViewById(id)
+}
+
 fun Activity.listView(id: Int): ListView {
     return findViewById(id)
 }

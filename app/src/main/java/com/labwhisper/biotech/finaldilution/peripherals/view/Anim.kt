@@ -3,10 +3,10 @@ package com.labwhisper.biotech.finaldilution.peripherals.view
 import android.graphics.Color
 import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.Transformation
+import android.view.animation.*
+import android.widget.ImageView
 import android.widget.TextView
+import com.labwhisper.biotech.finaldilution.R
 import java.util.*
 
 class Anim {
@@ -27,7 +27,7 @@ class Anim {
             return
         }
 
-        if (!(view is TextView)) {
+        if (view !is TextView) {
             return
         }
 
@@ -57,6 +57,73 @@ class Anim {
 
         })
         view.startAnimation(colorAnimator)
+    }
+
+    fun animWrong(imageView: ImageView) {
+        val fadeIn = AlphaAnimation(0f, 1f)
+        fadeIn.duration = 500
+        fadeIn.repeatMode = Animation.REVERSE
+        fadeIn.repeatCount = 1
+
+        val headShake = RotateAnimation(0f, 0f)
+        headShake.duration = 200
+        headShake.repeatMode = Animation.REVERSE
+        headShake.repeatCount = 3
+
+        headShake.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+                imageView.rotationY = (imageView.rotationY + 180f) % 360f
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                imageView.visibility = View.GONE
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+                imageView.visibility = View.VISIBLE
+            }
+
+        })
+        val animationSet = AnimationSet(true)
+        animationSet.addAnimation(fadeIn)
+        animationSet.addAnimation(headShake)
+        imageView.startAnimation(animationSet)
+    }
+
+    fun animWellDone(imageView: ImageView) {
+        imageView.rotationY = 180f
+        val fadeIn = AlphaAnimation(0f, 1f)
+        fadeIn.duration = 1000
+        fadeIn.repeatMode = Animation.REVERSE
+        fadeIn.repeatCount = 1
+
+        val wellDoneSize =
+            imageView.resources.getDimensionPixelSize(R.dimen.well_done_size).toFloat()
+
+
+        val headShake = RotateAnimation(-1f, 8f, wellDoneSize / 2.2f, wellDoneSize / 1.1f)
+        headShake.duration = 400
+        headShake.repeatMode = Animation.REVERSE
+        headShake.repeatCount = 3
+
+        headShake.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) = Unit
+
+            override fun onAnimationEnd(animation: Animation?) {
+                imageView.visibility = View.GONE
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+                imageView.visibility = View.VISIBLE
+            }
+
+        })
+
+        val animationSet = AnimationSet(true)
+        animationSet.addAnimation(fadeIn)
+        animationSet.addAnimation(headShake)
+        animationSet.interpolator = AccelerateDecelerateInterpolator()
+        imageView.startAnimation(animationSet)
     }
 
     companion object {
