@@ -52,6 +52,11 @@ class ChecklistAdapter(
             holder.unitTextView?.visibility = View.GONE
             holder.checkBox?.isChecked = solution.isFilledInWithWater
 
+
+            holder.itemView.setBackgroundColor(
+                ContextCompat.getColor(holder.itemView.context, R.color.transparent)
+            )
+
             holder.checkBox?.setOnCheckedChangeListener { _, isChecked ->
                 solution.isFilledInWithWater = isChecked
                 setWellDoneIfAllChecked(holder)
