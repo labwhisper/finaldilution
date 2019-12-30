@@ -2,13 +2,34 @@
 
 New  features
 
+- Deleting compounds now available
+
+- Final transparent animation ( scientist nodding )
+
+- Added components into first screen, so the user have info at a glance
+
+- Added Concentration on components panel
+
 Improvements
 
-- Removed unnecessary Floating action buttons
+- Checkboxes are reset when all were done on solution reenter
+
+- 50 [nX] -> 50X
+
+- New screenshots in store
 
 Fixes
 
-- When hiding stock - move away from nx concentration from both desired and stock
+- Compound rename no longer creates another
+
+- Liquid/Solid no longer scrolls up and hides when keyboard present
+
+- Back button should work even when view is hidden, but button visible
+
+- Click on the plus button on New Compound panel now works
+
+- overfill behavior corrected in some cases
+
 
 </en-GB>
 
