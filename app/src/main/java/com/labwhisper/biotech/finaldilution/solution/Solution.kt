@@ -45,14 +45,7 @@ data class Solution(
         components.forEach { component -> component.setSolutionVolume(volume) }
     }
 
-    fun displayString(): String {
-        val format = String.format(
-            "%s  %d components",
-            displayVolume(),
-            components.size
-        )
-        return format
-    }
+    fun displayString() = components.toString()
 
     fun displayVolume(): String = "${volumeAmountForCurrentUnit()} ${volumeUnit()}"
 

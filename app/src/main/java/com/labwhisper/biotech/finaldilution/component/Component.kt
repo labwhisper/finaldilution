@@ -29,7 +29,7 @@ data class Component(val compound: Compound) :
 
 
     override fun toString(): String {
-        return compound.name + " : " + getAmountStringForVolume(solutionVolume)
+        return "$desiredConcentration ${compound.displayName}"
     }
 
     fun getAmountStringForVolume(volume: Double): String {
