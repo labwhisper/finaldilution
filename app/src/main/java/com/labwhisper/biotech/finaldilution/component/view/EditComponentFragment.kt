@@ -32,7 +32,6 @@ import java.util.*
 
 class EditComponentFragment : Fragment() {
 
-    //TODO ADD TAG
     private lateinit var solution: Solution
     internal lateinit var compound: Compound
     private val initialConcentrationType = ConcentrationType.MOLAR
@@ -60,6 +59,7 @@ class EditComponentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        // TODO create buttons according to concentration Types
         // TODO use getChildAt instead of creaing such lists
 
         desiredButtonList = ArrayList()

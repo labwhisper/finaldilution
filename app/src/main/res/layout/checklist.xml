@@ -11,7 +11,7 @@
     android:minHeight="52dp">
 
     <TextView
-        android:id="@+id/checklist_component"
+        android:id="@+id/checklist_compound"
         style="@style/FinalDilutionListTextPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,9 +38,9 @@
         android:gravity="end"
         android:maxLines="1"
         app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="@+id/checklist_component"
+        app:layout_constraintBottom_toBottomOf="@+id/checklist_compound"
         app:layout_constraintEnd_toStartOf="@+id/checklist_checkBox1"
-        app:layout_constraintTop_toTopOf="@+id/checklist_component"
+        app:layout_constraintTop_toTopOf="@+id/checklist_compound"
         tools:text="60.15 ml" />
 
     <CheckBox
@@ -56,14 +56,14 @@
         app:layout_constraintTop_toTopOf="@+id/checklist_amount" />
 
     <TextView
-        android:id="@+id/checklist_extraTextView"
+        android:id="@+id/checklist_stock"
         style="@style/FinalDilutionListTextExtra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checklist_component"
+        app:layout_constraintTop_toBottomOf="@+id/checklist_compound"
         tools:text="36.0 [%]" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

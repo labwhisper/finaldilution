@@ -7,27 +7,35 @@ enum class ConcentrationType(val value: Int) {
     MILIGRAM_PER_MILLILITER(3),
     NX(4);
 
-    fun hint(): String {
-        return when (this.value) {
-            0 -> "%"
-            1 -> "mol/l"
-            2 -> "mmol/l"
-            3 -> "mg/ml"
-            4 -> "n times concentrated"
-            else -> ""
-        }
+    fun hint() = when (this.value) {
+        0 -> "%"
+        1 -> "mol/l"
+        2 -> "mmol/l"
+        3 -> "mg/ml"
+        4 -> "n times concentrated"
+        else -> ""
     }
 
-    override fun toString(): String {
-        return when (this.value) {
-            0 -> "%"
-            1 -> "M"
-            2 -> "mM"
-            3 -> "mg/ml"
-            4 -> "nX"
-            else -> ""
-        }
+    fun symbol() = when (this.value) {
+        0 -> "%"
+        1 -> "M"
+        2 -> "mM"
+        3 -> "mg/ml"
+        4 -> "nX"
+        else -> ""
     }
+
+    fun unit() = when (this.value) {
+        0 -> "%"
+        1 -> "M"
+        2 -> "mM"
+        3 -> "mg/ml"
+        4 -> "X"
+        else -> ""
+    }
+
+
+    override fun toString() = unit()
 
     companion object {
         private val map = values().associateBy(ConcentrationType::value)

@@ -1,12 +1,13 @@
 package com.labwhisper.biotech.finaldilution.component.concentration
 
 import java.io.Serializable
+import java.text.DecimalFormat
 
 abstract class Concentration(var concentration: Double, var type: ConcentrationType) :
     Serializable {
 
     override fun toString(): String {
-        return "$concentration [$type]"
+        return "${DecimalFormat("0.###").format(concentration)}${type.unit()}"
     }
 
     /**

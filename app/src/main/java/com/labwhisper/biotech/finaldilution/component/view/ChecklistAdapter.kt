@@ -48,8 +48,8 @@ class ChecklistAdapter(
         if (holder.adapterPosition >= solution.components.size) {
             holder.compoundTextView?.text =
                 "Fill up to ${solution.displayVolume()}"
-            holder.extraTextView?.visibility = View.GONE
-            holder.unitTextView?.visibility = View.GONE
+            holder.stockTextView?.visibility = View.GONE
+            holder.amountTextView?.visibility = View.GONE
             holder.checkBox?.isChecked = solution.isFilledInWithWater
 
 
@@ -67,14 +67,14 @@ class ChecklistAdapter(
         val component = solution.components[holder.adapterPosition]
         val compound = component.compound
         holder.compoundTextView?.text = compound.displayName
-        holder.unitTextView?.visibility = View.VISIBLE
-        holder.unitTextView?.text =
+        holder.amountTextView?.visibility = View.VISIBLE
+        holder.amountTextView?.text =
             component.getAmountStringForVolume(solution.volume)
         if (component.fromStock) {
-            holder.extraTextView?.visibility = View.VISIBLE
-            holder.extraTextView?.text = component.availableConcentration?.toString() ?: ""
+            holder.stockTextView?.visibility = View.VISIBLE
+            holder.stockTextView?.text = component.availableConcentration?.toString() ?: ""
         } else {
-            holder.extraTextView?.visibility = View.GONE
+            holder.stockTextView?.visibility = View.GONE
         }
         holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
         holder.checkBox?.tag = compound
@@ -117,14 +117,14 @@ class ChecklistAdapter(
     class ChecklistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var compoundTextView: TextView? = null
-        var unitTextView: TextView? = null
-        var extraTextView: TextView? = null
+        var amountTextView: TextView? = null
+        var stockTextView: TextView? = null
         var checkBox: CheckBox? = null
 
         init {
-            compoundTextView = itemView.textView(R.id.checklist_component)
-            unitTextView = itemView.textView(R.id.checklist_amount)
-            extraTextView = itemView.textView(R.id.checklist_extraTextView)
+            compoundTextView = itemView.textView(R.id.checklist_compound)
+            amountTextView = itemView.textView(R.id.checklist_amount)
+            stockTextView = itemView.textView(R.id.checklist_stock)
             checkBox = itemView.checkBox(R.id.checklist_checkBox1)
         }
     }
