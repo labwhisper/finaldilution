@@ -66,16 +66,13 @@ class ChecklistAdapter(
 
         val component = solution.components[holder.adapterPosition]
         val compound = component.compound
-        holder.compoundTextView?.text = compound.displayName
+        holder.compoundTextView?.text =
+            "${compound.displayName} ${component.availableConcentration?.toString() ?: ""}"
         holder.amountTextView?.visibility = View.VISIBLE
         holder.amountTextView?.text =
             component.getAmountStringForVolume(solution.volume)
-        if (component.fromStock) {
-            holder.stockTextView?.visibility = View.VISIBLE
-            holder.stockTextView?.text = component.availableConcentration?.toString() ?: ""
-        } else {
-            holder.stockTextView?.visibility = View.GONE
-        }
+        holder.stockTextView?.visibility = View.VISIBLE
+        holder.stockTextView?.text = component.desiredConcentration.toString()
         holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
         holder.checkBox?.tag = compound
 

@@ -45,9 +45,9 @@ data class Solution(
         components.forEach { component -> component.setSolutionVolume(volume) }
     }
 
-    fun displayString() = components.toString()
+    fun displayString() = components.joinToString()
 
-    fun displayVolume(): String = "${volumeAmountForCurrentUnit()} ${volumeUnit()}"
+    fun displayVolume() = "${volumeAmountForCurrentUnit()} ${volumeUnit()}"
 
     fun volumeUnit(): String = when {
         volume == 0.0 -> "ml"
