@@ -44,6 +44,9 @@ class NewCompoundFragment : Fragment() {
         editText(R.id.form_molar_mass, R.id.editText).inputType = InputType.TYPE_CLASS_NUMBER
         editText(R.id.form_molar_mass, R.id.editText).keyListener =
             DigitsKeyListener.getInstance("0123456789.")
+        textView(R.id.form_density, R.id.textView).text = getString(R.string.density)
+        editText(R.id.form_density, R.id.editText).keyListener =
+            DigitsKeyListener.getInstance("0123456789.")
         textView(R.id.form_formula, R.id.textView).text = getString(R.string.chemical_formula)
         appModel?.initialCompound?.let {
             textView(R.id.new_compound_title).text = "Edit ${it.iupacName}"
@@ -93,6 +96,10 @@ class NewCompoundFragment : Fragment() {
         constraintLayout(R.id.form_name).editText(R.id.editText).setText(compound.iupacName)
         compound.molarMass?.let {
             constraintLayout(R.id.form_molar_mass).editText(R.id.editText)
+                .setText(it.toString())
+        }
+        compound.density?.let {
+            constraintLayout(R.id.form_density).editText(R.id.editText)
                 .setText(it.toString())
         }
         compound.trivialName?.let {
@@ -180,6 +187,7 @@ class NewCompoundFragment : Fragment() {
         imm.hideSoftInputFromWindow(editText(R.id.form_trivial_name, R.id.editText).windowToken, 0)
         imm.hideSoftInputFromWindow(editText(R.id.form_formula, R.id.editText).windowToken, 0)
         imm.hideSoftInputFromWindow(editText(R.id.form_molar_mass, R.id.editText).windowToken, 0)
+        imm.hideSoftInputFromWindow(editText(R.id.form_density, R.id.editText).windowToken, 0)
     }
 
     private fun attemptToCreateCompoundFromFields(): Compound {
@@ -194,7 +202,20 @@ class NewCompoundFragment : Fragment() {
         } catch (e: NumberFormatException) {
             null
         }
-        return Compound(iupacName, liquid, molarMass, trivialName, formula)
+        val density = try {
+            editTextValue(R.id.form_density, R.id.editText)
+                .ifBlank { null }?.toDouble()
+        } catch (e: NumberFormatException) {
+            null
+        }
+        return Compound(
+            iupacName = iupacName,
+            liquid = liquid,
+            molarMass = molarMass,
+            trivialName = trivialName,
+            chemicalFormula = formula,
+            density = density
+        )
     }
 
     private var onFragmentCloseListener: ((compound: Compound?) -> Unit)? = null

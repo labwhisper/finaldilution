@@ -9,7 +9,8 @@ data class Compound(
     val liquid: Boolean,
     val molarMass: Double? = null,
     val trivialName: String? = null,
-    val chemicalFormula: String? = null
+    val chemicalFormula: String? = null,
+    val density: Double? = null
 ) : Item, Comparable<Compound> {
 
     override fun compareTo(other: Compound) = displayName.toLowerCase(Locale.ENGLISH)

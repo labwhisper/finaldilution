@@ -17,11 +17,13 @@ fun loadDefaultCompounds(context: Context): List<Compound?> {
             val iupacName = record[0]
             val trivialName = record[1]
             val state = record[2]
-            val formula = record[3]
-            val molarMass = record[4]
+            val density = record[3]
+            val formula = record[4]
+            val molarMass = record[5]
             Compound(
                 iupacName = iupacName,
                 liquid = state == "liquid",
+                density = density.ifEmpty { null }?.toDouble(),
                 molarMass = molarMass.ifEmpty { null }?.toDouble(),
                 trivialName = trivialName,
                 chemicalFormula = formula

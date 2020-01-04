@@ -23,6 +23,11 @@ data class Component(val compound: Compound) :
 
     val fromStock get() = availableConcentration != null
 
+    val resultInVolume
+        //FIXME for non-molar - all, for molar only with density
+        get() = fromStock ||
+                (compound.liquid && compound.density != null)
+
     var desiredConcentration: Concentration = MolarConcentration(0.0)
     var availableConcentration: Concentration? = null
     private var solutionVolume = 0.0
@@ -47,32 +52,28 @@ data class Component(val compound: Compound) :
             amount >= 1000 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount / 1000))
                 when {
-                    compound.liquid -> niceOutput.append(" l")
-                    fromStock -> niceOutput.append(" l")
+                    resultInVolume -> niceOutput.append(" l")
                     else -> niceOutput.append(" kg")
                 }
             }
             amount == 0.0 || amount >= 1 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount))
                 when {
-                    compound.liquid -> niceOutput.append(" ml")
-                    fromStock -> niceOutput.append(" ml")
+                    resultInVolume -> niceOutput.append(" ml")
                     else -> niceOutput.append(" g")
                 }
             }
             amount >= 0.00001 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount * 1000))
                 when {
-                    compound.liquid -> niceOutput.append(" \u03bcl")
-                    fromStock -> niceOutput.append(" \u03bcl")
+                    resultInVolume -> niceOutput.append(" \u03bcl")
                     else -> niceOutput.append(" mg")
                 }
             }
             else -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount * 1000000))
                 when {
-                    compound.liquid -> niceOutput.append(" nl")
-                    fromStock -> niceOutput.append(" nl")
+                    resultInVolume -> niceOutput.append(" nl")
                     else -> niceOutput.append(" \u03bcg")
                 }
             }
@@ -84,6 +85,10 @@ data class Component(val compound: Compound) :
         val M = compound.molarMass
         return when {
             fromStock -> {
+                if (availableConcentration?.type == desiredConcentration.type) {
+                    return desiredConcentration.concentration * volume /
+                            (availableConcentration?.concentration ?: 0.0)
+                }
                 availableConcentration?.calcVolumeForDesiredMass(
                     desiredConcentration.calcDesiredMass(volume, M), M
                 ) ?: 0.0

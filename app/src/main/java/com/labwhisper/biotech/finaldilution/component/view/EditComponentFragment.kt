@@ -225,6 +225,8 @@ class EditComponentFragment : Fragment() {
         radioButton(R.id.stockMilimolarConcButton).isEnabled = molarEnabled
     }
 
+    //TODO Move to appModel / interactor
+    //TODO only for desired conc. when stock is disabled
     private fun molarWithNoMolarMass(molarMass: Double?, type: ConcentrationType) =
         molarMass == null && (type == ConcentrationType.MOLAR || type == ConcentrationType.MILIMOLAR)
 

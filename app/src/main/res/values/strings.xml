@@ -29,6 +29,7 @@
     <string name="title_add_new_compound">Add new compound</string>
     <string name="trivial_name">Trivial name (optional)</string>
     <string name="molar_mass">Molar mass (for molar concentrations)</string>
+    <string name="density">Density (for molar concentrations of liquids)</string>
     <string name="iupac_name">Name</string>
     <string name="state_of_matter">State of matter</string>
     <string name="state_of_matter_solid">Solid</string>
