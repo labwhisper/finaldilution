@@ -3,8 +3,8 @@ package com.labwhisper.biotech.finaldilution.component
 import com.labwhisper.biotech.finaldilution.component.concentration.MolarConcentration
 import com.labwhisper.biotech.finaldilution.component.concentration.PercentageConcentration
 import com.labwhisper.biotech.finaldilution.compound.Compound
-import junit.framework.TestCase.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class ComponentDisplayTest {
 

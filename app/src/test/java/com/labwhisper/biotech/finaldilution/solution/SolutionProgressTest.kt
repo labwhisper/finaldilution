@@ -1,20 +1,18 @@
 package com.labwhisper.biotech.finaldilution.solution
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.labwhisper.biotech.finaldilution.InstantTaskExecutorExtension
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.peripherals.DataGatewayOperations
 import com.labwhisper.biotech.finaldilution.solution.appmodel.StartupAppModel
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Assert.assertEquals
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(InstantTaskExecutorExtension::class)
 class SolutionProgressTest {
-
-    @get:Rule
-    var instantTaskExecutionRule = InstantTaskExecutorRule()
 
     private val solutionGateway = mockk<DataGatewayOperations<Solution>>(relaxed = true)
     private val solution = Solution(

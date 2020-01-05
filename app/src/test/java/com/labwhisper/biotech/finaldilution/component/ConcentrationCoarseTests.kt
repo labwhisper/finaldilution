@@ -2,9 +2,9 @@ package com.labwhisper.biotech.finaldilution.component
 
 import com.labwhisper.biotech.finaldilution.component.concentration.*
 import com.labwhisper.biotech.finaldilution.compound.Compound
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ConcentrationCoarseTests {
 
@@ -15,7 +15,7 @@ class ConcentrationCoarseTests {
         molarMass = 40.0
     )
 
-    @Before
+    @BeforeEach
     @Throws(Exception::class)
     fun setUp() {
         volume = 2000.0 //[ml]

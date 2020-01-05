@@ -1,15 +1,16 @@
 package com.labwhisper.biotech.finaldilution.solution
 
 import com.labwhisper.biotech.finaldilution.genericitem.Item
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class CareTakerTest {
 
     val solutionCareTaker = CareTaker<Solution>()
 
-    @Before
+    @BeforeEach
     fun init() {
         solutionCareTaker.clearMementos()
     }
@@ -25,16 +26,20 @@ class CareTakerTest {
         assertEquals(result, solution1)
     }
 
-    @Test(expected = UndoOnEmptyListException::class)
+    @Test
     fun undoWithoutStackRaisesException() {
-        solutionCareTaker.undo()
+        Assertions.assertThrows(UndoOnEmptyListException::class.java) {
+            solutionCareTaker.undo()
+        }
     }
 
-    @Test(expected = UndoOnEmptyListException::class)
+    @Test
     fun undoWithOnlyOneMementoRaisesException() {
-        val solution = Solution("solution1")
-        solutionCareTaker.addMemento(solution)
-        solutionCareTaker.undo()
+        Assertions.assertThrows(UndoOnEmptyListException::class.java) {
+            val solution = Solution("solution1")
+            solutionCareTaker.addMemento(solution)
+            solutionCareTaker.undo()
+        }
     }
 
     @Test
@@ -49,13 +54,15 @@ class CareTakerTest {
         assertEquals(result, solution1)
     }
 
-    @Test(expected = RedoOnLastChangeException::class)
+    @Test
     fun redoOnLastIndexRaisesException() {
-        val solution1 = Solution("solution1")
-        solutionCareTaker.apply {
-            addMemento(solution1)
+        Assertions.assertThrows(RedoOnLastChangeException::class.java) {
+            val solution1 = Solution("solution1")
+            solutionCareTaker.apply {
+                addMemento(solution1)
+            }
+            solutionCareTaker.redo()
         }
-        solutionCareTaker.redo()
     }
 
     @Test

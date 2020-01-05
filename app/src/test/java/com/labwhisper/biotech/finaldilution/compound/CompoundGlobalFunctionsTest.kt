@@ -7,7 +7,7 @@ import com.labwhisper.biotech.finaldilution.peripherals.DataGatewayOperations
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class CompoundGlobalFunctionsTest {
 

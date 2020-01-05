@@ -9,7 +9,7 @@ import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class CompoundActionsTest {
 

@@ -5,8 +5,8 @@ import com.labwhisper.biotech.finaldilution.compound.appmodel.NewCompoundAppMode
 import io.mockk.Ordering
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 
 class NewCompoundDialogTest {
