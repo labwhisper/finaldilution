@@ -34,6 +34,7 @@ enum class ConcentrationType(val value: Int) {
         else -> ""
     }
 
+    fun isMolarLike() = value == MOLAR.value || value == MILIMOLAR.value
 
     override fun toString() = unit()
 

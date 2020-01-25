@@ -19,6 +19,7 @@ class StartupAppModel(val solutionGateway: DataGatewayOperations<Solution>) {
             solutionGateway.loadAll().sorted()
     }
 
+    //TODO Create interactors for those methods, AppModel/ViewModel should contain state only
     fun cleanSolutionProgressIfDone(solution: Solution) {
         if (solution.done) {
             solution.componentsAdded.clear()

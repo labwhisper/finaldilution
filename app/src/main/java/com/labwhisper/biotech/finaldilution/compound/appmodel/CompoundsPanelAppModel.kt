@@ -23,6 +23,7 @@ class CompoundsPanelAppModel(
     val compoundList
         get() = appState.loadAllCompoundsSorted().toMutableList()
 
+    //TODO Create interactors for those methods
     fun filterCompoundList(text: CharSequence?) {
         compoundListAdapter.compoundList =
             CompoundSearch.searchForCompound(compoundList, text.toString()).toMutableList()

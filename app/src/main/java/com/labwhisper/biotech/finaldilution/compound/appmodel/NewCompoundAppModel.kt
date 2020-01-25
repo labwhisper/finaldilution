@@ -20,7 +20,7 @@ class NewCompoundAppModel(private val appState: ApplicationContext) {
 
     var advancedOptions: Boolean = false
 
-
+    //TODO Create interactor
     fun proceedWithCompound(compound: Compound) {
         initialCompound?.let {
             if (compound.name != it.name) {
