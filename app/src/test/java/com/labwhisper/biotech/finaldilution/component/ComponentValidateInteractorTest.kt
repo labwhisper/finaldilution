@@ -1,8 +1,11 @@
 package com.labwhisper.biotech.finaldilution.component
 
 import com.labwhisper.biotech.finaldilution.component.EditComponentAction.*
+import com.labwhisper.biotech.finaldilution.component.concentration.ChooseMostSuitableConcentrationInteractor
+import com.labwhisper.biotech.finaldilution.component.concentration.CompatibleConcentrationsInteractor
 import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType
 import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType.*
+import com.labwhisper.biotech.finaldilution.component.concentration.PossibleConcentrationsInteractor
 import com.labwhisper.biotech.finaldilution.component.validation.ComponentValidateInteractor
 import com.labwhisper.biotech.finaldilution.component.validation.ComponentValidateOutputPort
 import com.labwhisper.biotech.finaldilution.component.validation.ComponentValidateRequestModel
@@ -17,44 +20,61 @@ import java.util.stream.Stream
 
 class ComponentValidateInteractorTest {
 
-    private val sut = ComponentValidateInteractor(object : ComponentValidateOutputPort {
-        override fun exposeValidatedComponentData(componentValidateResponseModel: ComponentValidateResponseModel) {
-        }
-    })
+    private val sut = ComponentValidateInteractor(
+        object : ComponentValidateOutputPort {
+            override fun exposeValidatedComponentData(
+                componentValidateResponseModel: ComponentValidateResponseModel
+            ) = Unit
+        },
+        PossibleConcentrationsInteractor(),
+        ChooseMostSuitableConcentrationInteractor(),
+        CompatibleConcentrationsInteractor()
+    )
+//
+//    @Test
+//    fun ``(){
+//
+//    }
+
+//      -> concentrationChange -> getPossibleConcList
+//              -> isPossible -> (don't open/close stock) -> validate other (set to possible)
+//              -> isNotPossible -> isStockPossible -> open stock -> getCompatibilityList
+//                      -> validate other (set to compatible)
+//      -> stockOpened (same as desiredConcentrationChange)
+//      -> currentClosed -> getPossibleConcList
+//              -> isPossible -> ok
+//              -> isNotPossible -> validate this (set to possible) (don't open stock)
+
+    //TODO Because action is removed from interactor, it should be added in fragment?
 
     @ParameterizedTest
     @MethodSource("testCaseProvider")
     fun `Compound options are validated properly`(requestModel: ComponentValidateRequestModel) {
 
+
         val responseModel = sut.validate(requestModel)
 
-        checkIfClickedButtonIsNotChanged(requestModel, responseModel)
+        checkIfClickedButtonIsNotChangedUnlessItsMgMlForStock(requestModel, responseModel)
         checkIfStockWasntClosed(requestModel, responseModel)
         checkIfStockWasOpenedOnDesiredNx(requestModel, responseModel)
         checkIfNxWasUncheckedOnStockClose(requestModel, responseModel)
         checkIfNxIsPropagatedInBothDirections(requestModel, responseModel)
         checkIfNxIsDismissedInBothDirections(requestModel, responseModel)
-        checkIfMgMlIsPropagatedInBothDirections(requestModel, responseModel)
+        checkIfMgMlIsPropagatedInBothDirectionsForSolids(requestModel, responseModel)
         checkIfMolarsArePropagatedInBothDirectionsWhenNoMolarMass(requestModel, responseModel)
     }
 
-    private fun checkIfClickedButtonIsNotChanged(
+    private fun checkIfClickedButtonIsNotChangedUnlessItsMgMlForStock(
         requestModel: ComponentValidateRequestModel,
         responseModel: ComponentValidateResponseModel
     ) {
-        if (requestModel.action != STOCK_CHANGED) {
-            assertEquals(
-                requestModel.desiredConcentrationType,
-                responseModel.desiredConcentrationType
-            )
+        if (requestModel.liquid && requestModel.currentConcentrationType == MILIGRAM_PER_MILLILITER) {
+            return
         }
-
-        if (requestModel.action == STOCK_CHANGED) {
-            assertEquals(
-                requestModel.stockConcentrationType,
-                responseModel.stockConcentrationType
-            )
-        }
+        assertEquals(
+            requestModel.currentConcentrationType,
+            responseModel.currentConcentrationType
+        )
     }
 
     private fun checkIfStockWasntClosed(
@@ -70,7 +90,7 @@ class ComponentValidateInteractorTest {
         requestModel: ComponentValidateRequestModel,
         responseModel: ComponentValidateResponseModel
     ) {
-        if (requestModel.action != STOCK_CHANGED && requestModel.desiredConcentrationType == NX) {
+        if (requestModel.currentConcentrationType == NX) {
             assertEquals(true, responseModel.isStock)
         }
     }
@@ -80,9 +100,9 @@ class ComponentValidateInteractorTest {
         responseModel: ComponentValidateResponseModel
     ) {
         if (requestModel.wasStockOpen && requestModel.action == STOCK_CLOSED
-            && requestModel.desiredConcentrationType == NX
+            && requestModel.currentConcentrationType == NX
         ) {
-            assertNotEquals(true, responseModel.desiredConcentrationType == NX)
+            assertNotEquals(true, responseModel.currentConcentrationType == NX)
         }
     }
 
@@ -90,12 +110,8 @@ class ComponentValidateInteractorTest {
         requestModel: ComponentValidateRequestModel,
         responseModel: ComponentValidateResponseModel
     ) {
-        if (requestModel.action != STOCK_CHANGED && requestModel.desiredConcentrationType == NX) {
-            assertEquals(NX, responseModel.stockConcentrationType)
-        }
-
-        if (requestModel.action == STOCK_CHANGED && requestModel.stockConcentrationType == NX) {
-            assertEquals(NX, responseModel.desiredConcentrationType)
+        if (requestModel.currentConcentrationType == NX) {
+            assertEquals(NX, responseModel.oppositeConcentrationType)
         }
     }
 
@@ -103,31 +119,27 @@ class ComponentValidateInteractorTest {
         requestModel: ComponentValidateRequestModel,
         responseModel: ComponentValidateResponseModel
     ) {
-        if (requestModel.action != STOCK_CHANGED && requestModel.desiredConcentrationType != NX
+        if (requestModel.currentConcentrationType != NX
         ) {
-            assertNotEquals(NX, responseModel.stockConcentrationType)
-        }
-
-        if (requestModel.action == STOCK_CHANGED && requestModel.stockConcentrationType != NX
-        ) {
-            assertNotEquals(NX, responseModel.desiredConcentrationType)
+            assertNotEquals(NX, responseModel.oppositeConcentrationType)
         }
     }
 
-    private fun checkIfMgMlIsPropagatedInBothDirections(
+    private fun checkIfMgMlIsPropagatedInBothDirectionsForSolids(
         requestModel: ComponentValidateRequestModel,
         responseModel: ComponentValidateResponseModel
     ) {
-        if (!requestModel.molarMassGiven && requestModel.action == STOCK_CHANGED
-            && requestModel.stockConcentrationType == MILIGRAM_PER_MILLILITER
-        ) {
-            assertEquals(MILIGRAM_PER_MILLILITER, responseModel.desiredConcentrationType)
-        }
+        if (requestModel.liquid) return
 
-        if (!requestModel.molarMassGiven && requestModel.action != STOCK_CHANGED
-            && requestModel.desiredConcentrationType == MILIGRAM_PER_MILLILITER
+        if (!requestModel.molarMassGiven
+            && (requestModel.currentConcentrationType == PERCENTAGE ||
+                    requestModel.currentConcentrationType == MILIGRAM_PER_MILLILITER)
+            && (requestModel.oppositeConcentrationType != PERCENTAGE &&
+                    requestModel.oppositeConcentrationType != MILIGRAM_PER_MILLILITER)
         ) {
-            assertEquals(MILIGRAM_PER_MILLILITER, responseModel.stockConcentrationType)
+            assertEquals(
+                requestModel.currentConcentrationType, responseModel.oppositeConcentrationType
+            )
         }
     }
 
@@ -137,27 +149,15 @@ class ComponentValidateInteractorTest {
     ) {
 
         if (!requestModel.molarMassGiven && requestModel.action == STOCK_CHANGED
-            && (requestModel.stockConcentrationType == MOLAR ||
-                    requestModel.stockConcentrationType == MILIMOLAR)
-            && (requestModel.desiredConcentrationType != MOLAR &&
-                    requestModel.desiredConcentrationType != MILIMOLAR)
+            && (requestModel.currentConcentrationType == MOLAR ||
+                    requestModel.currentConcentrationType == MILIMOLAR)
+            && (requestModel.oppositeConcentrationType != MOLAR &&
+                    requestModel.oppositeConcentrationType != MILIMOLAR)
         ) {
             assertEquals(
-                requestModel.stockConcentrationType, responseModel.desiredConcentrationType
+                requestModel.currentConcentrationType, responseModel.oppositeConcentrationType
             )
         }
-
-        if (!requestModel.molarMassGiven && requestModel.action != STOCK_CHANGED
-            && (requestModel.desiredConcentrationType == MOLAR ||
-                    requestModel.desiredConcentrationType == MILIMOLAR)
-            && (requestModel.stockConcentrationType != MOLAR &&
-                    requestModel.stockConcentrationType != MILIMOLAR)
-        ) {
-            assertEquals(
-                requestModel.desiredConcentrationType, responseModel.stockConcentrationType
-            )
-        }
-
     }
 
     companion object {
@@ -167,7 +167,7 @@ class ComponentValidateInteractorTest {
             for (desired in ConcentrationType.values()) {
                 for (stock in ConcentrationType.values()) {
                     for (stockOpen in setOf(true, false)) {
-                        for (stockChange in setOf(STOCK_CHANGED, DESIRED_CHANGED)) {
+                        for (action in setOf(STOCK_CHANGED, DESIRED_CHANGED)) {
                             for (liquid in setOf(true, false)) {
                                 for (molarMassGiven in setOf(true, false)) {
                                     for (densityGiven in setOf(true, false)) {
@@ -177,7 +177,7 @@ class ComponentValidateInteractorTest {
                                                     desired,
                                                     stock,
                                                     stockOpen,
-                                                    stockChange,
+                                                    action,
                                                     liquid,
                                                     molarMassGiven,
                                                     densityGiven

@@ -18,9 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
-import com.labwhisper.biotech.finaldilution.component.concentration.Concentration
-import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationFactory
-import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType
+import com.labwhisper.biotech.finaldilution.component.concentration.*
 import com.labwhisper.biotech.finaldilution.component.validation.ComponentValidateInteractor
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.genericitem.putExtraAnItem
@@ -36,7 +34,7 @@ class EditComponentFragment : Fragment() {
     private lateinit var solution: Solution
     internal lateinit var compound: Compound
     private var desiredConcType: ConcentrationType = ConcentrationType.MOLAR
-    private var stockConcType: ConcentrationType? = null
+    private var stockConcType: ConcentrationType = ConcentrationType.MOLAR
     private lateinit var desiredViewsList: MutableList<View>
     private lateinit var stockViewsList: MutableList<View>
     private lateinit var desiredButtonList: MutableList<RadioButton>
@@ -46,7 +44,17 @@ class EditComponentFragment : Fragment() {
     val appModel =
         ComponentEditAppModel()
     val presenter = EditComponentPresenter(appModel)
-    val componentValidateInputPort = ComponentValidateInteractor(presenter)
+    val possibleConcentrationsInteractor = PossibleConcentrationsInteractor()
+    val chooseMostSuitableConcentrationInteractor = ChooseMostSuitableConcentrationInteractor()
+    val compatibleConcentrationsInteractor = CompatibleConcentrationsInteractor()
+
+    val componentValidateInputPort = ComponentValidateInteractor(
+        presenter,
+        possibleConcentrationsInteractor,
+        chooseMostSuitableConcentrationInteractor,
+        compatibleConcentrationsInteractor
+    )
+
     val controller = EditComponentController(componentValidateInputPort)
 
     @Suppress("UNCHECKED_CAST")
@@ -133,6 +141,7 @@ class EditComponentFragment : Fragment() {
     }
 
     private fun changeStockConcentration(type: ConcentrationType?) {
+        if (type == null) return
         controller.changeStockConcentration(
             compound,
             desiredConcType,
@@ -151,19 +160,14 @@ class EditComponentFragment : Fragment() {
         editText(R.id.desiredConcEditText).hint = desiredConcType.hint()
     }
 
-    private fun checkStockConcButton(type: ConcentrationType?) {
-        if (type == null) {
-            radioGroup(R.id.stockConcButtonsBar).clearCheck()
-            applyStockConcButtonCheck(type)
-            return
-        }
+    private fun checkStockConcButton(type: ConcentrationType) {
         radioGroup(R.id.stockConcButtonsBar).check(getStockConcButton(type))
         applyStockConcButtonCheck(type)
     }
 
-    private fun applyStockConcButtonCheck(type: ConcentrationType?) {
+    private fun applyStockConcButtonCheck(type: ConcentrationType) {
         stockConcType = type
-        editText(R.id.stockConcEditText).hint = stockConcType?.hint() ?: ""
+        editText(R.id.stockConcEditText).hint = stockConcType.hint()
     }
 
     private fun getDesiredConcButton(type: ConcentrationType): Int {
@@ -224,7 +228,7 @@ class EditComponentFragment : Fragment() {
             return
         }
 
-        if (appModel.fromStock.value == true && stockConcType == null) {
+        if (appModel.fromStock.value == true) {
             //TODO Add animation to buttons
             return
         }
@@ -257,10 +261,7 @@ class EditComponentFragment : Fragment() {
         }
         val stockConcEditText = editText(R.id.stockConcEditText)
         val stockConcentrationValue = parseDoubleFromEditText(stockConcEditText)
-        stockConcType?.let {
-            return ConcentrationFactory.createConcentration(it, stockConcentrationValue)
-        }
-        return null
+        return ConcentrationFactory.createConcentration(stockConcType, stockConcentrationValue)
     }
 
     private fun retrieveDesiredConcFromInput(): Concentration {
@@ -304,10 +305,10 @@ class EditComponentFragment : Fragment() {
 
     private fun toggleSolutionFromStock() {
         controller.toggleStock(
-            compound,
-            desiredConcType,
-            stockConcType,
-            !(appModel.fromStock.value ?: false)
+            compound = compound,
+            desiredConcentrationType = desiredConcType,
+            stockConcentrationType = stockConcType,
+            wasStockOpen = appModel.fromStock.value ?: false
         )
     }
 

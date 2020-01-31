@@ -11,15 +11,17 @@ class EditComponentController(private val componentValidateInputPort: ComponentV
     // TODO Create clickModel
     // TODO Unify
 
+    // TODO Try to remove action from Interactor Request and Response models
+
     fun changeDesireConcentration(
         compound: Compound,
         desiredConcentrationType: ConcentrationType,
-        stockConcentrationType: ConcentrationType?,
+        stockConcentrationType: ConcentrationType,
         wasStockOpen: Boolean
     ) {
         val request = ComponentValidateRequestModel(
-            desiredConcentrationType = desiredConcentrationType,
-            stockConcentrationType = stockConcentrationType,
+            currentConcentrationType = desiredConcentrationType,
+            oppositeConcentrationType = stockConcentrationType,
             wasStockOpen = wasStockOpen,
             action = DESIRED_CHANGED,
             liquid = compound.liquid,
@@ -32,12 +34,12 @@ class EditComponentController(private val componentValidateInputPort: ComponentV
     fun changeStockConcentration(
         compound: Compound,
         desiredConcentrationType: ConcentrationType,
-        stockConcentrationType: ConcentrationType?,
+        stockConcentrationType: ConcentrationType,
         wasStockOpen: Boolean
     ) {
         val request = ComponentValidateRequestModel(
-            desiredConcentrationType = desiredConcentrationType,
-            stockConcentrationType = stockConcentrationType,
+            currentConcentrationType = stockConcentrationType,
+            oppositeConcentrationType = desiredConcentrationType,
             wasStockOpen = wasStockOpen,
             action = STOCK_CHANGED,
             liquid = compound.liquid,
@@ -50,12 +52,12 @@ class EditComponentController(private val componentValidateInputPort: ComponentV
     fun toggleStock(
         compound: Compound,
         desiredConcentrationType: ConcentrationType,
-        stockConcentrationType: ConcentrationType?,
+        stockConcentrationType: ConcentrationType,
         wasStockOpen: Boolean
     ) {
         val request = ComponentValidateRequestModel(
-            desiredConcentrationType = desiredConcentrationType,
-            stockConcentrationType = stockConcentrationType,
+            currentConcentrationType = desiredConcentrationType,
+            oppositeConcentrationType = stockConcentrationType,
             wasStockOpen = wasStockOpen,
             action = if (wasStockOpen) STOCK_CLOSED else STOCK_OPENED,
             liquid = compound.liquid,
@@ -64,6 +66,5 @@ class EditComponentController(private val componentValidateInputPort: ComponentV
         )
         componentValidateInputPort.componentChangeRequest(request)
     }
-
 
 }

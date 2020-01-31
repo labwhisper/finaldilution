@@ -1,10 +1,16 @@
 package com.labwhisper.biotech.finaldilution.component.validation
 
-import com.labwhisper.biotech.finaldilution.component.EditComponentAction.*
-import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType.*
+import com.labwhisper.biotech.finaldilution.component.EditComponentAction.STOCK_CLOSED
+import com.labwhisper.biotech.finaldilution.component.EditComponentAction.STOCK_OPENED
+import com.labwhisper.biotech.finaldilution.component.concentration.ChooseMostSuitableConcentrationInteractor
+import com.labwhisper.biotech.finaldilution.component.concentration.CompatibleConcentrationsInteractor
+import com.labwhisper.biotech.finaldilution.component.concentration.PossibleConcentrationsInteractor
 
 class ComponentValidateInteractor(
-    private val componentValidateOutputPort: ComponentValidateOutputPort
+    private val componentValidateOutputPort: ComponentValidateOutputPort,
+    private val possibleConcentrationsInteractor: PossibleConcentrationsInteractor,
+    private val chooseMostSuitableConcentrationInteractor: ChooseMostSuitableConcentrationInteractor,
+    private val compatibleConcentrationsInteractor: CompatibleConcentrationsInteractor
 ) : ComponentValidateInputPort {
 
     override fun componentChangeRequest(componentValidateRequestModel: ComponentValidateRequestModel) {
@@ -18,94 +24,77 @@ class ComponentValidateInteractor(
 
     fun validate(request: ComponentValidateRequestModel): ComponentValidateResponseModel {
 
-        if (nxIsNotReflected(request)) return ComponentValidateResponseModel(true, NX, NX)
+        val stockOpen = when (request.action) {
+            STOCK_OPENED -> true
+            STOCK_CLOSED -> false
+            else -> request.wasStockOpen
+        }
 
-        if (selectedMgMlNoMass(request)) return ComponentValidateResponseModel(
-            true,
-            MILIGRAM_PER_MILLILITER,
-            MILIGRAM_PER_MILLILITER
+        val possibleConcentrations = possibleConcentrationsInteractor.getPossibleConcentrations(
+            liquid = request.liquid,
+            molarMassGiven = request.molarMassGiven
         )
 
-        if (selectedDesireMolarNoMass(request)) {
-            if (request.stockConcentrationType != MOLAR && request.stockConcentrationType != MILIMOLAR)
-                return ComponentValidateResponseModel(
-                    true,
-                    request.desiredConcentrationType,
-                    request.desiredConcentrationType
-                )
-        }
-
-        if (selectedStockMolarNoMass(request)) {
-            if (request.desiredConcentrationType != MOLAR && request.desiredConcentrationType != MILIMOLAR)
-                return ComponentValidateResponseModel(
-                    true,
-                    request.stockConcentrationType ?: MOLAR,
-                    request.stockConcentrationType
-                )
-        }
-
-        val isStockOpen = request.wasStockOpen ||
-                (request.action == DESIRED_CHANGED
-                        && request.desiredConcentrationType == NX)
-
-        if (nxDesiredLeftSingle(request))
-            return ComponentValidateResponseModel(
-                true,
-                MILIGRAM_PER_MILLILITER,
-                request.stockConcentrationType
+        val bestPossibleCurrent =
+            chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
+                request.currentConcentrationType,
+                request.oppositeConcentrationType,
+                possibleConcentrations
             )
 
-        if (nxStockLeftSingle(request))
+        val bestPossibleOpposite =
+            chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
+                request.oppositeConcentrationType,
+                request.currentConcentrationType,
+                possibleConcentrations
+            )
+
+        if (request.action == STOCK_CLOSED) {
             return ComponentValidateResponseModel(
-                true,
-                request.desiredConcentrationType,
-                MILIGRAM_PER_MILLILITER
+                request.action,
+                stockOpen,
+                bestPossibleCurrent,
+                request.oppositeConcentrationType
+            )
+        }
+
+        if (possibleConcentrations.contains(request.currentConcentrationType)) {
+            return ComponentValidateResponseModel(
+                request.action,
+                stockOpen,
+                request.currentConcentrationType,
+                bestPossibleOpposite
+            )
+        }
+
+
+        val compatibleList =
+            compatibleConcentrationsInteractor.getCompatibleConcentrations(
+                request.liquid, request.currentConcentrationType
+            )
+        if (compatibleList.isEmpty()) {
+            return ComponentValidateResponseModel(
+                request.action,
+                stockOpen,
+                bestPossibleCurrent,
+                bestPossibleCurrent
+            )
+        }
+
+        val bestCompatible =
+            chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
+                request.oppositeConcentrationType,
+                request.currentConcentrationType,
+                compatibleList
             )
 
         return ComponentValidateResponseModel(
-            isStockOpen, request.desiredConcentrationType, request.stockConcentrationType
+            request.action,
+            true,
+            request.currentConcentrationType,
+            bestCompatible
         )
-    }
 
-    private fun selectedStockMolarNoMass(request: ComponentValidateRequestModel) =
-        (!request.molarMassGiven && stockOrigin(request)
-                && (request.stockConcentrationType?.isMolarLike() == true))
-
-    private fun selectedDesireMolarNoMass(request: ComponentValidateRequestModel) =
-        (!request.molarMassGiven && noStockOrigin(request)
-                && request.desiredConcentrationType.isMolarLike())
-
-    private fun selectedMgMlNoMass(request: ComponentValidateRequestModel): Boolean {
-        return ((!request.molarMassGiven && noStockOrigin(request)
-                && request.desiredConcentrationType == MILIGRAM_PER_MILLILITER)
-                || (!request.molarMassGiven && stockOrigin(request)
-                && request.stockConcentrationType == MILIGRAM_PER_MILLILITER))
-    }
-
-    private fun nxIsNotReflected(request: ComponentValidateRequestModel): Boolean {
-        return ((stockOrigin(request) && request.stockConcentrationType == NX)
-                || (noStockOrigin(request) && request.desiredConcentrationType == NX))
-    }
-
-    private fun nxStockLeftSingle(request: ComponentValidateRequestModel): Boolean {
-        return (noStockOrigin(request)
-                && request.desiredConcentrationType != NX
-                && request.stockConcentrationType == NX)
-    }
-
-    private fun nxDesiredLeftSingle(request: ComponentValidateRequestModel): Boolean {
-        return (stockOrigin(request)
-                && request.stockConcentrationType != NX
-                && request.desiredConcentrationType == NX)
-    }
-
-    private fun stockOrigin(request: ComponentValidateRequestModel) =
-        request.action == STOCK_CHANGED || request.action == STOCK_CLOSED
-
-    private fun noStockOrigin(request: ComponentValidateRequestModel): Boolean {
-        return (request.action == DESIRED_CHANGED
-                || request.action == STOCK_OPENED
-                || request.action == NO_ACTION)
     }
 
 }

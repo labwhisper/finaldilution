@@ -5,12 +5,15 @@ import com.labwhisper.biotech.finaldilution.component.concentration.Concentratio
 
 class ComponentEditAppModel {
 
-    private val initialConcentrationType = ConcentrationType.MOLAR
+    private val initialConcentrationType = ConcentrationType.PERCENTAGE
 
     var fromStock = MutableLiveData<Boolean>()
-    val desiredConcentrationType =
-        MutableLiveData<ConcentrationType>().apply { value = initialConcentrationType }
-    val stockConcentrationType = MutableLiveData<ConcentrationType?>()
+    val desiredConcentrationType = MutableLiveData<ConcentrationType>().apply {
+        value = initialConcentrationType
+    }
+    val stockConcentrationType = MutableLiveData<ConcentrationType>().apply {
+        value = initialConcentrationType
+    }
     // TODO Add validation (for blink)
     // TODO Add EditTexts Values (to be preserved on config change)
     //
