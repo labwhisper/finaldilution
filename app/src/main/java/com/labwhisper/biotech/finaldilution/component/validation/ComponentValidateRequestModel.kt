@@ -9,7 +9,6 @@ data class ComponentValidateRequestModel(
     val wasStockOpen: Boolean,
     val action: EditComponentAction,
     val liquid: Boolean,
-    val molarMassGiven: Boolean,
-    val densityGiven: Boolean
+    val molarMassGiven: Boolean
 )
 

@@ -54,7 +54,7 @@ class ComponentValidateInteractor(
                 request.action,
                 stockOpen,
                 bestPossibleCurrent,
-                request.oppositeConcentrationType
+                bestPossibleOpposite
             )
         }
 

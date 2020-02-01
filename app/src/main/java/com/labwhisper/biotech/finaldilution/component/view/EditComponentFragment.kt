@@ -102,11 +102,16 @@ class EditComponentFragment : Fragment() {
 
         textView(R.id.new_component_title).text = compound.displayName
 
+        disableMgMlForLiquids()
         setKeyboardOnInputs()
         bindListeners()
         fillComponentFields()
     }
 
+    private fun disableMgMlForLiquids() {
+        radioButton(R.id.desiredMgMlConcButton).isEnabled = !compound.liquid
+        radioButton(R.id.stockMgMlConcButton).isEnabled = !compound.liquid
+    }
 
     private fun bindListeners() {
 
