@@ -251,12 +251,6 @@ class EditComponentFragment : Fragment() {
             return
         }
 
-        if (appModel.fromStock.value == true) {
-            //TODO Add animation to buttons
-            return
-        }
-
-
         (solution.getComponentWithCompound(compound)?.also {
             updateComponent(it)
         } ?: createComponent())
