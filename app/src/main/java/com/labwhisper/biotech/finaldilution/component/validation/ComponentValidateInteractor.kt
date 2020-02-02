@@ -42,19 +42,37 @@ class ComponentValidateInteractor(
                 possibleConcentrations
             )
 
-        val bestPossibleOpposite =
+        val currentCompatibleList =
+            compatibleConcentrationsInteractor.getCompatibleConcentrations(
+                request.liquid, request.molarMassGiven, request.currentConcentrationType
+            )
+
+        val bestCompatibleFromCurrent =
             chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
                 request.oppositeConcentrationType,
                 request.currentConcentrationType,
-                possibleConcentrations
+                currentCompatibleList
+            )
+
+        val bestPossibleCurrentCompatibleList =
+            compatibleConcentrationsInteractor.getCompatibleConcentrations(
+                request.liquid, request.molarMassGiven, bestPossibleCurrent
+            )
+
+        val bestCompatibleFromBestPossibleCurrent =
+            chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
+                request.oppositeConcentrationType,
+                bestPossibleCurrent,
+                bestPossibleCurrentCompatibleList
             )
 
         if (request.action == STOCK_CLOSED) {
             return ComponentValidateResponseModel(
                 request.action,
-                stockOpen,
+                false,
                 bestPossibleCurrent,
-                bestPossibleOpposite
+                bestCompatibleFromBestPossibleCurrent,
+                bestPossibleCurrentCompatibleList
             )
         }
 
@@ -63,36 +81,27 @@ class ComponentValidateInteractor(
                 request.action,
                 stockOpen,
                 request.currentConcentrationType,
-                bestPossibleOpposite
+                bestCompatibleFromCurrent,
+                currentCompatibleList
             )
         }
 
-
-        val compatibleList =
-            compatibleConcentrationsInteractor.getCompatibleConcentrations(
-                request.liquid, request.currentConcentrationType
-            )
-        if (compatibleList.isEmpty()) {
+        if (currentCompatibleList.isEmpty()) {
             return ComponentValidateResponseModel(
                 request.action,
                 stockOpen,
                 bestPossibleCurrent,
-                bestPossibleCurrent
+                bestCompatibleFromBestPossibleCurrent,
+                bestPossibleCurrentCompatibleList
             )
         }
-
-        val bestCompatible =
-            chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
-                request.oppositeConcentrationType,
-                request.currentConcentrationType,
-                compatibleList
-            )
 
         return ComponentValidateResponseModel(
             request.action,
             true,
             request.currentConcentrationType,
-            bestCompatible
+            bestCompatibleFromCurrent,
+            currentCompatibleList
         )
 
     }

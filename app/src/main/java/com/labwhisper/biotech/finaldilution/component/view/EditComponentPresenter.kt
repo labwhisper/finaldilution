@@ -23,6 +23,8 @@ class EditComponentPresenter(val appModel: ComponentEditAppModel) :
             else componentResponseModel.oppositeConcentrationType
         appModel.desiredConcentrationType.value = desiredResult
         appModel.stockConcentrationType.value = stockResult
+        appModel.stockConcentrationsAvailable.value =
+            componentResponseModel.stockConcentrationsAvailable
     }
 
 }

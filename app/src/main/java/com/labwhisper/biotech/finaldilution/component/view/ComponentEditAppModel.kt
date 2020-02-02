@@ -14,8 +14,10 @@ class ComponentEditAppModel {
     val stockConcentrationType = MutableLiveData<ConcentrationType>().apply {
         value = initialConcentrationType
     }
+    val stockConcentrationsAvailable = MutableLiveData<List<ConcentrationType>>().apply {
+        value = listOf()
+    }
     // TODO Add validation (for blink)
     // TODO Add EditTexts Values (to be preserved on config change)
     //
 }
-// ViewModel - has strings in it, has flags for buttons, has boolean flag for disabled button e.g.

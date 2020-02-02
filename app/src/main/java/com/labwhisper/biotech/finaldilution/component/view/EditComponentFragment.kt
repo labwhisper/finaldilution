@@ -115,7 +115,6 @@ class EditComponentFragment : Fragment() {
 
     private fun bindListeners() {
 
-        //FIXME 2 Add observers
         for ((i, button) in desiredButtonList.withIndex()) {
             button.setOnClickListener { changeDesireConcentration(ConcentrationType.fromInt(i)) }
         }
@@ -132,7 +131,18 @@ class EditComponentFragment : Fragment() {
 
         appModel.desiredConcentrationType.observe(this, Observer { checkDesiredConcButton(it) })
         appModel.stockConcentrationType.observe(this, Observer { checkStockConcButton(it) })
+        appModel.stockConcentrationsAvailable.observe(
+            this,
+            Observer { enableStockConcentrations(it) })
         appModel.fromStock.observe(this, Observer { refreshFromStock(it) })
+    }
+
+    private fun enableStockConcentrations(concentrations: List<ConcentrationType>) {
+        stockButtonList.filterNot { button ->
+            concentrations.map { radioButton(getStockConcButton(it)) }.contains(button)
+        }
+            .forEach { it.isEnabled = false }
+        concentrations.forEach { radioButton(getStockConcButton(it)).isEnabled = true }
     }
 
     private fun changeDesireConcentration(type: ConcentrationType?) {

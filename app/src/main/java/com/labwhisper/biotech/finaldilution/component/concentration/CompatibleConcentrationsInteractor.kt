@@ -6,26 +6,31 @@ class CompatibleConcentrationsInteractor {
 
     fun getCompatibleConcentrations(
         liquid: Boolean,
+        molarMassGiven: Boolean,
         concentrationType: ConcentrationType
     ): List<ConcentrationType> {
-        val resultList = mutableListOf<ConcentrationType>()
 
         if (concentrationType == NX) {
-            resultList.add(NX)
+            return listOf(NX)
         }
 
-        if (concentrationType in listOf(MOLAR, MILIMOLAR)) {
+        if (liquid && concentrationType == MILIGRAM_PER_MILLILITER) {
+            return listOf()
+        }
+
+        if (!molarMassGiven && concentrationType in listOf(MOLAR, MILIMOLAR)) {
+            return listOf(MOLAR, MILIMOLAR)
+        }
+
+        val resultList = mutableListOf(PERCENTAGE)
+
+        if (molarMassGiven) {
             resultList.add(MOLAR)
             resultList.add(MILIMOLAR)
         }
 
-        if (!liquid && concentrationType in listOf(PERCENTAGE, MILIGRAM_PER_MILLILITER)) {
-            resultList.add(PERCENTAGE)
+        if (!liquid) {
             resultList.add(MILIGRAM_PER_MILLILITER)
-        }
-
-        if (liquid && concentrationType == PERCENTAGE) {
-            resultList.add(PERCENTAGE)
         }
 
         return resultList

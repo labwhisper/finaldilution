@@ -7,5 +7,6 @@ data class ComponentValidateResponseModel(
     val action: EditComponentAction,
     val isStock: Boolean,
     val currentConcentrationType: ConcentrationType,
-    val oppositeConcentrationType: ConcentrationType
+    val oppositeConcentrationType: ConcentrationType,
+    val stockConcentrationsAvailable: List<ConcentrationType>
 )

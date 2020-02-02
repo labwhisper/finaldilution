@@ -20,6 +20,8 @@ import java.util.stream.Stream
 
 class ComponentValidateInteractorTest {
 
+    //TODO Tests for Disabled Stock Concentrations
+
     private val sut = ComponentValidateInteractor(
         object : ComponentValidateOutputPort {
             override fun exposeValidatedComponentData(
@@ -30,31 +32,6 @@ class ComponentValidateInteractorTest {
         ChooseMostSuitableConcentrationInteractor(),
         CompatibleConcentrationsInteractor()
     )
-
-//    @Test
-//    fun `If current concentration after change is possible, don't open and close stock`() {
-//        every {
-//            possibleConcentrationsInteractor.getPossibleConcentrations(any(), any())
-//        } returns listOf(PERCENTAGE)
-//
-//        sut.validate(
-//            ComponentValidateRequestModel(
-//                currentConcentrationType = PERCENTAGE,
-//                oppositeConcentrationType = PERCENTAGE
-//            )
-//        )
-//    }
-
-//      -> concentrationChange -> getPossibleConcList
-//              -> isPossible -> (don't open/close stock) -> validate other (set to possible)
-//              -> isNotPossible -> isStockPossible -> open stock -> getCompatibilityList
-//                      -> validate other (set to compatible)
-//      -> stockOpened (same as desiredConcentrationChange)
-//      -> currentClosed -> getPossibleConcList
-//              -> isPossible -> ok
-//              -> isNotPossible -> validate this (set to possible) (don't open stock)
-
-    //TODO Because action is removed from interactor, it should be added in fragment?
 
     @ParameterizedTest
     @MethodSource("testCaseProvider")
