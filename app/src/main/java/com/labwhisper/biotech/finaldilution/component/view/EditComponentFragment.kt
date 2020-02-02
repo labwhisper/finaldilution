@@ -102,10 +102,18 @@ class EditComponentFragment : Fragment() {
 
         textView(R.id.new_component_title).text = compound.displayName
 
+        setNoMolarWarning()
         disableMgMlForLiquids()
         setKeyboardOnInputs()
         bindListeners()
         fillComponentFields()
+    }
+
+    private fun setNoMolarWarning() {
+        textView(R.id.warningTextView).visibility =
+            if (compound.molarMass == null) View.VISIBLE else View.GONE
+        textView(R.id.warningTextView).text =
+            "No molar mass entered."
     }
 
     private fun disableMgMlForLiquids() {
