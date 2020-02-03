@@ -15,6 +15,9 @@ class ComponentDisplayTest {
         availableConcentration = MolarConcentration(10.0)
     )
     private val liquid = Component(Compound("liquid1", true), PercentageConcentration(10.0))
+    private val liquidWithDensity = Component(
+        Compound("liquid1", true, density = 20.0), PercentageConcentration(10.0)
+    )
     private val liquidStock = Component(
         compound = Compound("solid1", false, 30.0),
         desiredConcentration = PercentageConcentration(20.0),
@@ -54,33 +57,63 @@ class ComponentDisplayTest {
 
 
     @Test
-    fun `Liquid component (no stock) with zero amount should display ml`() {
-        assertEquals("0 ml", liquid.getAmountString(0.0))
+    fun `Liquid component (no stock) no density with zero amount should display g`() {
+        assertEquals("0 g", liquid.getAmountString(0.0))
     }
 
     @Test
-    fun `Liquid component (no stock) with amount greater then 1l should display l`() {
-        assertEquals("1.2 l", liquid.getAmountString(1200.0))
+    fun `Liquid component (no stock) no density with amount greater then 1l should display kg`() {
+        assertEquals("1.2 kg", liquid.getAmountString(1200.0))
     }
 
     @Test
-    fun `Liquid component (no stock) with amount greater then 1ml should display ml`() {
-        assertEquals("1.2 ml", liquid.getAmountString(1.2))
+    fun `Liquid component (no stock) no density with amount greater then 1ml should display g`() {
+        assertEquals("1.2 g", liquid.getAmountString(1.2))
     }
 
     @Test
-    fun `Liquid component (no stock) with amount lesser then 1ml should display ul`() {
-        assertEquals("800 \u03bcl", liquid.getAmountString(0.8))
+    fun `Liquid component (no stock) no density with amount lesser then 1ml should display mg`() {
+        assertEquals("800 mg", liquid.getAmountString(0.8))
     }
 
     @Test
-    fun `Liquid component (no stock) with amount lesser then 1ul should still display ul`() {
-        assertEquals("0.8 \u03bcl", liquid.getAmountString(0.0008))
+    fun `Liquid component (no stock) no density with amount lesser then 1ul should still display ug`() {
+        assertEquals("0.8 mg", liquid.getAmountString(0.0008))
     }
 
     @Test
-    fun `Liquid component (no stock) with amount lesser then 1ul should display nl`() {
-        assertEquals("8 nl", liquid.getAmountString(0.000008))
+    fun `Liquid component (no stock) no density with amount lesser then 1ul should display ug`() {
+        assertEquals("8 \u03bcg", liquid.getAmountString(0.000008))
+    }
+
+    @Test
+    fun `Liquid component (no stock) with density with zero amount should display ml`() {
+        assertEquals("0 ml", liquidWithDensity.getAmountString(0.0))
+    }
+
+    @Test
+    fun `Liquid component (no stock) with density with amount greater then 1l should display l`() {
+        assertEquals("1.2 l", liquidWithDensity.getAmountString(1200.0))
+    }
+
+    @Test
+    fun `Liquid component (no stock) with density with amount greater then 1ml should display ml`() {
+        assertEquals("1.2 ml", liquidWithDensity.getAmountString(1.2))
+    }
+
+    @Test
+    fun `Liquid component (no stock) with density with amount lesser then 1ml should display ul`() {
+        assertEquals("800 \u03bcl", liquidWithDensity.getAmountString(0.8))
+    }
+
+    @Test
+    fun `Liquid component (no stock) with density with amount lesser then 1ul should still display ul`() {
+        assertEquals("0.8 \u03bcl", liquidWithDensity.getAmountString(0.0008))
+    }
+
+    @Test
+    fun `Liquid component (no stock) with density with amount lesser then 1ul should display nl`() {
+        assertEquals("8 nl", liquidWithDensity.getAmountString(0.000008))
     }
 
 
