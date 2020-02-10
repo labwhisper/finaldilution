@@ -1,5 +1,6 @@
 package com.labwhisper.biotech.finaldilution.component.validation
 
+import android.util.Log
 import com.labwhisper.biotech.finaldilution.component.EditComponentAction.STOCK_CLOSED
 import com.labwhisper.biotech.finaldilution.component.EditComponentAction.STOCK_OPENED
 import com.labwhisper.biotech.finaldilution.component.concentration.ChooseMostSuitableConcentrationInteractor
@@ -19,6 +20,8 @@ class ComponentValidateInteractor(
 
     private fun onComponentChange(componentValidateRequestModel: ComponentValidateRequestModel) {
         val componentResponse = validate(componentValidateRequestModel)
+        Log.d(TAG, componentValidateRequestModel.toString())
+        Log.d(TAG, componentResponse.toString())
         componentValidateOutputPort.exposeValidatedComponentData(componentResponse)
     }
 
@@ -104,6 +107,11 @@ class ComponentValidateInteractor(
             currentCompatibleList
         )
 
+    }
+
+    companion object {
+
+        private const val TAG = "Component validator"
     }
 
 }

@@ -41,8 +41,7 @@ class EditComponentFragment : Fragment() {
     private lateinit var stockButtonList: MutableList<RadioButton>
     private lateinit var careTaker: CareTaker<Solution>
 
-    val appModel =
-        ComponentEditAppModel()
+    val appModel = ComponentEditAppModel()
     val presenter = EditComponentPresenter(appModel)
     val possibleConcentrationsInteractor = PossibleConcentrationsInteractor()
     val chooseMostSuitableConcentrationInteractor = ChooseMostSuitableConcentrationInteractor()
@@ -216,6 +215,12 @@ class EditComponentFragment : Fragment() {
     private fun fillComponentFields() {
         val component = solution.getComponentWithCompound(compound) ?: return
 
+        controller.changeDesireConcentration(
+            component.compound,
+            component.desiredConcentration.type,
+            component.availableConcentration?.type ?: component.desiredConcentration.type,
+            component.fromStock
+        )
         editText(R.id.desiredConcEditText).apply {
             setText(component.desiredConcentration.concentration.toString())
         }
@@ -273,7 +278,7 @@ class EditComponentFragment : Fragment() {
     }
 
     private fun retrieveStockConcFromInput(): Concentration? {
-        if (appModel.fromStock.value == null) {
+        if (appModel.fromStock.value != true) {
             return null
         }
         val stockConcEditText = editText(R.id.stockConcEditText)
