@@ -81,19 +81,29 @@ data class Component(val compound: Compound) :
         return niceOutput.toString()
     }
 
+    //TODO Because this is main application logic it should be moved to new class
+    //TODO Add density
     fun getQuantity(volume: Double): Double {
         val M = compound.molarMass
-        return when {
+        when {
             fromStock -> {
                 if (availableConcentration?.type == desiredConcentration.type) {
                     return desiredConcentration.concentration * volume /
                             (availableConcentration?.concentration ?: 0.0)
                 }
-                availableConcentration?.calcVolumeForDesiredMass(
+                return availableConcentration?.calcVolumeForDesiredMass(
                     desiredConcentration.calcDesiredMass(volume, M), M
                 ) ?: 0.0
             }
-            else -> desiredConcentration.calcDesiredMass(volume, M)
+            else -> {
+                if (desiredConcentration.type.isMolarLike()
+                    && compound.liquid
+                    && compound.density != null
+                ) {
+                    return desiredConcentration.calcDesiredMass(volume, M) / compound.density
+                }
+                return desiredConcentration.calcDesiredMass(volume, M)
+            }
         }
     }
 

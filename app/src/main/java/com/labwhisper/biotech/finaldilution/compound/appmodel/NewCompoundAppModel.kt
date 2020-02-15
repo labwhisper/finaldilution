@@ -26,7 +26,7 @@ class NewCompoundAppModel(private val appState: ApplicationContext) {
             if (compound.name != it.name) {
                 appState.renameCompound(compound, it)
             }
-            appState.updateCompound(compound)
+            appState.updateCompound(compound, it)
         } ?: appState.safeSaveCompound(compound)
         newCompound = compound
     }

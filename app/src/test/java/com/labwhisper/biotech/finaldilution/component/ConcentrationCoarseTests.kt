@@ -3,23 +3,29 @@ package com.labwhisper.biotech.finaldilution.component
 import com.labwhisper.biotech.finaldilution.component.concentration.*
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class ConcentrationCoarseTests {
 
-    private var volume: Double = 0.toDouble()
-    private var compound = Compound(
+    private var volume = 2000.0
+    private val compound = Compound(
         iupacName = "Sodium hydroxide",
         liquid = false,
         molarMass = 40.0
     )
 
-    @BeforeEach
-    @Throws(Exception::class)
-    fun setUp() {
-        volume = 2000.0 //[ml]
-    }
+    private var liquidCompound = Compound(
+        iupacName = "methanol",
+        liquid = true,
+        molarMass = 32.0,
+        density = 0.8
+    )
+
+    private var liquidCompoundNoDensity = Compound(
+        iupacName = "methanol no density",
+        liquid = true,
+        molarMass = 32.0
+    )
 
     @Test
     @Throws(Exception::class)

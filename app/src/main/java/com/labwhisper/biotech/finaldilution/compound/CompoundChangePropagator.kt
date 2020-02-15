@@ -10,8 +10,34 @@ class CompoundChangePropagator(
 ) {
 
 
-    fun renameCompoundInAllSolutions(compound: Compound, oldCompound: Compound) {
+    fun propagateCompoundRename(compound: Compound, oldCompound: Compound) {
         compoundGateway.rename(compound, oldCompound.name)
+        updateCompoundInAllSolutions(oldCompound, compound)
+    }
+
+    fun propagateCompoundRemoval(compound: Compound) {
+        for (solution in solutionGateway.loadAll()) {
+            val component = solution.getComponentWithCompound(compound)
+            if (component != null) {
+                solution.removeComponent(component)
+                solutionGateway.update(solution)
+            }
+        }
+        compoundGateway.remove(compound)
+    }
+
+    fun propagateCompoundUpdate(
+        compound: Compound,
+        oldCompound: Compound
+    ) {
+        compoundGateway.update(compound)
+        updateCompoundInAllSolutions(oldCompound, compound)
+    }
+
+    private fun updateCompoundInAllSolutions(
+        oldCompound: Compound,
+        compound: Compound
+    ) {
         for (solution in solutionGateway.loadAll()) {
             val oldComponent = solution.getComponentWithCompound(oldCompound)
             oldComponent?.let {
@@ -27,14 +53,4 @@ class CompoundChangePropagator(
         }
     }
 
-    fun removeCompoundsFromAllSolutions(compound: Compound) {
-        for (solution in solutionGateway.loadAll()) {
-            val component = solution.getComponentWithCompound(compound)
-            if (component != null) {
-                solution.removeComponent(component)
-                solutionGateway.update(solution)
-            }
-        }
-        compoundGateway.remove(compound)
-    }
 }

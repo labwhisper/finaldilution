@@ -45,8 +45,8 @@ class NewCompoundDialogTest {
 
         verify { appContext.safeSaveCompound(compound) }
         verify(inverse = true) {
-            appContext.renameCompound(any(), compound)
-            appContext.updateCompound(any())
+            appContext.renameCompound(any(), any())
+            appContext.updateCompound(any(), any())
         }
     }
 
@@ -62,7 +62,7 @@ class NewCompoundDialogTest {
             appContext.safeSaveCompound(any())
             appContext.renameCompound(any(), any())
         }
-        verify { appContext.updateCompound(updated_compound) }
+        verify { appContext.updateCompound(updated_compound, compound) }
     }
 
     @Test
@@ -76,7 +76,7 @@ class NewCompoundDialogTest {
         verify(inverse = true) { appContext.safeSaveCompound(compound) }
         verify(ordering = Ordering.SEQUENCE) {
             appContext.renameCompound(renamed_compound, compound)
-            appContext.updateCompound(renamed_compound)
+            appContext.updateCompound(renamed_compound, compound)
         }
     }
 

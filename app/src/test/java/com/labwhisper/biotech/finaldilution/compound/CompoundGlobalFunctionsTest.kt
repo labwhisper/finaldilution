@@ -23,14 +23,14 @@ class CompoundGlobalFunctionsTest {
 
     @Test
     fun `When renaming compound - rename it in gateway`() {
-        sut.renameCompoundInAllSolutions(c1Changed, c1)
+        sut.propagateCompoundRename(c1Changed, c1)
         verify { compoundGateway.rename(c1Changed, c1.name) }
     }
 
     @Test
     fun `When renaming compound - rename it in all solutions`() {
         solutionGateway.updated = mutableListOf()
-        sut.renameCompoundInAllSolutions(c1Changed, c1)
+        sut.propagateCompoundRename(c1Changed, c1)
         assert(solutionGateway.updated.flatMap { it.components }.contains(component1Changed))
         assert(!solutionGateway.updated.flatMap { it.components }.contains(component1))
         assert(solutionGateway.updated.map { it.name }.contains("Sol1"))

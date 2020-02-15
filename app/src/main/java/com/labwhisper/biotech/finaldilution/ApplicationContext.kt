@@ -54,17 +54,17 @@ class ApplicationContext : Application() {
         compoundGateway.save(compound)
     }
 
-    fun updateCompound(compound: Compound) {
-        return compoundGateway.update(compound)
+    fun updateCompound(compound: Compound, oldCompound: Compound) {
+        compoundChangePropagator.propagateCompoundUpdate(compound, oldCompound)
     }
 
     //FIXME Add test cases
     fun renameCompound(compound: Compound, oldCompound: Compound) {
-        compoundChangePropagator.renameCompoundInAllSolutions(compound, oldCompound)
+        compoundChangePropagator.propagateCompoundRename(compound, oldCompound)
     }
 
     fun removeCompoundFromEverywhere(compound: Compound) {
-        compoundChangePropagator.removeCompoundsFromAllSolutions(compound)
+        compoundChangePropagator.propagateCompoundRemoval(compound)
     }
 
     fun saveCurrentWorkOnSolution(solution: Solution) {
