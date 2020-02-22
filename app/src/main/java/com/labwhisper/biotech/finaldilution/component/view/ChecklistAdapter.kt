@@ -42,6 +42,7 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
                 "Fill up to ${solution.displayVolume()}"
             holder.stockTextView?.visibility = View.GONE
             holder.amountTextView?.visibility = View.GONE
+            holder.addDensityTextView?.visibility = View.GONE
             holder.checkBox?.isChecked = solution.isFilledInWithWater
 
 
@@ -65,6 +66,8 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
             component.getAmountStringForVolume(solution.volume)
         holder.stockTextView?.visibility = View.VISIBLE
         holder.stockTextView?.text = component.desiredConcentration.toString()
+        holder.addDensityTextView?.visibility =
+            if (component.noVolumeBecauseOfNoDensity) View.VISIBLE else View.GONE
         holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
         holder.checkBox?.tag = compound
 
@@ -109,12 +112,14 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
         var amountTextView: TextView? = null
         var stockTextView: TextView? = null
         var checkBox: CheckBox? = null
+        var addDensityTextView: TextView? = null
 
         init {
             compoundTextView = itemView.textView(R.id.checklist_compound)
             amountTextView = itemView.textView(R.id.checklist_amount)
             stockTextView = itemView.textView(R.id.checklist_stock)
             checkBox = itemView.checkBox(R.id.checklist_checkBox1)
+            addDensityTextView = itemView.textView(R.id.checklist_no_density)
         }
     }
 }

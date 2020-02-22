@@ -9,4 +9,9 @@ data class ComponentValidateResponseModel(
     val currentConcentrationType: ConcentrationType,
     val oppositeConcentrationType: ConcentrationType,
     val stockConcentrationsAvailable: List<ConcentrationType>
-)
+) {
+    override fun toString(): String {
+        return "Response[$currentConcentrationType $oppositeConcentrationType $isStock " +
+                "$action $stockConcentrationsAvailable]"
+    }
+}

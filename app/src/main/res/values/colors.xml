@@ -17,7 +17,7 @@
     <color name="background_accent">#D8E9F0</color>
     <color name="background_accent_saturated">#f8f9fa</color>
     <color name="background_error">#fad0d0</color>
-    <color name="text_error">#EC2E2E</color>
+    <color name="text_error">#ECA02E</color>
     <color name="blue">#86D7F5</color>
     <color name="darker_blue">#7ac3de</color>
     <color name="dark_blue">#548699</color>

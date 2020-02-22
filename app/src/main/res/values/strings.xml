@@ -48,4 +48,5 @@
     <string name="mg_ml">mg/ml</string>
     <string name="nx">nX</string>
     <string name="well_done">Well done</string>
+    <string name="add_density_for_volume">Add density to obtain result in ml</string>
 </resources>

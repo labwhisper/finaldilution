@@ -23,6 +23,10 @@ data class Component(
         get() = fromStock ||
                 (compound.liquid && compound.density != null)
 
+    val noVolumeBecauseOfNoDensity
+        get() = compound.liquid && compound.density == null && desiredConcentration.type
+            .isMolarLike()
+
     private var solutionVolume = 0.0
 
 

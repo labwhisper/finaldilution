@@ -10,5 +10,10 @@ data class ComponentValidateRequestModel(
     val action: EditComponentAction,
     val liquid: Boolean,
     val molarMassGiven: Boolean
-)
+) {
+    override fun toString(): String {
+        return "Request [$currentConcentrationType $oppositeConcentrationType $wasStockOpen " +
+                "$action $liquid $molarMassGiven]"
+    }
+}
 
