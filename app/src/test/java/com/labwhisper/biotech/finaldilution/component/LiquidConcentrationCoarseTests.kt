@@ -25,8 +25,6 @@ class LiquidConcentrationCoarseTests {
         molarMass = 32.0
     )
 
-    //TODO Result should be in g!!
-
     @Test
     @Throws(Exception::class)
     fun testLiquidNoDensityToPercentage() {
