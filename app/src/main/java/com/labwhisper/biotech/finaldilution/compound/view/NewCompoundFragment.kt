@@ -11,15 +11,14 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import androidx.annotation.VisibleForTesting
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.CompoundValidator
 import com.labwhisper.biotech.finaldilution.compound.appmodel.NewCompoundAppModel
+import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import com.labwhisper.biotech.finaldilution.util.*
 
 class NewCompoundFragment : Fragment() {
@@ -32,7 +31,7 @@ class NewCompoundFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val fragment = inflater.inflate(R.layout.compound_new, container, false)
-        appModel = NewCompoundAppModel(requireActivity().applicationContext as ApplicationContext)
+        appModel = NewCompoundAppModel((requireActivity() as EditActivity).appModel)
         arguments?.getSerializable("COMPOUND").let { appModel?.initialCompound = it as Compound? }
         return fragment
     }
@@ -63,23 +62,19 @@ class NewCompoundFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    //FIXME All expand collapse functions are duplicated
-    fun isExpanded(): Boolean {
-        val compoundsListView =
-            requireActivity().findViewById<ConstraintLayout>(R.id.compounds_fragment)
+    private fun isExpanded(): Boolean {
+        val compoundsListView = constraintLayout(R.id.compounds_fragment)
         val state = BottomSheetBehavior.from(compoundsListView).state
         return state != BottomSheetBehavior.STATE_COLLAPSED
     }
 
-    fun expand() {
-        val compoundsListView =
-            requireActivity().findViewById<ConstraintLayout>(R.id.compounds_fragment)
+    private fun expand() {
+        val compoundsListView = constraintLayout(R.id.compounds_fragment)
         BottomSheetBehavior.from(compoundsListView).state = BottomSheetBehavior.STATE_EXPANDED
     }
 
-    fun collapse() {
-        val compoundsListView =
-            requireActivity().findViewById<ConstraintLayout>(R.id.compounds_fragment)
+    private fun collapse() {
+        val compoundsListView = constraintLayout(R.id.compounds_fragment)
         BottomSheetBehavior.from(compoundsListView).state = BottomSheetBehavior.STATE_COLLAPSED
     }
 

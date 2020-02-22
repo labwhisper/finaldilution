@@ -3,7 +3,7 @@ package com.labwhisper.biotech.finaldilution.component.concentration
 import java.io.Serializable
 import java.text.DecimalFormat
 
-abstract class Concentration(var concentration: Double, var type: ConcentrationType) :
+abstract class Concentration(open var concentration: Double, var type: ConcentrationType) :
     Serializable {
 
     override fun toString(): String {
@@ -25,4 +25,22 @@ abstract class Concentration(var concentration: Double, var type: ConcentrationT
      * @return - volume[ml] of compound to be taken
      */
     abstract fun calcVolumeForDesiredMass(mass: Double, molarMass: Double?): Double
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Concentration) return false
+
+        if (concentration != other.concentration) return false
+        if (type != other.type) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = concentration.hashCode()
+        result = 31 * result + type.hashCode()
+        return result
+    }
+
+
 }

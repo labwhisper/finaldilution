@@ -7,19 +7,14 @@ import com.labwhisper.biotech.finaldilution.compound.NoMolarMassException
 import java.io.Serializable
 import java.text.DecimalFormat
 
-data class Component(val compound: Compound) :
+data class Component(
+    val compound: Compound,
+    var desiredConcentration: Concentration = MolarConcentration(0.0),
+    var availableConcentration: Concentration? = null
+) :
     Serializable, Comparable<Component> {
 
     override fun compareTo(other: Component) = compound.compareTo(other.compound)
-
-    constructor(
-        compound: Compound,
-        desiredConcentration: Concentration,
-        availableConcentration: Concentration? = null
-    ) : this(compound) {
-        this.desiredConcentration = desiredConcentration
-        this.availableConcentration = availableConcentration
-    }
 
     val fromStock get() = availableConcentration != null
 
@@ -28,8 +23,6 @@ data class Component(val compound: Compound) :
         get() = fromStock ||
                 (compound.liquid && compound.density != null)
 
-    var desiredConcentration: Concentration = MolarConcentration(0.0)
-    var availableConcentration: Concentration? = null
     private var solutionVolume = 0.0
 
 

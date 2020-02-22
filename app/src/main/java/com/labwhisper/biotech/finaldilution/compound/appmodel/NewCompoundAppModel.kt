@@ -1,9 +1,9 @@
 package com.labwhisper.biotech.finaldilution.compound.appmodel
 
-import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.compound.Compound
+import com.labwhisper.biotech.finaldilution.solution.appmodel.EditSolutionAppModel
 
-class NewCompoundAppModel(private val appState: ApplicationContext) {
+class NewCompoundAppModel(val editSolutionAppModel: EditSolutionAppModel) {
 
     var initialCompound: Compound? = null
         set(value) {
@@ -24,10 +24,10 @@ class NewCompoundAppModel(private val appState: ApplicationContext) {
     fun proceedWithCompound(compound: Compound) {
         initialCompound?.let {
             if (compound.name != it.name) {
-                appState.renameCompound(compound, it)
+                editSolutionAppModel.renameCompound(compound, it)
             }
-            appState.updateCompound(compound, it)
-        } ?: appState.safeSaveCompound(compound)
+            editSolutionAppModel.updateCompound(compound, it)
+        } ?: editSolutionAppModel.safeSaveCompound(compound)
         newCompound = compound
     }
 }

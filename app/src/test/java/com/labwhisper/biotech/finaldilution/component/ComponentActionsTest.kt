@@ -8,6 +8,7 @@ import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.reactivex.subjects.BehaviorSubject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -22,7 +23,7 @@ class ComponentActionsTest {
 
     init {
         every { activity.applicationContext } returns appContext
-        every { activity.solution } returns solution
+        every { activity.appModel.solution } returns BehaviorSubject.createDefault(solution)
     }
 
     @Test
@@ -34,7 +35,7 @@ class ComponentActionsTest {
         sut.removeComponentSelectedInContextMenu()
 
         assertEquals(0, solution.components.size)
-        verify { appContext.saveCurrentWorkOnSolution(solution) }
+        verify { activity.appModel.updateSolution(solution) }
     }
 
 }

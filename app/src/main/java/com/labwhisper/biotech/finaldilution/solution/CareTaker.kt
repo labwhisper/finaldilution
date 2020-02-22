@@ -1,5 +1,6 @@
 package com.labwhisper.biotech.finaldilution.solution
 
+import android.util.Log
 import com.labwhisper.biotech.finaldilution.genericitem.Item
 import java.io.Serializable
 
@@ -18,6 +19,7 @@ class CareTaker<T : Item> : Serializable {
         mementos.getOrNull(currentPosition).let { current ->
             if (memento == current) return
         }
+        Log.d(TAG, "Added memento: $memento")
         mementos = mementos.filterIndexed { index, _ ->
             index <= currentPosition
         }.toMutableList().apply { add(memento.deepCopy() as T); currentPosition++ }
@@ -41,6 +43,10 @@ class CareTaker<T : Item> : Serializable {
             throw RedoOnLastChangeException()
         }
         return mementos[++currentPosition].deepCopy() as T
+    }
+
+    companion object {
+        const val TAG = "Care taker"
     }
 
 }

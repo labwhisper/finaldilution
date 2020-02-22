@@ -13,7 +13,7 @@ class EditCompoundFragmentCreator {
     fun startCompoundEdition(
         activity: AppCompatActivity,
         compound: Compound? = null,
-        onClose: (oldCompound: Compound?, newCompound: Compound?) -> Unit
+        onClose: (newCompound: Compound?) -> Unit
     ) {
         val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
         val newCompoundFragment = NewCompoundFragment()
@@ -22,9 +22,8 @@ class EditCompoundFragmentCreator {
             bundle.putSerializable("COMPOUND", compound)
             newCompoundFragment.arguments = bundle
         }
-        newCompoundFragment.setOnFragmentCloseListener { newCompound ->
-            onClose(compound, newCompound)
-        }
+        newCompoundFragment.setOnFragmentCloseListener { onClose(it) }
+
         fragmentTransaction.replace(R.id.compounds_fragment, newCompoundFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()

@@ -3,6 +3,7 @@ package com.labwhisper.biotech.finaldilution.solution.view
 import android.content.Context
 import android.content.res.Configuration
 import android.text.InputType
+import android.util.Log
 import android.view.GestureDetector
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -12,6 +13,7 @@ import android.widget.ViewSwitcher
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.peripherals.gestures.TapGestureController
 import com.labwhisper.biotech.finaldilution.peripherals.gestures.TapGestureListener
+import io.reactivex.disposables.CompositeDisposable
 
 
 class VolumePanel internal constructor(private val activity: EditActivity) : TapGestureController {
@@ -20,12 +22,17 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     private val volumeEditText by lazy<TextView> { activity.findViewById(R.id.beakerVolumeEditText) }
     private val volumeEditTextUnit by lazy<TextView> { activity.findViewById(R.id.beakerVolumeEditTextUnit) }
 
-    internal fun displayVolumeText() {
-        updateVolumeTextView()
-        volumeEditTextUnit.text = activity.solution.volumeUnit()
-        volumeEditText.text = activity.solution.volumeAmountForCurrentUnit()
-        volumeEditText.setSelectAllOnFocus(true)
+    //TODO Dispose
+    val disposable = CompositeDisposable()
 
+    internal fun displayVolumeText() {
+        disposable.add(activity.appModel.solution.subscribe {
+            volumeEditTextUnit.text = it.volumeUnit()
+            volumeEditText.text = it.volumeAmountForCurrentUnit()
+            updateVolumeTextView(it.displayVolume())
+        })
+
+        volumeEditText.setSelectAllOnFocus(true)
         //Set keyboard to numerical and to show immediately
         volumeEditText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
         volumeEditText.setRawInputType(Configuration.KEYBOARD_12KEY)
@@ -53,14 +60,17 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
                 val volumeInCurrentUnit =
                     java.lang.Double.parseDouble(text.toString().replace(',', '.'))
                 when {
-                    activity.solution.volumeUnit() == "\u03bcl" -> updateVolume(volumeInCurrentUnit / 1000)
-                    activity.solution.volumeUnit() == "l" -> updateVolume(volumeInCurrentUnit * 1000)
+                    activity.appModel.solution.value?.volumeUnit() == "\u03bcl" -> updateVolume(
+                        volumeInCurrentUnit / 1000
+                    )
+                    activity.appModel.solution.value?.volumeUnit() == "l" -> updateVolume(
+                        volumeInCurrentUnit * 1000
+                    )
                     else -> updateVolume(volumeInCurrentUnit)
                 }
-                activity.refresh()
             }
         } catch (e: NumberFormatException) {
-            // TODO NumberFormatException... get back old text
+            Log.d(TAG, "Cannot change volume", e)
         }
     }
 
@@ -77,16 +87,16 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
         }
     }
 
-    internal fun updateVolumeTextView() {
-        volumeTextView.text = activity.solution.displayVolume()
+    internal fun updateVolumeTextView(volume: CharSequence) {
+        volumeTextView.text = volume
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(volumeEditText.windowToken, 0)
     }
 
     private fun updateVolume(volume: Double) {
-        activity.solution.volume = volume
-        activity.solution.recalculateVolume(volume)
-        volumeEditTextUnit.text = activity.solution.volumeUnit()
+        activity.appModel.solution.value?.also {
+            it.volume = volume
+        }?.let { activity.appModel.solution.onNext(it) }
     }
 
     override fun onTap() {
@@ -94,11 +104,17 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     }
 
     private fun startVolumeEdition() {
-        volumeEditText.text = activity.solution.volumeAmountForCurrentUnit()
+        volumeEditText.text =
+            activity.appModel.solution.value?.volumeAmountForCurrentUnit() ?: return
         if (switcher.currentView == volumeTextView) {
             switcher.showNext()
             volumeEditText.requestFocus()
         }
     }
+
+    companion object {
+        const val TAG = "Volume Panel"
+    }
+
 
 }

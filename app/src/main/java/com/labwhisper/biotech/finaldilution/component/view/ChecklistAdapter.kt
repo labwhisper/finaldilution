@@ -16,19 +16,11 @@ import com.labwhisper.biotech.finaldilution.util.checkBox
 import com.labwhisper.biotech.finaldilution.util.imageView
 import com.labwhisper.biotech.finaldilution.util.textView
 
-class ChecklistAdapter(
-    private var solution: Solution
-) : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHolder>() {
+class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHolder>() {
 
-    var overflown: Boolean = false
-
+    lateinit var solution: Solution
     var onClickListener: ((Component) -> Unit)? = null
     var onLongClickListener: ((Component) -> Boolean)? = null
-
-    fun updateComponents(solution: Solution) {
-        this.solution = solution
-        this.notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChecklistViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -76,7 +68,7 @@ class ChecklistAdapter(
         holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
         holder.checkBox?.tag = compound
 
-        if (overflown && (compound.liquid || component.fromStock)) {
+        if (solution.isOverflown && (compound.liquid || component.fromStock)) {
             holder.itemView.setBackgroundColor(
                 ContextCompat.getColor(holder.itemView.context, R.color.background_error)
             )

@@ -1,6 +1,9 @@
 package com.labwhisper.biotech.finaldilution.solution
 
+import android.util.Log
 import com.labwhisper.biotech.finaldilution.genericitem.Item
+import io.mockk.every
+import io.mockk.mockkStatic
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -13,6 +16,8 @@ class CareTakerTest {
     @BeforeEach
     fun init() {
         solutionCareTaker.clearMementos()
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
     }
 
     @Test

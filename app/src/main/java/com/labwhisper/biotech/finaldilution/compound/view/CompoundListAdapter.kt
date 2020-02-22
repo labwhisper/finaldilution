@@ -13,7 +13,7 @@ import com.labwhisper.biotech.finaldilution.solution.Solution
 class CompoundListAdapter :
     RecyclerView.Adapter<CompoundListAdapter.CompoundViewHolder>() {
 
-    var compoundList: MutableList<Compound> = mutableListOf()
+    var compoundList: List<Compound> = mutableListOf()
     var compoundsInSolution: MutableList<Compound> = mutableListOf()
     var solution: Solution? = null
     var onClickListener: ((View, Compound) -> Unit)? = null

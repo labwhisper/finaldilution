@@ -15,7 +15,6 @@ import com.labwhisper.biotech.finaldilution.component.view.EditComponentFragment
 import com.labwhisper.biotech.finaldilution.component.view.EditCompoundFragmentCreator
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.appmodel.CompoundsPanelAppModel
-import com.labwhisper.biotech.finaldilution.compound.view.CompoundListAdapter
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
 import com.labwhisper.biotech.finaldilution.compound.view.NewCompoundFragment
 import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
@@ -23,8 +22,10 @@ import com.labwhisper.biotech.finaldilution.solution.CareTaker
 import com.labwhisper.biotech.finaldilution.solution.RedoOnLastChangeException
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.UndoOnEmptyListException
+import com.labwhisper.biotech.finaldilution.solution.appmodel.EditSolutionAppModel
 import com.labwhisper.biotech.finaldilution.util.editText
 import com.labwhisper.biotech.finaldilution.util.view
+import io.reactivex.disposables.CompositeDisposable
 
 
 class EditActivity : AppCompatActivity() {
@@ -32,21 +33,35 @@ class EditActivity : AppCompatActivity() {
     private var componentsPanel: ComponentsPanel? = null
     private var compoundsPanel: CompoundsPanel? = null
     private var screenGestureDetector: GestureDetector? = null
-    lateinit var solution: Solution
-    lateinit var careTaker: CareTaker<Solution>
+    private lateinit var careTaker: CareTaker<Solution>
+
+    val appModel by lazy {
+        EditSolutionAppModel(
+            (applicationContext as ApplicationContext).compoundGateway,
+            (applicationContext as ApplicationContext).solutionGateway
+        )
+    }
 
     private var menu: Menu? = null
+
+    //TODO Dispose
+    val disposable = CompositeDisposable()
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        solution = intent.getSerializableExtra("SOLUTION") as Solution
+        appModel.solution.onNext(intent.getSerializableExtra("SOLUTION") as Solution)
         careTaker = intent.getSerializableExtra("CARE_TAKER") as CareTaker<Solution>
         setContentView(R.layout.solution_edit)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         view(R.id.back).setOnClickListener { onBackPressed() }
+        disposable.add(appModel.solution.subscribe {
+            editText(R.id.solution_toolbar_text)?.setText(it.name)
+            careTaker.addMemento(it)
+            refreshMenu()
+        })
         enableSolutionRenaming()
 
         volumePanel = VolumePanel(this)
@@ -77,12 +92,12 @@ class EditActivity : AppCompatActivity() {
             if (hasFocus) return@OnFocusChangeListener
             val text = (view as EditText).text
             if (text.isNullOrBlank()) return@OnFocusChangeListener
-            if (text.toString() == solution.name) return@OnFocusChangeListener
-            val appState = applicationContext as ApplicationContext
-            val oldName = solution.name
-            solution.name = text.toString()
-            appState.renameSolution(solution, oldName)
-            refresh()
+            appModel.solution.value?.let {
+                val oldName = it.name
+                if (text.toString() == oldName) return@OnFocusChangeListener
+//                appModel.solution.onNext(it.apply { name = text.toString() })
+                appModel.renameSolution(it.apply { name = text.toString() }, oldName)
+            }
         }
     }
 
@@ -94,25 +109,22 @@ class EditActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item == null) {
-            return super.onOptionsItemSelected(null)
-        }
-        val appState = applicationContext as ApplicationContext
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_save -> {
-                appState.saveCurrentWorkOnSolution(solution)
+                appModel.solution.value?.let { appModel.updateSolution(it) }
                 return true
             }
             R.id.action_undo -> {
                 return try {
                     val newSolution = careTaker.undo()
-                    if (newSolution.name != solution.name) {
-                        appState.renameSolution(newSolution, solution.name)
-                    }
-                    solution = newSolution
-                    refresh()
-                    true
+                    appModel.solution.value?.let {
+                        if (newSolution.name != it.name) {
+                            appModel.renameSolution(newSolution, it.name)
+                        }
+                        appModel.updateSolution(newSolution)
+                        true
+                    } ?: false
                 } catch (e: UndoOnEmptyListException) {
                     false
                 }
@@ -120,12 +132,13 @@ class EditActivity : AppCompatActivity() {
             R.id.action_redo -> {
                 return try {
                     val newSolution = careTaker.redo()
-                    if (newSolution.name != solution.name) {
-                        appState.renameSolution(newSolution, solution.name)
-                    }
-                    solution = newSolution
-                    refresh()
-                    true
+                    appModel.solution.value?.let {
+                        if (newSolution.name != it.name) {
+                            appModel.renameSolution(newSolution, it.name)
+                        }
+                        appModel.updateSolution(newSolution)
+                        true
+                    } ?: false
                 } catch (e: RedoOnLastChangeException) {
                     false
                 }
@@ -148,10 +161,7 @@ class EditActivity : AppCompatActivity() {
     }
 
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        if (item == null) {
-            return super.onContextItemSelected(null)
-        }
+    override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_remove_component -> {
                 componentsPanel?.removeComponentSelectedInContextMenu()
@@ -176,31 +186,12 @@ class EditActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        val appState = applicationContext as ApplicationContext
-        appState.saveCurrentWorkOnSolution(solution)
+        appModel.solution.value?.let { appModel.updateSolution(it) }
     }
 
     override fun onResume() {
         super.onResume()
-        careTaker.addMemento(solution)
-        val title = findViewById<EditText>(R.id.solution_toolbar_text)
-        title.setText(solution.name)
-    }
-
-
-    fun propagateAllChanges() {
-        val appState: ApplicationContext = applicationContext as ApplicationContext
-        solution = appState.reloadSolution(solution)!!
-        refresh()
-    }
-
-    fun refresh() {
-        componentsPanel?.updateSolution()
-        volumePanel?.updateVolumeTextView()
-        careTaker.addMemento(solution)
-        val title = findViewById<EditText>(R.id.solution_toolbar_text)
-        title.setText(solution.name)
-        refreshMenu()
+        appModel.solution.value?.let { careTaker.addMemento(it) }
     }
 
     private fun refreshMenu() {
@@ -212,9 +203,9 @@ class EditActivity : AppCompatActivity() {
         compoundsPanel = CompoundsPanel(
             activity = this,
             appModel = CompoundsPanelAppModel(
-                applicationContext as ApplicationContext,
-                CompoundListAdapter(),
-                solution,
+                appModel,
+                appModel.compoundList,
+                appModel.solution,
                 careTaker
             ),
             editCompoundFragmentCreator = EditCompoundFragmentCreator()
@@ -225,7 +216,7 @@ class EditActivity : AppCompatActivity() {
     fun startComponentEdition(compound: Compound) {
         val bundle = Bundle()
         bundle.putSerializableAnItem(compound)
-        bundle.putSerializableAnItem(solution)
+        bundle.putSerializableAnItem(appModel.solution.value ?: return)
         bundle.putSerializable("CARE_TAKER", careTaker)
         val transaction = supportFragmentManager.beginTransaction()
         val fragment = EditComponentFragment().apply { arguments = bundle }

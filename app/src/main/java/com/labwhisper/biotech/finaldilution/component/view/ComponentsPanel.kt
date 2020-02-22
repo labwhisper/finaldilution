@@ -4,21 +4,23 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.labwhisper.biotech.finaldilution.ApplicationContext
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import com.labwhisper.biotech.finaldilution.util.recyclerView
+import io.reactivex.disposables.CompositeDisposable
 
 
 class ComponentsPanel(internal val activity: EditActivity) {
 
-    private val componentListAdapter: ChecklistAdapter =
-        ChecklistAdapter(activity.solution)
 
     var componentInContextMenu: Component? = null
 
+    //TODO Dispose
+    val disposable = CompositeDisposable()
+
     fun displayComponentList() {
+        val componentListAdapter = ChecklistAdapter()
         componentListAdapter.onClickListener = ::editComponent
         componentListAdapter.onLongClickListener = { componentInContextMenu = it; false }
         val componentsListView = activity.recyclerView(R.id.componentsList)
@@ -30,29 +32,24 @@ class ComponentsPanel(internal val activity: EditActivity) {
             ?.let { divider.setDrawable(it) }
         componentsListView.addItemDecoration(divider)
         activity.registerForContextMenu(componentsListView)
-        updateSolution()
+
+        disposable.add(activity.appModel.solution.subscribe {
+            componentListAdapter.solution = it
+            componentListAdapter.notifyDataSetChanged()
+        })
     }
 
     fun removeComponentSelectedInContextMenu() {
-        componentInContextMenu?.let {
-            activity.solution.removeComponent(it)
-            val appState: ApplicationContext = activity.applicationContext as ApplicationContext
-            appState.saveCurrentWorkOnSolution(activity.solution)
-            activity.refresh()
-        }
+        disposable.add(activity.appModel.solution.subscribe { solution ->
+            componentInContextMenu?.let { component ->
+                solution.removeComponent(component)
+                activity.appModel.updateSolution(solution)
+            }
+        })
     }
 
     private fun editComponent(component: Component) {
         component.compound.let { activity.startComponentEdition(it) }
-    }
-
-    fun updateSolution() {
-        componentListAdapter.updateComponents(activity.solution)
-        updateOverflowState()
-    }
-
-    private fun updateOverflowState() {
-        componentListAdapter.overflown = activity.solution.isOverflown
     }
 
 

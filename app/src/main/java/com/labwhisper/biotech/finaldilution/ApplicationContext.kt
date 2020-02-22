@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.multidex.MultiDex
 import com.google.gson.reflect.TypeToken
 import com.labwhisper.biotech.finaldilution.compound.Compound
-import com.labwhisper.biotech.finaldilution.compound.CompoundChangePropagator
 import com.labwhisper.biotech.finaldilution.init.loadDefaultCompounds
 import com.labwhisper.biotech.finaldilution.peripherals.DataGatewayOperations
 import com.labwhisper.biotech.finaldilution.peripherals.datastores.SharedPreferencesStore
@@ -35,48 +34,10 @@ class ApplicationContext : Application() {
         store
     }
 
-    val compoundChangePropagator by lazy {
-        CompoundChangePropagator(solutionGateway, compoundGateway)
-    }
-
     fun initEmptyCompoundList(store: DataGatewayOperations<Compound>) {
         Log.d(TAG, "No compounds found. Creating initial compound list")
         val compounds = loadDefaultCompounds(this)
         compounds.forEach { it?.let { compound -> store.save(compound) } }
-    }
-
-    fun loadAllCompoundsSorted(): List<Compound> {
-        return compoundGateway.loadAll().sorted()
-    }
-
-    fun safeSaveCompound(compound: Compound) {
-        //if name exist -> sameNameException ( to be handled by function user )
-        compoundGateway.save(compound)
-    }
-
-    fun updateCompound(compound: Compound, oldCompound: Compound) {
-        compoundChangePropagator.propagateCompoundUpdate(compound, oldCompound)
-    }
-
-    //FIXME Add test cases
-    fun renameCompound(compound: Compound, oldCompound: Compound) {
-        compoundChangePropagator.propagateCompoundRename(compound, oldCompound)
-    }
-
-    fun removeCompoundFromEverywhere(compound: Compound) {
-        compoundChangePropagator.propagateCompoundRemoval(compound)
-    }
-
-    fun saveCurrentWorkOnSolution(solution: Solution) {
-        solutionGateway.update(solution)
-    }
-
-    fun renameSolution(solution: Solution, oldName: String) {
-        solutionGateway.rename(solution, oldName)
-    }
-
-    fun reloadSolution(solution: Solution): Solution? {
-        return solutionGateway.load(solution.name)
     }
 
     companion object {

@@ -20,6 +20,7 @@ import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import com.labwhisper.biotech.finaldilution.util.imageButton
 import com.labwhisper.biotech.finaldilution.util.recyclerView
+import io.reactivex.disposables.CompositeDisposable
 
 
 class CompoundsPanel(
@@ -28,19 +29,31 @@ class CompoundsPanel(
     val editCompoundFragmentCreator: EditCompoundFragmentCreator
 ) {
 
+    private val adapter = CompoundListAdapter()
     private val searchCompoundPanel = SearchCompoundPanel(activity)
+    //TODO Dispose
+    private val disposable = CompositeDisposable()
 
     var compoundInContextMenu: Compound? = null
 
     fun displayCompoundList() {
-        appModel.compoundListAdapter.compoundList = appModel.compoundList
-        appModel.compoundListAdapter.onClickListener = ::onCompoundClick
-        appModel.compoundListAdapter.onLongClickListener = { compoundInContextMenu = it; false }
+
+        disposable.add(appModel.filteredCompoundList.subscribe {
+            adapter.compoundList = it
+            adapter.notifyDataSetChanged()
+        })
+
+        disposable.add(appModel.solution.subscribe {
+            adapter.compoundsInSolution = it.components.map { it.compound }.toMutableList()
+        })
+
+        adapter.onClickListener = ::onCompoundClick
+        adapter.onLongClickListener = { compoundInContextMenu = it; false }
         val compoundsListView = activity.recyclerView(R.id.compoundsListView)
         val layoutManager = LinearLayoutManager(activity)
         compoundsListView.layoutManager = layoutManager
         compoundsListView.itemAnimator = DefaultItemAnimator()
-        compoundsListView.adapter = appModel.compoundListAdapter
+        compoundsListView.adapter = adapter
         activity.imageButton(R.id.new_compound_button).setOnClickListener {
             editCompoundFragmentCreator.startCompoundEdition(
                 activity, onClose =
@@ -75,7 +88,7 @@ class CompoundsPanel(
     fun exitSearch() = searchCompoundPanel.exitSearch()
 
     private fun onCompoundClick(view: View, compound: Compound) {
-        if (activity.solution.getComponentWithCompound(compound) != null) {
+        if (appModel.solution.value?.getComponentWithCompound(compound) != null) {
             informAboutCompoundAlreadyAdded(view, compound)
             return
         }
@@ -84,28 +97,17 @@ class CompoundsPanel(
 
 
     private fun handleCompoundEditionClose(
-        compound: Compound?,
         newCompound: Compound?
     ) {
-        handleCompoundNameChange(compound, newCompound)
         activity.imageButton(R.id.new_compound_button).visibility = View.VISIBLE
-        appModel.compoundListAdapter.compoundList = appModel.compoundList
-        appModel.compoundListAdapter.notifyDataSetChanged()
         val compoundsListView = activity.findViewById<RecyclerView>(R.id.compoundsListView)
-        val newCompoundPosition = appModel.compoundListAdapter.compoundList.indexOf(newCompound)
+        val newCompoundPosition = adapter.compoundList.indexOf(newCompound)
         val offset =
             2 * activity.resources.getDimension(R.dimen.compound_list_item_height).toInt()
         (compoundsListView.layoutManager as LinearLayoutManager?)?.scrollToPositionWithOffset(
             newCompoundPosition,
             offset
         )
-    }
-
-    fun handleCompoundNameChange(compound: Compound?, newCompound: Compound?) {
-        if (newCompound == null) return
-        if (compound?.name != newCompound.name) {
-            activity.propagateAllChanges()
-        }
     }
 
     fun deleteCompoundSelectedInContextMenu() {
@@ -124,7 +126,6 @@ class CompoundsPanel(
 
     private fun deleteCompound(compound: Compound) {
         appModel.deleteCompound(compound)
-        activity.propagateAllChanges()
     }
 
     private fun informAboutCompoundAlreadyAdded(view: View, compound: Compound) {
@@ -137,7 +138,8 @@ class CompoundsPanel(
         }
         Log.d(
             TAG,
-            "Compound (${compound.trivialName}) already in solution (${activity.solution.name})"
+            "Compound (${compound.trivialName}) already in solution (${appModel.solution.value?.name
+                ?: ""})"
         )
     }
 
@@ -146,7 +148,7 @@ class CompoundsPanel(
         val editComponentFragment = EditComponentFragment()
         val bundle = Bundle()
         bundle.putSerializableAnItem(compound)
-        bundle.putSerializableAnItem(appModel.solution)
+        appModel.solution.value?.let { bundle.putSerializableAnItem(it) }
         bundle.putSerializable("CARE_TAKER", appModel.careTaker)
         editComponentFragment.arguments = bundle
         fragmentTransaction.replace(
