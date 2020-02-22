@@ -40,12 +40,11 @@ class ComponentsPanel(internal val activity: EditActivity) {
     }
 
     fun removeComponentSelectedInContextMenu() {
-        disposable.add(activity.appModel.solution.subscribe { solution ->
-            componentInContextMenu?.let { component ->
-                solution.removeComponent(component)
-                activity.appModel.updateSolution(solution)
-            }
-        })
+        componentInContextMenu?.let { component ->
+            val updatedSolution = activity.appModel.solution.value
+            updatedSolution?.removeComponent(component) ?: return
+            activity.appModel.updateSolution(updatedSolution)
+        }
     }
 
     private fun editComponent(component: Component) {
