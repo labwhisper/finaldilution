@@ -1,35 +1,23 @@
 <en-GB>
 
-New  features
-
-- Deleting compounds now available
-
-- Final transparent animation ( scientist nodding )
-
-- Added components into first screen, so the user have info at a glance
-
-- Added Concentration on components panel
-
 Improvements
 
-- Checkboxes are reset when all were done on solution reenter
+- Density added to liquid compounds
 
-- 50 [nX] -> 50X
+- Allow molar-molar conversion using stock without knowing molar mass
 
-- New screenshots in store
+- Disabled mg/ml concentrations for liquids
+
+- Changing and limiting stock possibility according to desired concentration settings
+
+- Message : Molar mass not entered.
+
+- Message : Density required to obtain ml.
 
 Fixes
 
-- Compound rename no longer creates another
+- Fixed liquid with molar concentration - result in grams unless the density is specified
 
-- Liquid/Solid no longer scrolls up and hides when keyboard present
-
-- Back button should work even when view is hidden, but button visible
-
-- Click on the plus button on New Compound panel now works
-
-- overfill behavior corrected in some cases
-
+- Fixed : More space for long compound names in title
 
 </en-GB>
-
