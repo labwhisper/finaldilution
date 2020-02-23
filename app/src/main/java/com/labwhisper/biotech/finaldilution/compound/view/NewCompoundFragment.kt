@@ -26,6 +26,7 @@ class NewCompoundFragment : Fragment() {
 
     lateinit var appModel: NewCompoundAppModel
 
+    //TODO dispose
     val disposable = CompositeDisposable()
 
     override fun onCreateView(
@@ -62,6 +63,14 @@ class NewCompoundFragment : Fragment() {
             .setOnClickListener {
                 if (!isExpanded()) expand() else collapse()
             }
+        radioGroup(R.id.radio_group_state_of_matter).setOnCheckedChangeListener { _, buttonId ->
+            appModel.liquid.onNext(buttonId == R.id.radioButtonLiquid)
+        }
+        disposable.add(appModel.liquid.subscribe {
+            constraintLayout(R.id.form_density).visibility =
+                if (it == true) View.VISIBLE else View.INVISIBLE
+
+        })
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -129,8 +138,6 @@ class NewCompoundFragment : Fragment() {
                     )
             )
         })
-        constraintLayout(R.id.form_density).visibility =
-            if (appModel.initialCompound?.liquid == true) View.VISIBLE else View.GONE
         imageButton(R.id.form_expand_advanced).setOnClickListener {
             appModel.advancedOptions.onNext(appModel.advancedOptions.value != true)
         }

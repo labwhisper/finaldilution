@@ -21,7 +21,9 @@ class NewCompoundAppModel(val editSolutionAppModel: EditSolutionAppModel) {
 
     var newCompound: Compound? = null
 
-    var advancedOptions = BehaviorSubject.createDefault(false)
+    val advancedOptions = BehaviorSubject.createDefault(false)
+
+    val liquid = BehaviorSubject.createDefault(false)
 
     //TODO Create interactor
     fun proceedWithCompound(compound: Compound) {
