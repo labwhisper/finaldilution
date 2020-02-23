@@ -18,7 +18,7 @@ class NewCompoundDialogTest {
         val compound = Compound("iupac_name", true)
         val appModel = NewCompoundAppModel(editSolutionAppModel)
         appModel.initialCompound = compound
-        assertEquals(false, appModel.advancedOptions)
+        assertEquals(false, appModel.advancedOptions.value)
     }
 
     @Test
@@ -26,7 +26,7 @@ class NewCompoundDialogTest {
         val compound = Compound("iupac_name", true, chemicalFormula = "CHF")
         val appModel = NewCompoundAppModel(editSolutionAppModel)
         appModel.initialCompound = compound
-        assertEquals(true, appModel.advancedOptions)
+        assertEquals(true, appModel.advancedOptions.value)
     }
 
     @Test
@@ -34,7 +34,7 @@ class NewCompoundDialogTest {
         val compound = Compound("iupac_name", true, trivialName = "alterName")
         val appModel = NewCompoundAppModel(editSolutionAppModel)
         appModel.initialCompound = compound
-        assertEquals(true, appModel.advancedOptions)
+        assertEquals(true, appModel.advancedOptions.value)
     }
 
     @Test
