@@ -2,6 +2,7 @@ package com.labwhisper.biotech.finaldilution.compound.appmodel
 
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.solution.appmodel.EditSolutionAppModel
+import io.reactivex.subjects.BehaviorSubject
 
 class NewCompoundAppModel(val editSolutionAppModel: EditSolutionAppModel) {
 
@@ -9,16 +10,18 @@ class NewCompoundAppModel(val editSolutionAppModel: EditSolutionAppModel) {
         set(value) {
             field = value
             if (anyAdvancedFieldFilled(value)) {
-                advancedOptions = true
+                advancedOptions.onNext(true)
             }
         }
 
     private fun anyAdvancedFieldFilled(compound: Compound?) =
-        !compound?.trivialName.isNullOrBlank() || !compound?.chemicalFormula.isNullOrBlank()
+        !compound?.trivialName.isNullOrBlank()
+                || !compound?.chemicalFormula.isNullOrBlank()
+                || compound?.density != null
 
     var newCompound: Compound? = null
 
-    var advancedOptions: Boolean = false
+    var advancedOptions = BehaviorSubject.createDefault(false)
 
     //TODO Create interactor
     fun proceedWithCompound(compound: Compound) {

@@ -24,7 +24,6 @@ class CompoundsPanelAppModel(
         })
 
     fun deleteCompound(compound: Compound) {
-        editSolutionAppModel.updateSolution(solution.value ?: return)
         editSolutionAppModel.removeCompoundFromEverywhere(compound)
     }
 

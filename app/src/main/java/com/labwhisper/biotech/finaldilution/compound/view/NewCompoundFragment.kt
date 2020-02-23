@@ -20,10 +20,13 @@ import com.labwhisper.biotech.finaldilution.compound.CompoundValidator
 import com.labwhisper.biotech.finaldilution.compound.appmodel.NewCompoundAppModel
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import com.labwhisper.biotech.finaldilution.util.*
+import io.reactivex.disposables.CompositeDisposable
 
 class NewCompoundFragment : Fragment() {
 
-    var appModel: NewCompoundAppModel? = null
+    lateinit var appModel: NewCompoundAppModel
+
+    val disposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +35,7 @@ class NewCompoundFragment : Fragment() {
     ): View? {
         val fragment = inflater.inflate(R.layout.compound_new, container, false)
         appModel = NewCompoundAppModel((requireActivity() as EditActivity).appModel)
-        arguments?.getSerializable("COMPOUND").let { appModel?.initialCompound = it as Compound? }
+        arguments?.getSerializable("COMPOUND").let { appModel.initialCompound = it as Compound? }
         return fragment
     }
 
@@ -47,7 +50,7 @@ class NewCompoundFragment : Fragment() {
         editText(R.id.form_density, R.id.editText).keyListener =
             DigitsKeyListener.getInstance("0123456789.")
         textView(R.id.form_formula, R.id.textView).text = getString(R.string.chemical_formula)
-        appModel?.initialCompound?.let {
+        appModel.initialCompound?.let {
             textView(R.id.new_compound_title).text = "Edit ${it.iupacName}"
             populateCompoundIntoFields(it)
         }
@@ -108,31 +111,29 @@ class NewCompoundFragment : Fragment() {
     }
 
     private fun initAdvancedButton() {
-        loadFromAppModel()
+        disposable.add(appModel.advancedOptions.subscribe {
+            constraintLayout(R.id.form_trivial_name).visibility =
+                if (it == true) View.VISIBLE else View.INVISIBLE
+            constraintLayout(R.id.form_formula).visibility =
+                if (it == true) View.VISIBLE else View.INVISIBLE
+            imageButton(R.id.form_expand_advanced).setImageDrawable(
+                if (it == true)
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_expand_less_black_24dp
+                    )
+                else
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_expand_more_black_24dp
+                    )
+            )
+        })
+        constraintLayout(R.id.form_density).visibility =
+            if (appModel.initialCompound?.liquid == true) View.VISIBLE else View.GONE
         imageButton(R.id.form_expand_advanced).setOnClickListener {
-            appModel?.advancedOptions = !(appModel?.advancedOptions == true)
-            loadFromAppModel()
+            appModel.advancedOptions.onNext(appModel.advancedOptions.value != true)
         }
-    }
-
-    fun loadFromAppModel() {
-        constraintLayout(R.id.form_trivial_name).visibility =
-            if (appModel?.advancedOptions == true) View.VISIBLE else View.INVISIBLE
-        constraintLayout(R.id.form_formula).visibility =
-            if (appModel?.advancedOptions == true) View.VISIBLE else View.INVISIBLE
-        imageButton(R.id.form_expand_advanced).setImageDrawable(
-            if (appModel?.advancedOptions == true)
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.ic_expand_less_black_24dp
-                )
-            else
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.ic_expand_more_black_24dp
-                )
-        )
-
     }
 
     private fun initCancelButton() {
@@ -171,7 +172,7 @@ class NewCompoundFragment : Fragment() {
         hideKeyboard()
         //TODO update should ask for update / save new
         //TODO safeSave -> on error the question replace should be asked
-        appModel?.proceedWithCompound(compound)
+        appModel.proceedWithCompound(compound)
         fragmentManager?.popBackStack()
     }
 
@@ -197,12 +198,16 @@ class NewCompoundFragment : Fragment() {
         } catch (e: NumberFormatException) {
             null
         }
-        val density = try {
-            editTextValue(R.id.form_density, R.id.editText)
-                .ifBlank { null }?.toDouble()
-        } catch (e: NumberFormatException) {
-            null
-        }
+        val density =
+            if (!liquid) null
+            else {
+                try {
+                    editTextValue(R.id.form_density, R.id.editText)
+                        .ifBlank { null }?.toDouble()
+                } catch (e: NumberFormatException) {
+                    null
+                }
+            }
         return Compound(
             iupacName = iupacName,
             liquid = liquid,
@@ -220,8 +225,8 @@ class NewCompoundFragment : Fragment() {
     }
 
     override fun onStop() {
-        onFragmentCloseListener?.invoke(appModel?.newCompound)
-        appModel?.newCompound = null
+        onFragmentCloseListener?.invoke(appModel.newCompound)
+        appModel.newCompound = null
         super.onStop()
     }
 
