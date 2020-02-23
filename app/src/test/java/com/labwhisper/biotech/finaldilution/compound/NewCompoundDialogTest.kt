@@ -38,6 +38,22 @@ class NewCompoundDialogTest {
     }
 
     @Test
+    fun `Density should be closed at dialog load when it is solid`() {
+        val compound = Compound("iupac_name", false)
+        val appModel = NewCompoundAppModel(editSolutionAppModel)
+        appModel.initialCompound = compound
+        assertEquals(false, appModel.densityOpen.value)
+    }
+
+    @Test
+    fun `Density should be open at dialog load when it is liquid`() {
+        val compound = Compound("iupac_name", true)
+        val appModel = NewCompoundAppModel(editSolutionAppModel)
+        appModel.initialCompound = compound
+        assertEquals(true, appModel.densityOpen.value)
+    }
+
+    @Test
     fun `When proceeding without initial compound - save new compound`() {
         val compound = Compound("iupac_name", true)
         val appModel = NewCompoundAppModel(editSolutionAppModel)

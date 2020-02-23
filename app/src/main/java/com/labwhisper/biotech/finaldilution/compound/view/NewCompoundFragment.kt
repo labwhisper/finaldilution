@@ -64,9 +64,9 @@ class NewCompoundFragment : Fragment() {
                 if (!isExpanded()) expand() else collapse()
             }
         radioGroup(R.id.radio_group_state_of_matter).setOnCheckedChangeListener { _, buttonId ->
-            appModel.liquid.onNext(buttonId == R.id.radioButtonLiquid)
+            appModel.densityOpen.onNext(buttonId == R.id.radioButtonLiquid)
         }
-        disposable.add(appModel.liquid.subscribe {
+        disposable.add(appModel.densityOpen.subscribe {
             constraintLayout(R.id.form_density).visibility =
                 if (it == true) View.VISIBLE else View.INVISIBLE
 

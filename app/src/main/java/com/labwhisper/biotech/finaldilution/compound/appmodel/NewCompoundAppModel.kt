@@ -12,6 +12,7 @@ class NewCompoundAppModel(val editSolutionAppModel: EditSolutionAppModel) {
             if (anyAdvancedFieldFilled(value)) {
                 advancedOptions.onNext(true)
             }
+            densityOpen.onNext(value?.liquid ?: false)
         }
 
     private fun anyAdvancedFieldFilled(compound: Compound?) =
@@ -23,7 +24,7 @@ class NewCompoundAppModel(val editSolutionAppModel: EditSolutionAppModel) {
 
     val advancedOptions = BehaviorSubject.createDefault(false)
 
-    val liquid = BehaviorSubject.createDefault(false)
+    val densityOpen = BehaviorSubject.create<Boolean>()
 
     //TODO Create interactor
     fun proceedWithCompound(compound: Compound) {
