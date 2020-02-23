@@ -21,7 +21,8 @@ data class Component(
     val resultInVolume
         //FIXME for non-molar - all, for molar only with density
         get() = fromStock ||
-                (compound.liquid && compound.density != null)
+                (compound.liquid &&
+                        (!(compound.density == null && desiredConcentration.type.isMolarLike())))
 
     val noVolumeBecauseOfNoDensity
         get() = compound.liquid && compound.density == null && desiredConcentration.type
