@@ -26,7 +26,7 @@
         android:id="@+id/new_compound_title"
         style="@style/FinalDilutionH1"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@color/grey1"
         android:clickable="true"
         android:focusable="true"
