@@ -1,5 +1,6 @@
 package com.labwhisper.biotech.finaldilution.solution.appmodel
 
+import android.util.Log
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.CompoundChangePropagator
 import com.labwhisper.biotech.finaldilution.peripherals.DataGatewayOperations
@@ -60,17 +61,26 @@ class EditSolutionAppModel(
     }
 
     fun updateSolution(updatedSolution: Solution) {
+        Log.d(TAG, "Update solution: $updatedSolution")
         solutionGateway.update(updatedSolution)
         solution.onNext(updatedSolution)
     }
 
     fun renameSolution(updatedSolution: Solution, oldName: String) {
+        Log.d(TAG, "Rename solution: $updatedSolution")
         solutionGateway.rename(updatedSolution, oldName)
         solution.onNext(updatedSolution)
     }
 
     fun reloadSolution() = solution.value?.name?.let { name ->
-        solutionGateway.load(name)?.let { updatedSolution -> solution.onNext(updatedSolution) }
+        solutionGateway.load(name)?.let { updatedSolution ->
+            Log.d(TAG, "Reload solution: $updatedSolution")
+            solution.onNext(updatedSolution)
+        }
+    }
+
+    companion object {
+        const val TAG = "Edit Solution App Model"
     }
 
 }

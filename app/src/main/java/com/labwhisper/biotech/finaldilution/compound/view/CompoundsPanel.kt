@@ -44,6 +44,10 @@ class CompoundsPanel(
         })
 
         disposable.add(appModel.solution.subscribe {
+            Log.d(
+                TAG, "Adapting to the new solution " +
+                        "${it.volumeAmountForCurrentUnit()}${it.volumeUnit()}"
+            )
             adapter.compoundsInSolution = it.components.map { it.compound }.toMutableList()
         })
 
@@ -161,7 +165,6 @@ class CompoundsPanel(
     }
 
     companion object {
-
         const val TAG = "Compound Panel"
     }
 

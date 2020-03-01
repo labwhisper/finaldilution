@@ -1,5 +1,6 @@
 package com.labwhisper.biotech.finaldilution.component.view
 
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
@@ -34,6 +35,10 @@ class ComponentsPanel(internal val activity: EditActivity) {
         activity.registerForContextMenu(componentsListView)
 
         disposable.add(activity.appModel.solution.subscribe {
+            Log.d(
+                TAG, "Adapting to the new solution " +
+                        "${it.volumeAmountForCurrentUnit()}${it.volumeUnit()}"
+            )
             componentListAdapter.solution = it
             componentListAdapter.notifyDataSetChanged()
         })
@@ -51,5 +56,7 @@ class ComponentsPanel(internal val activity: EditActivity) {
         component.compound.let { activity.startComponentEdition(it) }
     }
 
-
+    companion object {
+        const val TAG = "Components Panel"
+    }
 }

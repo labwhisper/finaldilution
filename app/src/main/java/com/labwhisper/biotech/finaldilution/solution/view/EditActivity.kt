@@ -3,6 +3,7 @@ package com.labwhisper.biotech.finaldilution.solution.view
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -58,6 +59,10 @@ class EditActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         view(R.id.back).setOnClickListener { onBackPressed() }
         disposable.add(appModel.solution.subscribe {
+            Log.d(
+                TAG, "Adapting to the new solution " +
+                        "${it.volumeAmountForCurrentUnit()}${it.volumeUnit()}"
+            )
             editText(R.id.solution_toolbar_text)?.setText(it.name)
             careTaker.addMemento(it)
             refreshMenu()
@@ -242,6 +247,10 @@ class EditActivity : AppCompatActivity() {
             }
         }
         return super.dispatchTouchEvent(event)
+    }
+
+    companion object {
+        const val TAG = "Edit Activity"
     }
 
 }

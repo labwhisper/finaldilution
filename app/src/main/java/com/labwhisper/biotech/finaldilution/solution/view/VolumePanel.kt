@@ -27,6 +27,10 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
 
     internal fun displayVolumeText() {
         disposable.add(activity.appModel.solution.subscribe {
+            Log.d(
+                TAG, "Adapting to the new solution " +
+                        "${it.volumeAmountForCurrentUnit()}${it.volumeUnit()}"
+            )
             volumeEditTextUnit.text = it.volumeUnit()
             volumeEditText.text = it.volumeAmountForCurrentUnit()
             updateVolumeTextView(it.displayVolume())
@@ -96,7 +100,7 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     private fun updateVolume(volume: Double) {
         activity.appModel.solution.value?.also {
             it.volume = volume
-        }?.let { activity.appModel.solution.onNext(it) }
+        }?.let { activity.appModel.updateSolution(it) }
     }
 
     override fun onTap() {
