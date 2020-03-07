@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test
 
 class LiquidConcentrationCoarseTests {
 
+    private val sut = ComponentQuantityCalculator()
+
     private var volume = 2000.0
 
     private var liquid = Compound(
@@ -30,7 +32,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidNoDensityToPercentage() {
         val desired = PercentageConcentration(20.0)
         val component = Component(liquidNoDensity, desired)
-        assertEquals(400.0, component.getQuantity(volume), 1.0)
+        assertEquals(400.0, sut.getQuantity(component, volume), 1.0)
     }
 
     @Test
@@ -38,7 +40,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidNoDensityToMolar() {
         val desired = MolarConcentration(0.5)
         val component = Component(liquidNoDensity, desired)
-        assertEquals(32.0, component.getQuantity(volume), 1.0)
+        assertEquals(32.0, sut.getQuantity(component, volume), 1.0)
     }
 
     @Test
@@ -46,7 +48,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidNoDensityToMillimolar() {
         val desired = MilimolarConcentration(75.0)
         val component = Component(liquidNoDensity, desired)
-        assertEquals(4.8, component.getQuantity(volume), 0.1)
+        assertEquals(4.8, sut.getQuantity(component, volume), 0.1)
     }
 
     @Test
@@ -54,7 +56,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidNoDensityToMgMl() {
         val desired = MgMlConcentration(200.0)
         val component = Component(liquidNoDensity, desired)
-        assertEquals(400.0, component.getQuantity(volume), 1.0)
+        assertEquals(400.0, sut.getQuantity(component, volume), 1.0)
     }
 
     @Test
@@ -62,7 +64,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidToPercentage() {
         val desired = PercentageConcentration(20.0)
         val component = Component(liquid, desired)
-        assertEquals(400.0, component.getQuantity(volume), 1.0)
+        assertEquals(400.0, sut.getQuantity(component, volume), 1.0)
     }
 
     @Test
@@ -70,7 +72,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidToMolar() {
         val desired = MolarConcentration(0.5)
         val component = Component(liquid, desired)
-        assertEquals(40.0, component.getQuantity(volume), 1.0)
+        assertEquals(40.0, sut.getQuantity(component, volume), 1.0)
     }
 
     @Test
@@ -78,7 +80,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidToMillimolar() {
         val desired = MilimolarConcentration(75.0)
         val component = Component(liquid, desired)
-        assertEquals(6.0, component.getQuantity(volume), 0.1)
+        assertEquals(6.0, sut.getQuantity(component, volume), 0.1)
     }
 
     @Test
@@ -86,7 +88,7 @@ class LiquidConcentrationCoarseTests {
     fun testLiquidToMgMl() {
         val desired = MgMlConcentration(200.0)
         val component = Component(liquid, desired)
-        assertEquals(400.0, component.getQuantity(volume), 1.0)
+        assertEquals(400.0, sut.getQuantity(component, volume), 1.0)
     }
 
 }

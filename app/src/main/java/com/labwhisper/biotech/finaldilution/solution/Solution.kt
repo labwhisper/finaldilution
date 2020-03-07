@@ -2,7 +2,6 @@ package com.labwhisper.biotech.finaldilution.solution
 
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.compound.Compound
-import com.labwhisper.biotech.finaldilution.compound.NoMolarMassException
 import com.labwhisper.biotech.finaldilution.genericitem.Item
 import java.text.DecimalFormat
 import java.util.*
@@ -21,21 +20,6 @@ data class Solution(
 
     override val seriesName: String
         get() = "SOLUTION"
-
-    val isOverflown: Boolean
-        get() = allLiquidComponentsVolume > volume
-
-    private val allLiquidComponentsVolume: Double
-        get() = components
-            .asSequence()
-            .filter { it.fromStock || it.compound.liquid }
-            .sumByDouble {
-                try {
-                    it.getQuantity(volume)
-                } catch (e: NoMolarMassException) {
-                    0.0
-                }
-            }
 
     val done
         get() = isFilledInWithWater && componentsAdded.containsAll(components)

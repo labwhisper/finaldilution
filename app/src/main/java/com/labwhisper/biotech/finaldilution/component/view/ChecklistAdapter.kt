@@ -10,8 +10,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
+import com.labwhisper.biotech.finaldilution.component.ComponentQuantityCalculator
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.Solution
+import com.labwhisper.biotech.finaldilution.solution.SolutionVolumeCalculator
 import com.labwhisper.biotech.finaldilution.util.checkBox
 import com.labwhisper.biotech.finaldilution.util.imageView
 import com.labwhisper.biotech.finaldilution.util.textView
@@ -21,6 +23,9 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
     lateinit var solution: Solution
     var onClickListener: ((Component) -> Unit)? = null
     var onLongClickListener: ((Component) -> Boolean)? = null
+
+    private val componentQuantityCalculator = ComponentQuantityCalculator()
+    private val solutionVolumeCalculator = SolutionVolumeCalculator(componentQuantityCalculator)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChecklistViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -63,7 +68,7 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
             "${compound.displayName} ${component.availableConcentration?.toString() ?: ""}"
         holder.amountTextView?.visibility = View.VISIBLE
         holder.amountTextView?.text =
-            component.getAmountStringForVolume(solution.volume)
+            componentQuantityCalculator.getAmountStringForVolume(component, solution.volume)
         holder.stockTextView?.visibility = View.VISIBLE
         holder.stockTextView?.text = component.desiredConcentration.toString()
         holder.addDensityTextView?.visibility =
@@ -71,7 +76,9 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
         holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
         holder.checkBox?.tag = compound
 
-        if (solution.isOverflown && (compound.liquid || component.fromStock)) {
+        if (solutionVolumeCalculator.isOverflown(solution)
+            && (compound.liquid || component.fromStock)
+        ) {
             holder.itemView.setBackgroundColor(
                 ContextCompat.getColor(holder.itemView.context, R.color.background_error)
             )
