@@ -22,8 +22,7 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     private val volumeEditText by lazy<TextView> { activity.findViewById(R.id.beakerVolumeEditText) }
     private val volumeEditTextUnit by lazy<TextView> { activity.findViewById(R.id.beakerVolumeEditTextUnit) }
 
-    //TODO Dispose
-    val disposable = CompositeDisposable()
+    private val disposable = CompositeDisposable()
 
     internal fun displayVolumeText() {
         disposable.add(activity.appModel.solution.subscribe {
@@ -115,6 +114,8 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
             volumeEditText.requestFocus()
         }
     }
+
+    fun onStop() = disposable.clear()
 
     companion object {
         const val TAG = "Volume Panel"

@@ -26,8 +26,7 @@ class NewCompoundFragment : Fragment() {
 
     lateinit var appModel: NewCompoundAppModel
 
-    //TODO dispose
-    val disposable = CompositeDisposable()
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -235,6 +234,7 @@ class NewCompoundFragment : Fragment() {
         onFragmentCloseListener?.invoke(appModel.newCompound)
         appModel.newCompound = null
         super.onStop()
+        disposable.clear()
     }
 
     companion object {

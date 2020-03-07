@@ -31,7 +31,6 @@ class CompoundsPanel(
 
     private val adapter = CompoundListAdapter()
     private val searchCompoundPanel = SearchCompoundPanel(activity)
-    //TODO Dispose
     private val disposable = CompositeDisposable()
 
     var compoundInContextMenu: Compound? = null
@@ -163,6 +162,8 @@ class CompoundsPanel(
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
+
+    fun onStop() = disposable.clear()
 
     companion object {
         const val TAG = "Compound Panel"

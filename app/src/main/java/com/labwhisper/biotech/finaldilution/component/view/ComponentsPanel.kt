@@ -17,8 +17,7 @@ class ComponentsPanel(internal val activity: EditActivity) {
 
     var componentInContextMenu: Component? = null
 
-    //TODO Dispose
-    val disposable = CompositeDisposable()
+    private val disposable = CompositeDisposable()
 
     fun displayComponentList() {
         val componentListAdapter = ChecklistAdapter()
@@ -55,6 +54,8 @@ class ComponentsPanel(internal val activity: EditActivity) {
     private fun editComponent(component: Component) {
         component.compound.let { activity.startComponentEdition(it) }
     }
+
+    fun onStop() = disposable.clear()
 
     companion object {
         const val TAG = "Components Panel"

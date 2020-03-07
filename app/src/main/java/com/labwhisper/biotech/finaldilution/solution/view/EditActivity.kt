@@ -45,8 +45,7 @@ class EditActivity : AppCompatActivity() {
 
     private var menu: Menu? = null
 
-    //TODO Dispose
-    val disposable = CompositeDisposable()
+    private val disposable = CompositeDisposable()
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -197,6 +196,14 @@ class EditActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         appModel.solution.value?.let { careTaker.addMemento(it) }
+    }
+
+    override fun onStop() {
+        volumePanel?.onStop()
+        componentsPanel?.onStop()
+        compoundsPanel?.onStop()
+        super.onStop()
+        disposable.clear()
     }
 
     private fun refreshMenu() {
