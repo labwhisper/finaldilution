@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test
 
 class ConcentrationCoarseTests {
 
-    private val sut = ComponentQuantityCalculator()
+    val congruentConcentrationsInteractor = CongruentConcentrationsInteractor()
+    private val sut = ComponentQuantityCalculator(congruentConcentrationsInteractor)
 
     private var volume = 2000.0
     private val compound = Compound(

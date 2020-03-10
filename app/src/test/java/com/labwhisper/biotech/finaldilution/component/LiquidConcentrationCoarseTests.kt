@@ -1,16 +1,14 @@
 package com.labwhisper.biotech.finaldilution.component
 
-import com.labwhisper.biotech.finaldilution.component.concentration.MgMlConcentration
-import com.labwhisper.biotech.finaldilution.component.concentration.MilimolarConcentration
-import com.labwhisper.biotech.finaldilution.component.concentration.MolarConcentration
-import com.labwhisper.biotech.finaldilution.component.concentration.PercentageConcentration
+import com.labwhisper.biotech.finaldilution.component.concentration.*
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class LiquidConcentrationCoarseTests {
 
-    private val sut = ComponentQuantityCalculator()
+    val congruentConcentrationsInteractor = CongruentConcentrationsInteractor()
+    private val sut = ComponentQuantityCalculator(congruentConcentrationsInteractor)
 
     private var volume = 2000.0
 

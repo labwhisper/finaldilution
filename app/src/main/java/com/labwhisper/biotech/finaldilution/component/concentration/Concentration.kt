@@ -11,6 +11,11 @@ abstract class Concentration(open var concentration: Double, var type: Concentra
     }
 
     /**
+     * Equals 1.0 for "normal" si unit case (100 for percentage)
+     */
+    abstract val multiplicationFactor: Double
+
+    /**
      * Calculate desired mass depending on desired concentration
      *
      * @param volume - volume[ml] of the final solution

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
 import com.labwhisper.biotech.finaldilution.component.ComponentQuantityCalculator
+import com.labwhisper.biotech.finaldilution.component.concentration.CongruentConcentrationsInteractor
 import com.labwhisper.biotech.finaldilution.peripherals.view.Anim
 import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.SolutionVolumeCalculator
@@ -24,7 +25,9 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
     var onClickListener: ((Component) -> Unit)? = null
     var onLongClickListener: ((Component) -> Boolean)? = null
 
-    private val componentQuantityCalculator = ComponentQuantityCalculator()
+    val congruentConcentrationsInteractor = CongruentConcentrationsInteractor()
+    private val componentQuantityCalculator =
+        ComponentQuantityCalculator(congruentConcentrationsInteractor)
     private val solutionVolumeCalculator = SolutionVolumeCalculator(componentQuantityCalculator)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChecklistViewHolder {

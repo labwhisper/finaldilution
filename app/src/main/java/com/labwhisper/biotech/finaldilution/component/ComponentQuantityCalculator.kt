@@ -1,9 +1,12 @@
 package com.labwhisper.biotech.finaldilution.component
 
+import com.labwhisper.biotech.finaldilution.component.concentration.CongruentConcentrationsInteractor
 import com.labwhisper.biotech.finaldilution.compound.NoMolarMassException
 import java.text.DecimalFormat
 
-class ComponentQuantityCalculator {
+class ComponentQuantityCalculator(
+    private val congruentConcentrationsInteractor: CongruentConcentrationsInteractor
+) {
 
     fun getAmountStringForVolume(component: Component, volume: Double): String {
         val amount = try {
@@ -20,9 +23,19 @@ class ComponentQuantityCalculator {
             val M = compound.molarMass
             when {
                 fromStock -> {
-                    if (availableConcentration?.type == desiredConcentration.type) {
-                        return desiredConcentration.concentration * volume /
-                                (availableConcentration?.concentration ?: 0.0)
+                    val congruentConcentrations =
+                        congruentConcentrationsInteractor.getCongruentConcentrations(
+                            liquid = compound.liquid,
+                            concentrationType = desiredConcentration.type
+                        )
+                    availableConcentration?.let { avConc ->
+                        if (congruentConcentrations.contains(avConc.type)) {
+                            return volume *
+                                    desiredConcentration.concentration *
+                                    avConc.multiplicationFactor /
+                                    avConc.concentration /
+                                    desiredConcentration.multiplicationFactor
+                        }
                     }
                     return availableConcentration?.calcVolumeForDesiredMass(
                         desiredConcentration.calcDesiredMass(volume, M), M

@@ -8,6 +8,8 @@ class NXConcentration(amount: Double) : Concentration(amount, ConcentrationType.
     // 3. Molar concentration should have molarMass argument
     // 4. NXConcentration should have another two methods... simple division of them
 
+    override val multiplicationFactor = 1.0
+
     override fun calcDesiredMass(volume: Double, molarMass: Double?): Double {
         return concentration * volume
     }

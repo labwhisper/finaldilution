@@ -1,5 +1,6 @@
 package com.labwhisper.biotech.finaldilution.component
 
+import com.labwhisper.biotech.finaldilution.component.concentration.CongruentConcentrationsInteractor
 import com.labwhisper.biotech.finaldilution.component.concentration.MolarConcentration
 import com.labwhisper.biotech.finaldilution.component.concentration.PercentageConcentration
 import com.labwhisper.biotech.finaldilution.compound.Compound
@@ -8,7 +9,8 @@ import org.junit.jupiter.api.Test
 
 class ComponentDisplayTest {
 
-    private val sut = ComponentQuantityCalculator()
+    val congruentConcentrationsInteractor = CongruentConcentrationsInteractor()
+    private val sut = ComponentQuantityCalculator(congruentConcentrationsInteractor)
     private val solid = Component(Compound("solid1", false, 30.0), MolarConcentration(20.0))
     private val solidStock = Component(
         compound = Compound("solid1", false, 30.0),
