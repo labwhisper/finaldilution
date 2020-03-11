@@ -1,23 +1,9 @@
 <en-GB>
 
-Improvements
-
-- Density added to liquid compounds
-
-- Allow molar-molar conversion using stock without knowing molar mass
-
-- Disabled mg/ml concentrations for liquids
-
-- Changing and limiting stock possibility according to desired concentration settings
-
-- Message : Molar mass not entered.
-
-- Message : Density required to obtain ml.
-
 Fixes
 
-- Fixed liquid with molar concentration - result in grams unless the density is specified
+- Volume change was not saved immediately after change
 
-- Fixed : More space for long compound names in title
+- Allowed calculation of M->mM without molar mass
 
 </en-GB>
