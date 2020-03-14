@@ -24,6 +24,7 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
     lateinit var solution: Solution
     var onClickListener: ((Component) -> Unit)? = null
     var onLongClickListener: ((Component) -> Boolean)? = null
+    var solutionUpdate: ((Solution) -> Unit)? = null
 
     val congruentConcentrationsInteractor = CongruentConcentrationsInteractor()
     private val componentQuantityCalculator =
@@ -37,7 +38,7 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
     }
 
     override fun getItemCount(): Int {
-        return solution.components.size + 1
+        return if (::solution.isInitialized) solution.components.size + 1 else 0
     }
 
     override fun onBindViewHolder(
@@ -76,8 +77,6 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
         holder.stockTextView?.text = component.desiredConcentration.toString()
         holder.addDensityTextView?.visibility =
             if (component.noVolumeBecauseOfNoDensity) View.VISIBLE else View.GONE
-        holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
-        holder.checkBox?.tag = compound
 
         if (solutionVolumeCalculator.isOverflown(solution)
             && (compound.liquid || component.fromStock)
@@ -91,6 +90,9 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
             )
         }
 
+        holder.checkBox?.setOnCheckedChangeListener(null)
+        holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
+        holder.checkBox?.tag = compound
         holder.checkBox?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 //TODO Write code for added components using unit TDD
@@ -98,6 +100,7 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
             } else {
                 solution.componentsAdded.remove(component)
             }
+            solutionUpdate?.invoke(solution)
             setWellDoneIfAllChecked(holder)
         }
 

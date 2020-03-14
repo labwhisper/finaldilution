@@ -23,6 +23,7 @@ class ComponentsPanel(internal val activity: EditActivity) {
         val componentListAdapter = ChecklistAdapter()
         componentListAdapter.onClickListener = ::editComponent
         componentListAdapter.onLongClickListener = { componentInContextMenu = it; false }
+        componentListAdapter.solutionUpdate = { activity.appModel.updateSolution(it) }
         val componentsListView = activity.recyclerView(R.id.componentsList)
         componentsListView.layoutManager =
             LinearLayoutManager(activity)
@@ -33,14 +34,15 @@ class ComponentsPanel(internal val activity: EditActivity) {
         componentsListView.addItemDecoration(divider)
         activity.registerForContextMenu(componentsListView)
 
-        disposable.add(activity.appModel.solution.subscribe {
-            Log.d(
-                TAG, "Adapting to the new solution " +
-                        "${it.volumeAmountForCurrentUnit()}${it.volumeUnit()}"
-            )
-            componentListAdapter.solution = it
-            componentListAdapter.notifyDataSetChanged()
-        })
+        disposable.add(activity.appModel.solution
+            .subscribe {
+                Log.d(
+                    TAG, "Adapting to the new solution " +
+                            "${it.volumeAmountForCurrentUnit()}${it.volumeUnit()}"
+                )
+                componentListAdapter.solution = it
+                componentListAdapter.notifyDataSetChanged()
+            })
     }
 
     fun removeComponentSelectedInContextMenu() {

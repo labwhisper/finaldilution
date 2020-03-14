@@ -8,14 +8,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.compound.Compound
-import com.labwhisper.biotech.finaldilution.solution.Solution
 
 class CompoundListAdapter :
     RecyclerView.Adapter<CompoundListAdapter.CompoundViewHolder>() {
 
     var compoundList: List<Compound> = mutableListOf()
     var compoundsInSolution: MutableList<Compound> = mutableListOf()
-    var solution: Solution? = null
     var onClickListener: ((View, Compound) -> Unit)? = null
     var onLongClickListener: ((Compound) -> Boolean)? = null
 
