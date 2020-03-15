@@ -16,18 +16,7 @@ data class Component(
 
     val fromStock get() = availableConcentration != null
 
-    val resultInVolume
-        //FIXME for non-molar - all, for molar only with density
-        get() = fromStock ||
-                (compound.liquid &&
-                        (!(compound.density == null && desiredConcentration.type.isMolarLike())))
-
-    val noVolumeBecauseOfNoDensity
-        get() = compound.liquid && compound.density == null && desiredConcentration.type
-            .isMolarLike()
-
     private var solutionVolume = 0.0
-
 
     override fun toString(): String {
         return "$desiredConcentration ${compound.displayName}"

@@ -76,7 +76,8 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
         holder.stockTextView?.visibility = View.VISIBLE
         holder.stockTextView?.text = component.desiredConcentration.toString()
         holder.addDensityTextView?.visibility =
-            if (component.noVolumeBecauseOfNoDensity) View.VISIBLE else View.GONE
+            if (componentQuantityCalculator.noVolumeBecauseOfNoDensity(component)) View.VISIBLE
+            else View.GONE
 
         if (solutionVolumeCalculator.isOverflown(solution)
             && (compound.liquid || component.fromStock)
