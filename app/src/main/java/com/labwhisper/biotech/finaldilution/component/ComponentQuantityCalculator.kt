@@ -61,33 +61,53 @@ class ComponentQuantityCalculator(
             amount >= 1000 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount / 1000))
                 when {
-                    component.resultInVolume -> niceOutput.append(" l")
+                    resultInVolume(component) -> niceOutput.append(" l")
                     else -> niceOutput.append(" kg")
                 }
             }
             amount == 0.0 || amount >= 1 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount))
                 when {
-                    component.resultInVolume -> niceOutput.append(" ml")
+                    resultInVolume(component) -> niceOutput.append(" ml")
                     else -> niceOutput.append(" g")
                 }
             }
             amount >= 0.00001 -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount * 1000))
                 when {
-                    component.resultInVolume -> niceOutput.append(" \u03bcl")
+                    resultInVolume(component) -> niceOutput.append(" \u03bcl")
                     else -> niceOutput.append(" mg")
                 }
             }
             else -> {
                 niceOutput.append(DecimalFormat("0.###").format(amount * 1000000))
                 when {
-                    component.resultInVolume -> niceOutput.append(" nl")
+                    resultInVolume(component) -> niceOutput.append(" nl")
                     else -> niceOutput.append(" \u03bcg")
                 }
             }
         }
         return niceOutput.toString()
+    }
+
+    fun resultInVolume(component: Component) = component.run {
+        fromStock || (compound.liquid && !(molarNoDensity(component)))
+
+    }
+
+    fun noVolumeBecauseOfNoDensity(component: Component) = component.run {
+        compound.liquid && molarNoDensity(component)
+    }
+
+    private fun molarNoDensity(component: Component) = component.run {
+        val concentrationsAreCongruent = availableConcentration?.let {
+            congruentConcentrationsInteractor.getCongruentConcentrations(
+                compound.liquid,
+                desiredConcentration.type
+            ).contains(it.type)
+        }
+        compound.density == null && desiredConcentration.type.isMolarLike()
+                && (concentrationsAreCongruent != true)
     }
 
 }
