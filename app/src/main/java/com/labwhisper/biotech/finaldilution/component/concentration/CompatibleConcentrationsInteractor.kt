@@ -1,12 +1,12 @@
 package com.labwhisper.biotech.finaldilution.component.concentration
 
 import com.labwhisper.biotech.finaldilution.component.concentration.ConcentrationType.*
+import com.labwhisper.biotech.finaldilution.compound.Compound
 
 class CompatibleConcentrationsInteractor {
 
     fun getCompatibleConcentrations(
-        liquid: Boolean,
-        molarMassGiven: Boolean,
+        compound: Compound,
         concentrationType: ConcentrationType
     ): List<ConcentrationType> {
 
@@ -14,22 +14,22 @@ class CompatibleConcentrationsInteractor {
             return listOf(NX)
         }
 
-        if (liquid && concentrationType == MILIGRAM_PER_MILLILITER) {
+        if (compound.liquid && concentrationType == MILIGRAM_PER_MILLILITER) {
             return listOf()
         }
 
-        if (!molarMassGiven && concentrationType in listOf(MOLAR, MILIMOLAR)) {
+        if (!compound.molarMassGiven && concentrationType in listOf(MOLAR, MILIMOLAR)) {
             return listOf(MOLAR, MILIMOLAR)
         }
 
         val resultList = mutableListOf(PERCENTAGE)
 
-        if (molarMassGiven) {
+        if (compound.molarMassGiven) {
             resultList.add(MOLAR)
             resultList.add(MILIMOLAR)
         }
 
-        if (!liquid) {
+        if (!compound.liquid) {
             resultList.add(MILIGRAM_PER_MILLILITER)
         }
 

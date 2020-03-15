@@ -39,73 +39,73 @@ class ComponentValidateInteractor(
 
         val bestPossibleCurrent =
             chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
-                request.currentConcentrationType,
-                request.oppositeConcentrationType,
-                possibleConcentrations
+                currentConcentrationType = request.currentConcentrationType,
+                oppositeConcentrationType = request.oppositeConcentrationType,
+                suitableConcentrations = possibleConcentrations
             )
 
         val currentCompatibleList =
             compatibleConcentrationsInteractor.getCompatibleConcentrations(
-                liquid = request.compound.liquid,
-                molarMassGiven = request.compound.molarMassGiven,
+                compound = request.compound,
                 concentrationType = request.currentConcentrationType
             )
 
         val bestCompatibleFromCurrent =
             chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
-                request.oppositeConcentrationType,
-                request.currentConcentrationType,
-                currentCompatibleList
+                currentConcentrationType = request.oppositeConcentrationType,
+                oppositeConcentrationType = request.currentConcentrationType,
+                suitableConcentrations = currentCompatibleList
             )
 
         val bestPossibleCurrentCompatibleList =
             compatibleConcentrationsInteractor.getCompatibleConcentrations(
-                request.compound.liquid, request.compound.molarMassGiven, bestPossibleCurrent
+                compound = request.compound,
+                concentrationType = bestPossibleCurrent
             )
 
         val bestCompatibleFromBestPossibleCurrent =
             chooseMostSuitableConcentrationInteractor.chooseMostSuitableConcentration(
-                request.oppositeConcentrationType,
-                bestPossibleCurrent,
-                bestPossibleCurrentCompatibleList
+                currentConcentrationType = request.oppositeConcentrationType,
+                oppositeConcentrationType = bestPossibleCurrent,
+                suitableConcentrations = bestPossibleCurrentCompatibleList
             )
 
         if (request.action == STOCK_CLOSED) {
             return ComponentValidateResponseModel(
-                request.action,
-                false,
-                bestPossibleCurrent,
-                bestCompatibleFromBestPossibleCurrent,
-                bestPossibleCurrentCompatibleList
+                action = request.action,
+                isStock = false,
+                currentConcentrationType = bestPossibleCurrent,
+                oppositeConcentrationType = bestCompatibleFromBestPossibleCurrent,
+                stockConcentrationsAvailable = bestPossibleCurrentCompatibleList
             )
         }
 
         if (possibleConcentrations.contains(request.currentConcentrationType)) {
             return ComponentValidateResponseModel(
-                request.action,
-                stockOpen,
-                request.currentConcentrationType,
-                bestCompatibleFromCurrent,
-                currentCompatibleList
+                action = request.action,
+                isStock = stockOpen,
+                currentConcentrationType = request.currentConcentrationType,
+                oppositeConcentrationType = bestCompatibleFromCurrent,
+                stockConcentrationsAvailable = currentCompatibleList
             )
         }
 
         if (currentCompatibleList.isEmpty()) {
             return ComponentValidateResponseModel(
-                request.action,
-                stockOpen,
-                bestPossibleCurrent,
-                bestCompatibleFromBestPossibleCurrent,
-                bestPossibleCurrentCompatibleList
+                action = request.action,
+                isStock = stockOpen,
+                currentConcentrationType = bestPossibleCurrent,
+                oppositeConcentrationType = bestCompatibleFromBestPossibleCurrent,
+                stockConcentrationsAvailable = bestPossibleCurrentCompatibleList
             )
         }
 
         return ComponentValidateResponseModel(
-            request.action,
-            true,
-            request.currentConcentrationType,
-            bestCompatibleFromCurrent,
-            currentCompatibleList
+            action = request.action,
+            isStock = true,
+            currentConcentrationType = request.currentConcentrationType,
+            oppositeConcentrationType = bestCompatibleFromCurrent,
+            stockConcentrationsAvailable = currentCompatibleList
         )
 
     }
