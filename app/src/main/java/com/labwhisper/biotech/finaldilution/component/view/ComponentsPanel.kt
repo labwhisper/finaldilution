@@ -35,6 +35,7 @@ class ComponentsPanel(internal val activity: EditActivity) {
         activity.registerForContextMenu(componentsListView)
 
         disposable.add(activity.appModel.solution
+            .distinctUntilChanged()
             .subscribe {
                 Log.d(
                     TAG, "Adapting to the new solution " +
@@ -47,7 +48,7 @@ class ComponentsPanel(internal val activity: EditActivity) {
 
     fun removeComponentSelectedInContextMenu() {
         componentInContextMenu?.let { component ->
-            val updatedSolution = activity.appModel.solution.value
+            val updatedSolution = activity.appModel.solution.value?.deepCopy()
             updatedSolution?.removeComponent(component) ?: return
             activity.appModel.updateSolution(updatedSolution)
         }

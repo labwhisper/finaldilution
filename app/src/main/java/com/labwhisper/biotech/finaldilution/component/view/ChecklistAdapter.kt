@@ -94,13 +94,14 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
         holder.checkBox?.isChecked = solution.componentsAdded.contains(component)
         holder.checkBox?.tag = compound
         holder.checkBox?.setOnCheckedChangeListener { _, isChecked ->
+            val updatedSolution = solution.deepCopy()
             if (isChecked) {
                 //TODO Write code for added components using unit TDD
-                solution.componentsAdded.add(component)
+                updatedSolution.componentsAdded.add(component)
             } else {
-                solution.componentsAdded.remove(component)
+                updatedSolution.componentsAdded.remove(component)
             }
-            solutionUpdate?.invoke(solution)
+            solutionUpdate?.invoke(updatedSolution)
             setWellDoneIfAllChecked(holder)
         }
 

@@ -115,10 +115,6 @@ class EditActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_save -> {
-                appModel.solution.value?.let { appModel.updateSolution(it) }
-                return true
-            }
             R.id.action_undo -> {
                 return try {
                     val newSolution = careTaker.undo()
@@ -190,7 +186,7 @@ class EditActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        appModel.solution.value?.let { appModel.updateSolution(it) }
+        appModel.solution.value?.deepCopy()?.let { appModel.updateSolution(it) }
     }
 
     override fun onResume() {

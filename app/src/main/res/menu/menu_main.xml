@@ -12,9 +12,4 @@
         android:orderInCategory="150"
         android:title="@string/action_redo"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_save"
-        android:orderInCategory="200"
-        android:title="@string/action_save"
-        app:showAsAction="never" />
 </menu>

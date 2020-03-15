@@ -97,7 +97,7 @@ class VolumePanel internal constructor(private val activity: EditActivity) : Tap
     }
 
     private fun updateVolume(volume: Double) {
-        activity.appModel.solution.value?.also {
+        activity.appModel.solution.value?.deepCopy()?.also {
             it.volume = volume
         }?.let { activity.appModel.updateSolution(it) }
     }

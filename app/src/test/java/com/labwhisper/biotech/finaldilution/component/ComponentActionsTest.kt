@@ -31,11 +31,13 @@ class ComponentActionsTest {
         val sut = ComponentsPanel(activity)
         sut.componentInContextMenu = component
         assertEquals(1, solution.components.size)
+        val solutionWithoutComponent = solution.deepCopy().apply {
+            components.clear()
+        }
 
         sut.removeComponentSelectedInContextMenu()
 
-        assertEquals(0, solution.components.size)
-        verify { activity.appModel.updateSolution(solution) }
+        verify { activity.appModel.updateSolution(solutionWithoutComponent) }
     }
 
 }

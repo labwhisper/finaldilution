@@ -55,11 +55,11 @@ data class Solution(
     }
 
     override fun deepCopy(): Solution {
-        val deepCopy = Solution(name, volume)
-        deepCopy.components.apply { addAll(components) }
-        deepCopy.componentsAdded = mutableSetOf<Component>().apply { addAll(componentsAdded) }
-        deepCopy.isFilledInWithWater = isFilledInWithWater
-        return deepCopy
+        val solutionCopy = Solution(name, volume)
+        solutionCopy.components.apply { addAll(components) }
+        solutionCopy.componentsAdded = mutableSetOf<Component>().apply { addAll(componentsAdded) }
+        solutionCopy.isFilledInWithWater = isFilledInWithWater
+        return solutionCopy
     }
 
 }
