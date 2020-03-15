@@ -34,6 +34,9 @@ data class Compound(
             } ?: "[liquid]".takeIf { liquid } ?: "[undefined]"
         }
 
+    val molarMassGiven: Boolean
+        get() = molarMass != null
+
     override fun toString(): String {
         return "$displayName [$displayMass]"
     }

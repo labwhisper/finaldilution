@@ -5,24 +5,21 @@ import com.labwhisper.biotech.finaldilution.compound.Compound
 
 class PossibleConcentrationsInteractor {
 
-    fun getPossibleConcentrations(compound: Compound) =
-        getPossibleConcentrations(compound.liquid, compound.molarMass != null)
-
-    fun getPossibleConcentrations(liquid: Boolean, molarMassGiven: Boolean):
-            List<ConcentrationType> {
+    fun getPossibleConcentrations(compound: Compound): List<ConcentrationType> {
 
         val resultList = mutableListOf(PERCENTAGE)
 
-        if (!liquid) {
+        if (!compound.liquid) {
             resultList.add(MILIGRAM_PER_MILLILITER)
         }
 
-        if (molarMassGiven) {
+        if (compound.molarMassGiven) {
             resultList.add(MOLAR)
             resultList.add(MILIMOLAR)
         }
 
         return resultList
+
     }
 
 }

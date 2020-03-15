@@ -10,6 +10,7 @@ import com.labwhisper.biotech.finaldilution.component.validation.ComponentValida
 import com.labwhisper.biotech.finaldilution.component.validation.ComponentValidateOutputPort
 import com.labwhisper.biotech.finaldilution.component.validation.ComponentValidateRequestModel
 import com.labwhisper.biotech.finaldilution.component.validation.ComponentValidateResponseModel
+import com.labwhisper.biotech.finaldilution.compound.Compound
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.params.ParameterizedTest
@@ -60,7 +61,7 @@ class ComponentValidateInteractorTest {
             return
         }
 
-        if (requestModel.liquid && requestModel.currentConcentrationType == MILIGRAM_PER_MILLILITER) {
+        if (requestModel.compound.liquid && requestModel.currentConcentrationType == MILIGRAM_PER_MILLILITER) {
             return
         }
         assertEquals(
@@ -140,9 +141,9 @@ class ComponentValidateInteractorTest {
         requestModel: ComponentValidateRequestModel,
         responseModel: ComponentValidateResponseModel
     ) {
-        if (requestModel.liquid) return
+        if (requestModel.compound.liquid) return
 
-        if (!requestModel.molarMassGiven && requestModel.action != STOCK_CLOSED
+        if (!requestModel.compound.molarMassGiven && requestModel.action != STOCK_CLOSED
             && (requestModel.currentConcentrationType == PERCENTAGE ||
                     requestModel.currentConcentrationType == MILIGRAM_PER_MILLILITER)
             && (requestModel.oppositeConcentrationType != PERCENTAGE &&
@@ -159,7 +160,7 @@ class ComponentValidateInteractorTest {
         responseModel: ComponentValidateResponseModel
     ) {
 
-        if (!requestModel.molarMassGiven && requestModel.action != STOCK_CLOSED
+        if (!requestModel.compound.molarMassGiven && requestModel.action != STOCK_CLOSED
             && (requestModel.currentConcentrationType == MOLAR ||
                     requestModel.currentConcentrationType == MILIMOLAR)
             && (requestModel.oppositeConcentrationType != MOLAR &&
@@ -182,7 +183,7 @@ class ComponentValidateInteractorTest {
                             STOCK_CHANGED, DESIRED_CHANGED, STOCK_OPENED, STOCK_CLOSED
                         )) {
                             for (liquid in setOf(true, false)) {
-                                for (molarMassGiven in setOf(true, false)) {
+                                for (molarMass in setOf(1.0, null)) {
                                     argumentList.add(
                                         arguments(
                                             ComponentValidateRequestModel(
@@ -190,8 +191,11 @@ class ComponentValidateInteractorTest {
                                                 oppositeConcentrationType = opposite,
                                                 wasStockOpen = stockOpen,
                                                 action = action,
-                                                liquid = liquid,
-                                                molarMassGiven = molarMassGiven
+                                                compound = Compound(
+                                                    iupacName = "Name",
+                                                    liquid = liquid,
+                                                    molarMass = molarMass
+                                                )
                                             )
                                         )
                                     )

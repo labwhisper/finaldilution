@@ -24,8 +24,7 @@ class EditComponentController(private val componentValidateInputPort: ComponentV
             oppositeConcentrationType = stockConcentrationType,
             wasStockOpen = wasStockOpen,
             action = DESIRED_CHANGED,
-            liquid = compound.liquid,
-            molarMassGiven = compound.molarMass != null
+            compound = compound
         )
         componentValidateInputPort.componentChangeRequest(request)
     }
@@ -41,8 +40,7 @@ class EditComponentController(private val componentValidateInputPort: ComponentV
             oppositeConcentrationType = desiredConcentrationType,
             wasStockOpen = wasStockOpen,
             action = STOCK_CHANGED,
-            liquid = compound.liquid,
-            molarMassGiven = compound.molarMass != null
+            compound = compound
         )
         componentValidateInputPort.componentChangeRequest(request)
     }
@@ -58,8 +56,7 @@ class EditComponentController(private val componentValidateInputPort: ComponentV
             oppositeConcentrationType = stockConcentrationType,
             wasStockOpen = wasStockOpen,
             action = if (wasStockOpen) STOCK_CLOSED else STOCK_OPENED,
-            liquid = compound.liquid,
-            molarMassGiven = compound.molarMass != null
+            compound = compound
         )
         componentValidateInputPort.componentChangeRequest(request)
     }

@@ -34,8 +34,7 @@ class ComponentValidateInteractor(
         }
 
         val possibleConcentrations = possibleConcentrationsInteractor.getPossibleConcentrations(
-            liquid = request.liquid,
-            molarMassGiven = request.molarMassGiven
+            compound = request.compound
         )
 
         val bestPossibleCurrent =
@@ -47,7 +46,9 @@ class ComponentValidateInteractor(
 
         val currentCompatibleList =
             compatibleConcentrationsInteractor.getCompatibleConcentrations(
-                request.liquid, request.molarMassGiven, request.currentConcentrationType
+                liquid = request.compound.liquid,
+                molarMassGiven = request.compound.molarMassGiven,
+                concentrationType = request.currentConcentrationType
             )
 
         val bestCompatibleFromCurrent =
@@ -59,7 +60,7 @@ class ComponentValidateInteractor(
 
         val bestPossibleCurrentCompatibleList =
             compatibleConcentrationsInteractor.getCompatibleConcentrations(
-                request.liquid, request.molarMassGiven, bestPossibleCurrent
+                request.compound.liquid, request.compound.molarMassGiven, bestPossibleCurrent
             )
 
         val bestCompatibleFromBestPossibleCurrent =
