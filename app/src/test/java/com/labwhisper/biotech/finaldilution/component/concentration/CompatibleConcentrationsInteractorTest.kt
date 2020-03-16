@@ -11,8 +11,7 @@ class CompatibleConcentrationsInteractorTest {
 
     private val solidNoMass = Compound(
         iupacName = "solid no mass",
-        liquid = false,
-        molarMass = null
+        liquid = false
     )
 
     private val solidWithMass = Compound(
@@ -23,14 +22,20 @@ class CompatibleConcentrationsInteractorTest {
 
     private val liquidNoMass = Compound(
         iupacName = "liquid no mass",
-        liquid = true,
-        molarMass = null
+        liquid = true
     )
 
-    private val liquidWithMass = Compound(
+    private val liquidWithMassNoDensity = Compound(
         iupacName = "name",
         liquid = true,
         molarMass = 1.0
+    )
+
+    private val liquidWithMassAndDensity = Compound(
+        iupacName = "name",
+        liquid = true,
+        molarMass = 1.0,
+        density = 0.5
     )
 
     @Test
@@ -141,9 +146,18 @@ class CompatibleConcentrationsInteractorTest {
     }
 
     @Test
-    fun `Liquid % with mass is compatible with %, M and mM`() {
+    fun `Liquid % with mass no density is compatible with %`() {
         val result = sut.getCompatibleConcentrations(
-            compound = liquidWithMass,
+            compound = liquidWithMassNoDensity,
+            concentrationType = PERCENTAGE
+        )
+        assertListsEquivalent(listOf(PERCENTAGE), result)
+    }
+
+    @Test
+    fun `Liquid % with mass and density is compatible with %, M and mM`() {
+        val result = sut.getCompatibleConcentrations(
+            compound = liquidWithMassAndDensity,
             concentrationType = PERCENTAGE
         )
         assertListsEquivalent(listOf(PERCENTAGE, MOLAR, MILIMOLAR), result)
@@ -161,7 +175,7 @@ class CompatibleConcentrationsInteractorTest {
     @Test
     fun `Liquid mgMl with mass is compatible with nothing`() {
         val result = sut.getCompatibleConcentrations(
-            compound = liquidWithMass,
+            compound = liquidWithMassNoDensity,
             concentrationType = MILIGRAM_PER_MILLILITER
         )
         assertListsEquivalent(listOf(), result)
@@ -177,9 +191,18 @@ class CompatibleConcentrationsInteractorTest {
     }
 
     @Test
-    fun `Liquid M with mass is compatible with %, M and mM`() {
+    fun `Liquid M with mass no density is compatible with M and mM`() {
         val result = sut.getCompatibleConcentrations(
-            compound = liquidWithMass,
+            compound = liquidWithMassNoDensity,
+            concentrationType = MOLAR
+        )
+        assertListsEquivalent(listOf(MOLAR, MILIMOLAR), result)
+    }
+
+    @Test
+    fun `Liquid M with mass with density is compatible with %, M and mM`() {
+        val result = sut.getCompatibleConcentrations(
+            compound = liquidWithMassAndDensity,
             concentrationType = MOLAR
         )
         assertListsEquivalent(listOf(PERCENTAGE, MOLAR, MILIMOLAR), result)
@@ -195,9 +218,18 @@ class CompatibleConcentrationsInteractorTest {
     }
 
     @Test
-    fun `Liquid mM with mass is compatible with %, M and mM`() {
+    fun `Liquid mM with mass no density is compatible with M and mM`() {
         val result = sut.getCompatibleConcentrations(
-            compound = liquidWithMass,
+            compound = liquidWithMassNoDensity,
+            concentrationType = MILIMOLAR
+        )
+        assertListsEquivalent(listOf(MOLAR, MILIMOLAR), result)
+    }
+
+    @Test
+    fun `Liquid mM with mass and density is compatible with %, M and mM`() {
+        val result = sut.getCompatibleConcentrations(
+            compound = liquidWithMassAndDensity,
             concentrationType = MILIMOLAR
         )
         assertListsEquivalent(listOf(PERCENTAGE, MOLAR, MILIMOLAR), result)
@@ -215,7 +247,7 @@ class CompatibleConcentrationsInteractorTest {
     @Test
     fun `Liquid nX with mass is compatible with nX`() {
         val result = sut.getCompatibleConcentrations(
-            compound = liquidWithMass,
+            compound = liquidWithMassNoDensity,
             concentrationType = NX
         )
         assertListsEquivalent(listOf(NX), result)

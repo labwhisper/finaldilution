@@ -22,6 +22,18 @@ class CompatibleConcentrationsInteractor {
             return listOf(MOLAR, MILIMOLAR)
         }
 
+        if (compound.liquid && !compound.densityGiven
+            && concentrationType in listOf(MOLAR, MILIMOLAR)
+        ) {
+            return listOf(MOLAR, MILIMOLAR)
+        }
+
+        if (compound.liquid && !compound.densityGiven
+            && concentrationType == PERCENTAGE
+        ) {
+            return listOf(PERCENTAGE)
+        }
+
         val resultList = mutableListOf(PERCENTAGE)
 
         if (compound.molarMassGiven) {

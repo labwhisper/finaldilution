@@ -109,10 +109,22 @@ class EditComponentFragment : Fragment() {
     }
 
     private fun setNoMolarWarning() {
-        textView(R.id.warningTextView).visibility =
-            if (compound.molarMass == null) View.VISIBLE else View.GONE
-        textView(R.id.warningTextView).text =
-            "No molar mass entered."
+        textView(R.id.warningTextView).run {
+            when {
+                !compound.molarMassGiven -> {
+                    visibility = View.VISIBLE
+                    text = getString(R.string.no_molar_mass_entered)
+                }
+                compound.liquid && !compound.densityGiven -> {
+                    visibility = View.VISIBLE
+                    text = getString(R.string.no_density_entered)
+                }
+                else -> {
+                    visibility = View.GONE
+                    text = ""
+                }
+            }
+        }
     }
 
     private fun disableMgMlForLiquids() {

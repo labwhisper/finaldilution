@@ -13,7 +13,7 @@ data class ComponentValidateRequestModel(
 ) {
     override fun toString(): String {
         return "Request [$currentConcentrationType $oppositeConcentrationType $wasStockOpen " +
-                "$action ${compound}]"
+                "$action ${compound.liquid} ${compound.molarMass}, ${compound.density}]"
     }
 }
 

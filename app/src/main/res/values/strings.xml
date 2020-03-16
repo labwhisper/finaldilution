@@ -48,4 +48,6 @@
     <string name="nx">nX</string>
     <string name="well_done">Well done</string>
     <string name="add_density_for_volume">Add density to obtain result in ml</string>
+    <string name="no_molar_mass_entered">No molar mass entered.</string>
+    <string name="no_density_entered">No density entered.</string>
 </resources>

@@ -13,8 +13,7 @@ class PossibleConcentrationsInteractorTest {
     fun `Solid with no molar mass can have only % and MgMl concentrations`() {
         val compound = Compound(
             iupacName = "Name1",
-            liquid = false,
-            molarMass = null
+            liquid = false
         )
         val result = sut.getPossibleConcentrations(compound)
         assertListsEquivalent(listOf(PERCENTAGE, MILIGRAM_PER_MILLILITER), result)
@@ -35,8 +34,7 @@ class PossibleConcentrationsInteractorTest {
     fun `Liquid with no molar mass can have only % concentrations`() {
         val compound = Compound(
             iupacName = "Name1",
-            liquid = true,
-            molarMass = null
+            liquid = true
         )
         val result = sut.getPossibleConcentrations(compound)
         assertListsEquivalent(listOf(PERCENTAGE), result)

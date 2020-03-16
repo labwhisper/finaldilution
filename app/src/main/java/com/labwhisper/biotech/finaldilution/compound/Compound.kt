@@ -37,6 +37,9 @@ data class Compound(
     val molarMassGiven: Boolean
         get() = molarMass != null
 
+    val densityGiven: Boolean
+        get() = density != null
+
     override fun toString(): String {
         return "$displayName [$displayMass]"
     }
