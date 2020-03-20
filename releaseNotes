@@ -2,8 +2,12 @@
 
 Fixes
 
-- Volume change was not saved immediately after change
+- Save button removed
 
-- Allowed calculation of M->mM without molar mass
+- For liquids missing density added factored calculation
+
+- Introduced no density info in concentration edition
+
+- Reset checklist on volume change
 
 </en-GB>
