@@ -1,12 +1,12 @@
 package com.labwhisper.biotech.finaldilution.component.view
 
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.labwhisper.biotech.finaldilution.R
 import com.labwhisper.biotech.finaldilution.component.Component
+import com.labwhisper.biotech.finaldilution.solution.Solution
 import com.labwhisper.biotech.finaldilution.solution.view.EditActivity
 import com.labwhisper.biotech.finaldilution.util.recyclerView
 import io.reactivex.disposables.CompositeDisposable
@@ -37,13 +37,16 @@ class ComponentsPanel(internal val activity: EditActivity) {
         disposable.add(activity.appModel.solution
             .distinctUntilChanged()
             .subscribe {
-                Log.d(
-                    TAG, "Adapting to the new solution " +
-                            "${it.volumeAmountForCurrentUnit()}${it.volumeUnit()}"
-                )
-                componentListAdapter.solution = it
-                componentListAdapter.notifyDataSetChanged()
+                onSolutionChange(it, componentListAdapter)
             })
+    }
+
+    private fun onSolutionChange(
+        solution: Solution,
+        componentListAdapter: ChecklistAdapter
+    ) {
+        componentListAdapter.solution = solution
+        componentListAdapter.notifyDataSetChanged()
     }
 
     fun removeComponentSelectedInContextMenu() {

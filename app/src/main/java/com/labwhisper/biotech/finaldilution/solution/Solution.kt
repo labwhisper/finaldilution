@@ -9,14 +9,13 @@ import java.util.*
 data class Solution(
     override var name: String,
     var volume: Double = 0.0,
-    val components: MutableList<Component> = ArrayList()
+    val components: MutableList<Component> = ArrayList(),
+    var componentsAdded: MutableSet<Component> = hashSetOf(),
+    var isFilledInWithWater: Boolean = false
 ) : Item, Comparable<Solution> {
 
     override fun compareTo(other: Solution) =
         name.toLowerCase(Locale.ENGLISH).compareTo(other.name.toLowerCase(Locale.ENGLISH))
-
-    var componentsAdded: MutableSet<Component> = hashSetOf()
-    var isFilledInWithWater: Boolean = false
 
     override val seriesName: String
         get() = "SOLUTION"
@@ -40,6 +39,11 @@ data class Solution(
         volume >= 1000 -> DecimalFormat("0.###").format(volume / 1000)
         volume < 1 -> DecimalFormat("0.###").format(volume * 1000)
         else -> DecimalFormat("0.###").format(volume)
+    }
+
+    fun resetPreparation() {
+        componentsAdded.clear()
+        isFilledInWithWater = false
     }
 
     fun removeComponent(component: Component) {
