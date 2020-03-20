@@ -48,7 +48,10 @@ class ChecklistAdapter : RecyclerView.Adapter<ChecklistAdapter.ChecklistViewHold
 
         if (holder.adapterPosition >= solution.components.size) {
             holder.compoundTextView?.text =
-                "Fill up to ${solution.displayVolume()}"
+                holder.itemView.resources.getString(
+                    R.string.fill_up_to_quantity,
+                    solution.displayVolume()
+                )
             holder.stockTextView?.visibility = View.GONE
             holder.amountTextView?.visibility = View.GONE
             holder.addDensityTextView?.visibility = View.GONE

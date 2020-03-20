@@ -51,7 +51,9 @@ class NewCompoundFragment : Fragment() {
             DigitsKeyListener.getInstance("0123456789.")
         textView(R.id.form_formula, R.id.textView).text = getString(R.string.chemical_formula)
         appModel.initialCompound?.let {
-            textView(R.id.new_compound_title).text = "Edit ${it.displayName}"
+            textView(R.id.new_compound_title).text = getString(
+                R.string.edit_compound, it.displayName
+            )
             populateCompoundIntoFields(it)
         }
         initAdvancedButton()
@@ -238,6 +240,6 @@ class NewCompoundFragment : Fragment() {
     }
 
     companion object {
-        val TAG = "New Compound"
+        const val TAG = "New Compound"
     }
 }

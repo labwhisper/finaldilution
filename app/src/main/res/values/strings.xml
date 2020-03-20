@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">Final Dilution</string>
-    <string name="action_rename">rename</string>
-    <string name="action_clone">clone</string>
-    <string name="action_delete">delete</string>
-    <string name="action_edit">edit</string>
-    <string name="action_remove">remove</string>
-    <string name="action_undo">undo</string>
-    <string name="action_redo">redo</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_clone">Clone</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_create">Create</string>
     <string name="beakerDescription">beaker</string>
     <string name="volumeText">Total volume:</string>
     <string name="title_activity_startup">Select solution</string>
@@ -50,4 +52,10 @@
     <string name="add_density_for_volume">Add density to obtain result in ml</string>
     <string name="no_molar_mass_entered">No molar mass entered.</string>
     <string name="no_density_entered">No density entered.</string>
+    <string name="fill_up_to_quantity">Fill up to %s</string>
+    <string name="delete_solution">Delete solution: %s?</string>
+    <string name="edit_compound">Edit %s</string>
+    <string name="enter_new_solution_name">Enter new solution name:</string>
+    <string name="clone_solution">Clone %s:</string>
+    <string name="rename_solution">Rename %s:</string>
 </resources>
