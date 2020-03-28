@@ -110,7 +110,9 @@ class CompoundsPanel(
     }
 
     fun deleteCompoundSelectedInContextMenu() {
-        compoundInContextMenu?.let { deleteCompound(it) }
+        compoundInContextMenu?.let { compound ->
+            activity.showDeleteCompoundConfirmationDialog(compound)
+        }
     }
 
     fun editCompoundSelectedInContextMenu() {
@@ -121,10 +123,6 @@ class CompoundsPanel(
                 ::handleCompoundEditionClose
             )
         }
-    }
-
-    private fun deleteCompound(compound: Compound) {
-        appModel.deleteCompound(compound)
     }
 
     private fun informAboutCompoundAlreadyAdded(view: View, compound: Compound) {

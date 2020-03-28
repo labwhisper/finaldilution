@@ -53,7 +53,10 @@
     <string name="no_molar_mass_entered">No molar mass entered.</string>
     <string name="no_density_entered">No density entered.</string>
     <string name="fill_up_to_quantity">Fill up to %s</string>
-    <string name="delete_solution">Delete solution: %s?</string>
+    <string name="delete_solution">Delete solution: %s ?</string>
+    <string name="delete_compound">Delete compound: %s ?</string>
+    <string name="delete_compound_affected_solutions">Warning! The following solutions will be
+        affected: %s</string>
     <string name="edit_compound">Edit %s</string>
     <string name="enter_new_solution_name">Enter new solution name:</string>
     <string name="clone_solution">Clone %s:</string>

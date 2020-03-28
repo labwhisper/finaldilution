@@ -40,7 +40,7 @@ class CompoundActionsTest {
 
         sut.deleteCompoundSelectedInContextMenu()
 
-        verify { editSolutionAppModel.removeCompoundFromEverywhere(compound) }
+        verify { activity.showDeleteCompoundConfirmationDialog(compound) }
     }
 
     @Test
@@ -51,30 +51,5 @@ class CompoundActionsTest {
 
         verify { editCompoundFragmentCreator.startCompoundEdition(activity, compound, any()) }
     }
-
-    //FIXME Write these tests for EditSolutionAppModel
-//    @Test
-//    fun `When there was no change, do not reload solution`() {
-//        sut.handleCompoundNameChange(Compound("OldName", false), null)
-//        verify(inverse = true) { activity.propagateAllChanges() }
-//    }
-//
-//    @Test
-//    fun `If new compound was added, reload solution`() {
-//        sut.handleCompoundNameChange(null, Compound("NewName", true))
-//        verify { activity.propagateAllChanges() }
-//    }
-//
-//    @Test
-//    fun `When compound name wasn't changed do not reload solution`() {
-//        sut.handleCompoundNameChange(Compound("OldName", false), Compound("OldName", true))
-//        verify(inverse = true) { activity.propagateAllChanges() }
-//    }
-//
-//    @Test
-//    fun `When compound name was changed reload solution`() {
-//        sut.handleCompoundNameChange(Compound("OldName", false), Compound("NewName", false))
-//        verify { activity.propagateAllChanges() }
-//    }
 
 }

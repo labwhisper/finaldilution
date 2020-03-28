@@ -16,6 +16,7 @@ import com.labwhisper.biotech.finaldilution.component.view.EditCompoundFragmentC
 import com.labwhisper.biotech.finaldilution.compound.Compound
 import com.labwhisper.biotech.finaldilution.compound.appmodel.CompoundsPanelAppModel
 import com.labwhisper.biotech.finaldilution.compound.view.CompoundsPanel
+import com.labwhisper.biotech.finaldilution.compound.view.DeleteCompoundConfirmDialog
 import com.labwhisper.biotech.finaldilution.compound.view.NewCompoundFragment
 import com.labwhisper.biotech.finaldilution.genericitem.putSerializableAnItem
 import com.labwhisper.biotech.finaldilution.solution.CareTaker
@@ -158,20 +159,30 @@ class EditActivity : AppCompatActivity() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_remove_component -> {
-                componentsPanel?.removeComponentSelectedInContextMenu()
-                true
-            }
-            R.id.action_delete_compound -> {
-                compoundsPanel?.deleteCompoundSelectedInContextMenu()
-                true
-            }
-            R.id.action_edit_compound -> {
-                compoundsPanel?.editCompoundSelectedInContextMenu()
-                true
-            }
+            R.id.action_remove_component -> onContextMenuRemoveComponent()
+            R.id.action_delete_compound -> onContextMenuDeleteCompound()
+            R.id.action_edit_compound -> onContextMenuEditCompound()
             else -> false
         }
+    }
+
+    private fun onContextMenuRemoveComponent(): Boolean {
+        componentsPanel?.removeComponentSelectedInContextMenu()
+        return true
+    }
+
+    private fun onContextMenuEditCompound(): Boolean {
+        compoundsPanel?.editCompoundSelectedInContextMenu()
+        return true
+    }
+
+    private fun onContextMenuDeleteCompound(): Boolean {
+        compoundsPanel?.deleteCompoundSelectedInContextMenu()
+        return true
+    }
+
+    internal fun showDeleteCompoundConfirmationDialog(compound: Compound) {
+        DeleteCompoundConfirmDialog(this, appModel).create(compound).show()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

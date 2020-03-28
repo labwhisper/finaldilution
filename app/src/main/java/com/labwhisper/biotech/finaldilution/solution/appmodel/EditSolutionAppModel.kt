@@ -38,6 +38,12 @@ class EditSolutionAppModel(
 
     private fun loadAllCompoundsSorted() = compoundGateway.loadAll().sorted()
 
+    fun findSolutionsWithCompound(compound: Compound): List<Solution> {
+        return solutionGateway.loadAll().filter { solution ->
+            solution.components.map { it.compound }.contains(compound)
+        }
+    }
+
     fun safeSaveCompound(compound: Compound) {
         //if name exist -> sameNameException ( to be handled by function user )
         compoundGateway.save(compound)
