@@ -1,13 +1,7 @@
 <en-GB>
 
-Fixes
+Updates:
 
-- Save button removed
-
-- For liquids missing density added factored calculation
-
-- Introduced no density info in concentration edition
-
-- Reset checklist on volume change
+- When try to delete compound - list solution used and ask
 
 </en-GB>
