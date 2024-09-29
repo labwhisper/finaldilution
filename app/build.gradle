@@ -1,18 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
+    namespace = "com.labwhisper.biotech.finaldilution"
     signingConfigs {
         config {
         }
     }
-    compileSdkVersion 29
-    buildToolsVersion '28.0.3'
+    compileSdk 34
     defaultConfig {
         applicationId "com.labwhisper.biotech.finaldilution"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 34
         versionCode 20
         versionName '1.0.0'
         multiDexEnabled true
@@ -43,11 +42,11 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "17"
     }
 }
 
